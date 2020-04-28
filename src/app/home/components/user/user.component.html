@@ -1,0 +1,14 @@
+<h1>Добро пожаловать {{curentUser?.first_name}} {{curentUser?.last_name}}</h1>
+
+<h2>Вот ваши данные</h2>
+
+<ul>
+  <li>id: {{curentUser?.id}}</li>
+  <li>имя: {{curentUser?.first_name}}</li>
+  <li>фамилия: {{curentUser?.last_name}}</li>
+  <li>email: {{curentUser?.email}}</li>
+  <li>model: {{curentUser?.model_code}}</li>
+  <li>qr_code:{{curentUser?.qr_code_link}}</li>
+</ul>
+
+<button class="btn-link" (click)="logout()">Logout</button>

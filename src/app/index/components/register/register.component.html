@@ -1,0 +1,73 @@
+
+
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <div class="form-row">
+
+      <!-- /////////firstName//////// -->
+
+      <div class="form-group col-md-6" [ngClass]="{invalid: form.get('firstName').touched && form.get('firstName').invalid}">
+
+        <label for="input-first-name">Имя</label>
+        <input type="text" class="form-control" formControlName="firstName" id="input-first-name" >
+        <div
+          *ngIf="form.get('firstName').touched && form.get('firstName').invalid"
+          class="validation"
+        >
+          <div class="alert alert-warning" role="alert"  *ngIf="form.get('firstName').errors.required">
+            Вы не ввели имя
+          </div>
+        </div>
+      </div>
+
+      <!-- /////////lastName//////// -->
+
+      <div class="form-group col-md-6" [ngClass]="{invalid: form.get('lastName').touched && form.get('lastName').invalid}">
+
+        <label for="input-last-name">Фамилия</label>
+        <input type="test" class="form-control" formControlName="lastName" id="input-last-name">
+        <div
+          *ngIf="form.get('lastName').touched && form.get('lastName').invalid"
+          class="validation"
+        >
+          <div class="alert alert-warning" role="alert" *ngIf="form.get('lastName').errors.required">
+            Вы не ввели фамилию
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- /////////email//////// -->
+
+    <div class="form-group" [ngClass]="{invalid: form.get('email').touched && form.get('email').invalid}">
+      <label for="inputEmail">Email</label>
+      <input type="text" class="form-control" id="inputEmail" formControlName="email" placeholder="@">
+      <div
+        *ngIf="form.get('email').touched && form.get('email').invalid"
+        class="validation"
+      >
+        <div class="alert alert-warning" role="alert" *ngIf="form.get('email').errors.required">
+          Вы не ввели email
+        </div>
+      </div>
+    </div>
+    <!-- /////////password//////// -->
+    <div class="form-group" [ngClass]="{invalid: form.get('password').touched && form.get('password').invalid}">
+      <label for="input-password">Пароль</label>
+      <input type="password" class="form-control" formControlName="password" id="input-password">
+      <div
+        *ngIf="form.get('password').touched && form.get('password').invalid"
+        class="validation"
+      >
+        <div class="alert alert-warning" role="alert" *ngIf="form.get('password').errors.required">
+          Вы не ввели пароль
+        </div>
+      </div>
+    </div>
+
+
+    <button type="submit" class="btn btn-primary" [disabled]="form.invalid">Зарегистрировать</button>
+  </form>
+
+
+
+
