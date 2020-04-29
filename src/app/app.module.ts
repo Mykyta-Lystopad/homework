@@ -11,12 +11,16 @@ import {HeaderComponent} from './shared/components/header/header.component';
 import {SignInComponent} from './shared/components/sign-in/sign-in.component';
 
 
+
+
 @NgModule({
   declarations: [
     AppComponent,
     FooterComponent,
     HeaderComponent,
-    SignInComponent
+    SignInComponent,
+
+
   ],
   imports: [
     CoreModule,

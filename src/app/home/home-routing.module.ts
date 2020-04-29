@@ -7,10 +7,12 @@ import {AuthGuard} from '../core/services';
 
 const routes: Routes = [
   {
-    path: '', component: LayoutHomeComponent, children: [
-      {path: ':id', component: UserComponent, canActivate: [AuthGuard]}
+    path: ':id', component: LayoutHomeComponent, children: [
+      {path: 'profile', loadChildren: () => import('../profile/profile.module').then(m => m.ProfileModule)},
+      {path: 'groups', loadChildren: () => import('../groups/groups.module').then(m => m.GroupsModule)},
     ]
-  }
+  },
+
 ];
 
 @NgModule({
@@ -18,5 +20,7 @@ const routes: Routes = [
   exports: [RouterModule]
 })
 export class HomeRoutingModule {
+
+
 
 }

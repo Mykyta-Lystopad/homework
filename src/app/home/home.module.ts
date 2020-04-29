@@ -3,11 +3,13 @@ import {LayoutHomeComponent} from './components/layout-home/layout-home.componen
 import {HomeRoutingModule} from './home-routing.module';
 import {SharedModule} from '../shared/shared.module';
 import { UserComponent } from './components/user/user.component';
+import { SidebarComponent } from './components/sidebar/sidebar.component';
 
 @NgModule({
   declarations: [
     LayoutHomeComponent,
-    UserComponent
+    UserComponent,
+    SidebarComponent
   ],
   imports: [
     SharedModule,

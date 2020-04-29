@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {UserService} from '../../../core/services';
+import {ApiService, UserService} from '../../../core/services';
 import {Subscriber, Subscription} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {User} from '../../../core/models';
@@ -17,6 +17,7 @@ export class UserComponent implements OnInit, OnDestroy {
 
   constructor(
     private userService: UserService,
+    private apiService: ApiService,
     private router: Router
   ) {
   }
