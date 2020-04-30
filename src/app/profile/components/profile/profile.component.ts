@@ -1,15 +1,15 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Subscription} from 'rxjs';
 import {User} from '../../../core/models';
-import {UserService} from '../../../core/services';
+import {ApiService, UserService} from '../../../core/services';
 import {Router} from '@angular/router';
 
 @Component({
-  selector: 'app-header',
-  templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss']
+  selector: 'app-profile',
+  templateUrl: './profile.component.html',
+  styleUrls: ['./profile.component.scss']
 })
-export class HeaderComponent implements OnInit, OnDestroy {
+export class ProfileComponent implements OnInit , OnDestroy {
 
   private userSub: Subscription;
   public curentUser: User;
@@ -37,5 +37,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
   }
 
+  settings() {
 
+  }
 }

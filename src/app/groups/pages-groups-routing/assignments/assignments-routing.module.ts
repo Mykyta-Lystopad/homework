@@ -8,7 +8,7 @@ const routes: Routes = [
   {
     path: '', component: AssignmentsLayoutComponent, children: [
       {path: '' , redirectTo: 'myAssignments', pathMatch: 'full'},
-      {path: 'myAssignments' , component: MyAssignmentsComponent}
+      {path: 'myAssignments' , component: MyAssignmentsComponent},
     ]
   },
   {path: 'solution', loadChildren: () => import('../solution/solution.module').then(m => m.SolutionModule)},

@@ -42,4 +42,8 @@ export class SignInComponent implements OnInit {
       this.form.reset();
     });
   }
+
+  redirectRegister() {
+    this.router.navigate(['/register']);
+  }
 }

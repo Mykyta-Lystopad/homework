@@ -1,7 +1,8 @@
 .layout-container{
   flex: 1 0 auto;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
+  justify-content: flex-end;
   background: gray no-repeat center/60% url("../../../../assets/img/组 1.png");
 }

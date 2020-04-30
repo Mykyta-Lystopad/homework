@@ -1,7 +1,13 @@
 
 
-  <form [formGroup]="form" (ngSubmit)="submit()">
-    <div class="form-row">
+  <form [formGroup]="form" (ngSubmit)="submit()" class="form-register">
+    <div class="row justify-content-between">
+    <h2>Регистрация</h2>
+
+    <button class="close" [routerLink]="['/']"><img class="btn-close" src="https://image.flaticon.com/icons/png/512/467/467128.png"></button>
+    </div>
+    <div class="form-row " >
+
 
       <!-- /////////firstName//////// -->
 
