@@ -1,3 +1,5 @@
+[![Build & Deploy](https://github.com/GrassBusinessLabs/homework-app/workflows/Build%20&%20Deploy/badge.svg)](https://homework.grassbusinesslabs.ml)
+
 # HomeworkAppMaster2
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.0.2.
