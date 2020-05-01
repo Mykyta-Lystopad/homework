@@ -48,7 +48,7 @@ export class RegisterComponent implements OnInit {
         if (res.success) {
           this.userService.setAuth(res.data);
 
-          this.router.navigate([`/user/${res.data.id}`]);
+          this.router.navigate([`/${res.data.id}`]);
           this.Alert.success('Вы успешно зарегистрировались');
 
         }

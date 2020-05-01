@@ -35,7 +35,7 @@ export class UserService {
         .subscribe(
           data => {
             this.setAuth(data.data, this.jwtService.token);
-            this.router.navigate([`/user/${data.data.id}`]);
+            this.router.navigate([`/${data.data.id}`]);
           },
           err => this.purgeAuth()
         );
@@ -90,8 +90,8 @@ export class UserService {
   logout() {
     this.apiService.post('api/auth/logout', '').subscribe(res => {
       if (res) {
-        this.purgeAuth();
-        this.router.navigate(['/']);
+        this.purgeAuth(); // стирание куки и стримов
+        this.router.navigate(['/']); // редирект на главную
       }
     });
 

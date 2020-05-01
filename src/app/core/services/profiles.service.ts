@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { ApiService } from './api.service';
-import { Profile } from '../models';
+import {Profile, User} from '../models';
 import { map } from 'rxjs/operators';
 
 @Injectable()
@@ -20,8 +20,12 @@ export class ProfilesService {
     return this.apiService.post('/profiles/' + username + '/follow');
   }
 
+  updateInfoUser(user: User){
+    return this.apiService.put('api/profile', user);
+  }
+
   unfollow(username: string): Observable<Profile> {
     return this.apiService.delete('/profiles/' + username + '/follow');
-  }
+}
 
 }

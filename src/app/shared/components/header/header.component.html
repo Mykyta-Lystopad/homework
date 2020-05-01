@@ -8,6 +8,6 @@
 
   </nav>
   <nav class="my-2 my-md-0 mr-md-3" *appShowAuthed="true">
-    <button class="btn btn-outline-dark" [routerLink]="'/user/profile/profile'">{{curentUser.first_name}}</button>
+    <button class="btn btn-outline-dark" [routerLink]="'/'+curentUser.id+'/profile'">{{curentUser.first_name}}</button>
   </nav>
 </div>

@@ -1,1 +1,127 @@
-<p>profile-settings works!</p>
+<div class="row mb-5">
+  <h2>Настройки пользователя</h2>
+</div>
+<div class="container-fluid">
+  <nav>
+    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+      <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Личные данные</a>
+      <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Приватность</a>
+
+    </div>
+  </nav>
+  <div class="tab-content" id="nav-tabContent">
+    <div *ngIf="openChangeBlock; else Change" class="tab-pane fade show active" id="nav-home1" role="tabpanel" aria-labelledby="nav-home-tab">
+
+            <div class="row" >
+              <div class="col-md-6">
+                <label>User Id</label>
+              </div>
+              <div class="col-md-6">
+                <p>{{curentUser?.id}} </p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <label>Name</label>
+              </div>
+              <div class="col-md-6">
+                <p>{{curentUser?.first_name}} {{curentUser?.last_name}} </p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <label>Email</label>
+              </div>
+              <div class="col-md-6">
+                <p>{{curentUser?.email}}</p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <label>Phone</label>
+              </div>
+              <div class="col-md-6">
+                <p>+380953666667</p>
+              </div>
+            </div>
+      <button (click)="openChangeBlock=false" class="btn btn-primary">Изменить данные</button>
+          </div>
+
+
+
+
+
+
+    <ng-template #Change>
+
+      <form [formGroup]="form" (ngSubmit)="submit()" class="form-register">
+        <div class="row align-content-end">
+          <button class="close" [routerLink]="['../']"><img class="btn-close" src="https://image.flaticon.com/icons/png/512/467/467128.png"></button>
+        </div>
+
+
+
+          <!-- /////////firstName//////// -->
+
+          <div class="form-group" [ngClass]="{invalid: form.get('firstName').touched && form.get('firstName').invalid}">
+
+            <label for="input-first-name">Имя</label>
+            <input type="text" class="form-control" formControlName="firstName" id="input-first-name" >
+            <div
+              *ngIf="form.get('firstName').touched && form.get('firstName').invalid"
+              class="validation"
+            >
+              <div class="alert alert-warning" role="alert"  *ngIf="form.get('firstName').errors.required">
+                Вы не ввели имя
+              </div>
+            </div>
+          </div>
+
+          <!-- /////////lastName//////// -->
+
+          <div class="form-group" [ngClass]="{invalid: form.get('lastName').touched && form.get('lastName').invalid}">
+
+            <label for="input-last-name">Фамилия</label>
+            <input type="test" class="form-control" formControlName="lastName" id="input-last-name">
+            <div
+              *ngIf="form.get('lastName').touched && form.get('lastName').invalid"
+              class="validation"
+            >
+              <div class="alert alert-warning" role="alert" *ngIf="form.get('lastName').errors.required">
+                Вы не ввели фамилию
+              </div>
+            </div>
+          </div>
+
+
+        <!-- /////////email//////// -->
+
+        <div class="form-group" [ngClass]="{invalid: form.get('email').touched && form.get('email').invalid}">
+          <label for="inputEmail">Email</label>
+          <input type="text" class="form-control" id="inputEmail" formControlName="email" placeholder="@">
+          <div
+            *ngIf="form.get('email').touched && form.get('email').invalid"
+            class="validation"
+          >
+            <div class="alert alert-warning" role="alert" *ngIf="form.get('email').errors.required">
+              Вы не ввели email
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary " [disabled]="form.invalid">Подтвердить изминения</button>
+      </form>
+
+    </ng-template>
+
+
+
+
+
+
+
+
+    <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">...</div>
+
+  </div>
+</div>

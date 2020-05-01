@@ -6,7 +6,8 @@ import {LayoutHomeComponent} from './components/layout-home/layout-home.componen
 
 const routes: Routes = [
   {
-    path: ':id', component: LayoutHomeComponent, children: [
+    path: '', component: LayoutHomeComponent, children: [
+      {path: '', redirectTo: 'profile', pathMatch: 'full'},
       {path: 'profile', loadChildren: () => import('../profile/profile.module').then(m => m.ProfileModule)},
       {path: 'groups', loadChildren: () => import('../groups/groups.module').then(m => m.GroupsModule)},
     ]

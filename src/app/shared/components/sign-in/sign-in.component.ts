@@ -38,7 +38,7 @@ export class SignInComponent implements OnInit {
     this.apiService.post('api/auth/login', user).subscribe((res: UserResponseModel) => {
       if(res.success){
         this.userService.setAuth(res.data);
-        this.router.navigate([`/user/${res.data.id}`]);
+        this.router.navigate([`/${res.data.id}`]);
       }
       this.form.reset();
     });
