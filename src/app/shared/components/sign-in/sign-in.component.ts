@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {UserResponseModel, User} from '../../../core/models';
-import {ApiService, UserService} from '../../../core/services';
+import {AlertService, ApiService, UserService} from '../../../core/services';
 import {Router} from '@angular/router';
 
 @Component({
@@ -15,7 +15,8 @@ export class SignInComponent implements OnInit {
   constructor(
     private apiService: ApiService,
     private router: Router,
-    private userService: UserService
+    private userService: UserService,
+    private Alert: AlertService
   ) {
   }
 

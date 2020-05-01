@@ -3,6 +3,7 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {UserResponseModel, User} from '../../../core/models';
 import {Router} from '@angular/router';
 import {ApiService, UserService} from '../../../core/services';
+import {AlertService} from '../../../core/services/alert.service';
 
 
 @Component({
@@ -17,7 +18,8 @@ export class RegisterComponent implements OnInit {
   constructor(
     private apiService: ApiService,
     private userService: UserService,
-    private router: Router
+    private router: Router,
+    private Alert: AlertService
   ) {
   }
 
@@ -45,12 +47,18 @@ export class RegisterComponent implements OnInit {
     this.apiService.post('api/auth/register', user).subscribe((res: UserResponseModel) => {
         if (res.success) {
           this.userService.setAuth(res.data);
+
           this.router.navigate([`/user/${res.data.id}`]);
+          this.Alert.success('Вы успешно зарегистрировались');
+
         }
 
-
-        this.form.reset();
       }
+
     );
+    this.form.reset({
+      firstName: this.form.value.firstName,
+      lastName: this.form.value.lastName
+    });
   }
 }

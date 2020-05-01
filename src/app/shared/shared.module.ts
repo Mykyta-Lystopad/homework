@@ -3,6 +3,7 @@ import {HttpClientModule} from '@angular/common/http';
 import {CommonModule} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ShowAuthedDirective} from './directives/show-authed.directive';
+import { AlertComponent } from './components/alert/alert.component';
 
 
 
@@ -15,6 +16,7 @@ import {ShowAuthedDirective} from './directives/show-authed.directive';
   ],
   declarations: [
     ShowAuthedDirective,
+    AlertComponent,
 
   ],
   exports: [
@@ -22,7 +24,8 @@ import {ShowAuthedDirective} from './directives/show-authed.directive';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    ShowAuthedDirective
+    ShowAuthedDirective,
+    AlertComponent
   ],
 
 })

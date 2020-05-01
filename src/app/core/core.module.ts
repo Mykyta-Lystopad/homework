@@ -4,11 +4,12 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HttpTokenInterceptor } from './interceptors/http.token.interceptor';
 
 import {
+  AlertService,
   ApiService,
   ArticlesService,
   AuthGuard,
   CommentsService,
-  JwtService,
+  JwtService, NamesService,
   ProfilesService,
   TagsService,
   UserService
@@ -29,6 +30,8 @@ import {
     ProfilesService,
     TagsService,
     UserService,
+    AlertService,
+    NamesService
 
   ],
   declarations: []

@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Subscription} from 'rxjs';
 import {User} from '../../../core/models';
-import {UserService} from '../../../core/services';
+import {NamesService, UserService} from '../../../core/services';
 import {Router} from '@angular/router';
 
 @Component({
@@ -16,7 +16,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   constructor(
     private userService: UserService,
-    private router: Router
+    private router: Router,
+    public nameServise: NamesService
   ) {
   }
 

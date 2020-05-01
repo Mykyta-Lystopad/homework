@@ -2,7 +2,7 @@ import {Injectable, Injector} from '@angular/core';
 import {HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HttpErrorResponse} from '@angular/common/http';
 import {Observable, throwError} from 'rxjs';
 
-import {JwtService, UserService} from '../services';
+import {AlertService, JwtService, UserService} from '../services';
 import {catchError} from 'rxjs/operators';
 import {Router} from '@angular/router';
 
@@ -11,7 +11,8 @@ export class HttpTokenInterceptor implements HttpInterceptor {
   constructor(
     private jwtService: JwtService,
     private userServise: UserService,
-    private router: Router
+    private router: Router,
+    private Alert: AlertService
   ) {
   }
 
@@ -30,9 +31,9 @@ export class HttpTokenInterceptor implements HttpInterceptor {
     return next.handle(req)
       .pipe(
         catchError((error: HttpErrorResponse) => {
-          console.log('[interseptor Error]:', error);
           if (400 <= error.status && error.status <= 526) {
-            this.userServise.logout();
+            /*this.userServise.logout();*/
+            this.Alert.danger(`${error.message}`);
           }
           return throwError(error);
         })
