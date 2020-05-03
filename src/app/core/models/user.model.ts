@@ -4,6 +4,8 @@ export interface User {
   last_name?: string;
   email: string;
   password?: string;
+  role_comment?: string;
+  role?: string;
   model_code?: string;
   qr_code_link?: string;
   api_token?: string;

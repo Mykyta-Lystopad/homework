@@ -28,7 +28,8 @@ export class RegisterComponent implements OnInit {
       firstName: new FormControl(null, [Validators.required, Validators.minLength(3), Validators.maxLength(50)]),
       lastName: new FormControl(null, [Validators.required, Validators.minLength(3), Validators.maxLength(50)]),
       email: new FormControl(null, [Validators.required, Validators.email, Validators.maxLength(50)]),
-      password: new FormControl(null, [Validators.required, Validators.minLength(6), Validators.maxLength(20)])
+      password: new FormControl(null, [Validators.required, Validators.minLength(6), Validators.maxLength(20)]),
+      role: new FormControl(null, Validators.required)
     });
 
   }
@@ -43,7 +44,11 @@ export class RegisterComponent implements OnInit {
       last_name: this.form.value.lastName,
       email: this.form.value.email,
       password: this.form.value.password,
+      role: this.form.value.role,
+      role_comment: 'student, parent, teacher, tutor'
+
     };
+
     this.apiService.post('api/auth/register', user).subscribe((res: UserResponseModel) => {
         if (res.success) {
           this.userService.setAuth(res.data);

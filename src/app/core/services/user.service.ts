@@ -88,14 +88,17 @@ export class UserService {
   }
 
   logout() {
-    this.apiService.post('api/auth/logout', '').subscribe(res => {
-      if (res) {
-        this.purgeAuth(); // стирание куки и стримов
-        this.router.navigate(['/']); // редирект на главную
-      }
-    });
+    if(this.isAuth()) {
+      this.apiService.post('api/auth/logout', '').subscribe(res => {
+        if (res) {
+          this.purgeAuth(); // стирание куки и стримов
+          this.router.navigate(['/']); // редирект на главную
+        }
 
-
+      });
+    }
+    this.purgeAuth(); // стирание куки и стримов
+    this.router.navigate(['/']); // редирект на главную
   }
 
   // Update the user on the server (email, pass, etc)

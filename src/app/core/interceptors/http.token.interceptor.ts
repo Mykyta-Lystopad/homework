@@ -32,7 +32,7 @@ export class HttpTokenInterceptor implements HttpInterceptor {
       .pipe(
         catchError((error: HttpErrorResponse) => {
           if (400 <= error.status && error.status <= 526) {
-            /*this.userServise.logout();*/
+            this.userServise.logout();
             this.Alert.danger(`${error.message}`);
           }
           return throwError(error);
