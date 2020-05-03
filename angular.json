@@ -127,6 +127,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "homework-app-master2"
+    }
+  },
+  "defaultProject": "homework-app-master2",
+  "cli": {
+    "analytics": "4256b9a4-fe0f-425a-a2b2-c102e73b70cf"
+  }
 }
