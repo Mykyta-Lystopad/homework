@@ -15,10 +15,6 @@ const routes: Routes = [
       {path: 'createGroup',  component: CreateGroupComponent},
     ]
   },
-  {path: 'subject', loadChildren: () => import('./pages-groups-routing/subject/subject.module').then(m => m.SubjectModule)},
-
-
-
 
 ];
 

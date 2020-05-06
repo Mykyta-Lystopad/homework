@@ -1,1 +1,60 @@
-<p>тут мои группы</p>
+<div class="row">
+
+  <div class="col-4 container container-for-groups">
+    <div class="row justify-content-between mt-3 ml-2 mr-2">
+      <div>
+        <p>MY GROUPS</p>
+      </div>
+    </div>
+
+    <div
+      *ngIf="group; else loading"
+    >
+      <div>
+        <ul class="list-group">
+          <li
+            *ngFor="let group of groups$|async"
+            (click)="getUsersGroup(group.id)"
+            class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+              <p>{{group.title}}</p>
+              <p>{{group.subject}}</p>
+            </div>
+            <span class="badge badge-primary badge-pill">14</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <ng-template #loading>
+      <p>Загрузка...</p>
+    </ng-template>
+  </div>
+
+  <div class="col-7 container-for-groups">
+    <div class="container">
+      <div class="row">
+        <ul class="nav nav-tabs">
+          <li
+            class="nav-item"
+            [ngClass]="{'active': activeTab}"
+            (click)="activeTab = false"
+          >
+            <a class="nav-link" data-toggle="tab">Assingments</a></li>
+          <li
+            class="nav-item"
+            [ngClass]="{'active': activeTab}"
+            (click)="activeTab = true"
+          >
+            <a class="nav-link" data-toggle="tab">Students</a></li>
+        </ul>
+      </div>
+
+
+    </div>
+    <div>
+      <app-assignments *ngIf="!activeTab"></app-assignments>
+      <app-students *ngIf="activeTab"></app-students>
+    </div>
+  </div>
+</div>
