@@ -16,3 +16,34 @@
     height: 100%;
   }
 }
+
+.group-title{
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  width: 100%;
+}
+
+
+.group-manager{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.pill{
+  margin: 7px 0 7px;
+}
+
+.btn-for-group{
+  cursor: pointer;
+  outline: none;
+}
+
+.info-group{
+  cursor: pointer;
+  font-weight: bold;
+}
+
+
+

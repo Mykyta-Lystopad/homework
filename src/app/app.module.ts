@@ -10,6 +10,7 @@ import {FooterComponent} from './shared/components/footer/footer.component';
 import {HeaderComponent} from './shared/components/header/header.component';
 import {SignInComponent} from './shared/components/sign-in/sign-in.component';
 import {RelationshipsService} from "./core/services/relationships.service";
+import {HomeModule} from "./home/home.module";
 
 
 
@@ -23,13 +24,14 @@ import {RelationshipsService} from "./core/services/relationships.service";
 
 
   ],
-  imports: [
-    CoreModule,
-    BrowserModule,
-    AppRoutingModule,
-    SharedModule,
-    NgbModule
-  ],
+    imports: [
+        CoreModule,
+        BrowserModule,
+        AppRoutingModule,
+        SharedModule,
+        NgbModule,
+        HomeModule
+    ],
   providers: [RelationshipsService],
   bootstrap: [AppComponent]
 })

@@ -6,15 +6,18 @@ import { UserComponent } from './components/user/user.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 
 @NgModule({
-  declarations: [
-    LayoutHomeComponent,
-    UserComponent,
-    SidebarComponent
-  ],
-  imports: [
-    SharedModule,
-    HomeRoutingModule
-  ]
+    declarations: [
+        LayoutHomeComponent,
+        UserComponent,
+        SidebarComponent
+    ],
+    exports: [
+        SidebarComponent
+    ],
+    imports: [
+        SharedModule,
+        HomeRoutingModule
+    ]
 })
 export class HomeModule {
 

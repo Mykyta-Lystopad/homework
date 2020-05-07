@@ -15,7 +15,9 @@ export class MyGroupsComponent implements OnInit {
   groups$: BehaviorSubject<Group[]> = new BehaviorSubject([]);
   group: Group[];
   activeTab = false;
-  title = 'some';
+  title = '';
+  idGroup: number;
+  showTitleBlock = false;
 
   constructor(
     private  apiService: ApiService,
@@ -33,17 +35,29 @@ export class MyGroupsComponent implements OnInit {
   }
 
   addGroup() {
+    // проверка на заполнение title
     this.apiService.post('api/groups', {
       title: this.title,
       subject_id: 1
     })
       .subscribe((res) => {
-        this.group.push(res.data);
+        this.title = '';
+        this.showTitleBlock = false;
+        this.group.unshift(res.data);
         this.groups$.next(this.group);
       });
   }
 
   getUsersGroup(id: number) {
+    this.idGroup = id;
     this.relationshipsService.setId(id);
+  }
+
+  deleteGroup(id: number) {
+    this.apiService.delete(`api/groups/${id.toString()}`)
+      .subscribe(() => {
+        this.group = this.group.filter(group => group.id !== id);
+        this.groups$.next(this.group);
+      });
   }
 }
