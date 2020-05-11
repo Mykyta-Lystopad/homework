@@ -4,6 +4,7 @@ import {UserResponseModel, User} from '../../../core/models';
 import {Router} from '@angular/router';
 import {ApiService, UserService} from '../../../core/services';
 import {AlertService} from '../../../core/services/alert.service';
+import {NgxUiLoaderService} from 'ngx-ui-loader';
 
 
 @Component({
@@ -19,7 +20,8 @@ export class RegisterComponent implements OnInit {
     private apiService: ApiService,
     private userService: UserService,
     private router: Router,
-    private Alert: AlertService
+    private Alert: AlertService,
+    private ngxService: NgxUiLoaderService
   ) {
   }
 
@@ -39,6 +41,7 @@ export class RegisterComponent implements OnInit {
     if (this.form.invalid) {
       return;
     }
+    this.ngxService.start(); // start foreground spinner of the master loader with 'default' taskId
     const user: User = {
       first_name: this.form.value.firstName,
       last_name: this.form.value.lastName,
@@ -52,14 +55,12 @@ export class RegisterComponent implements OnInit {
     this.apiService.post('api/auth/register', user).subscribe((res: UserResponseModel) => {
         if (res.success) {
           this.userService.setAuth(res.data);
-
-          this.router.navigate([`/${res.data.id}`]);
+          this.ngxService.stop();
+          this.router.navigate([`home`]);
           this.Alert.success('Вы успешно зарегистрировались');
-
         }
 
       }
-
     );
     this.form.reset({
       firstName: this.form.value.firstName,

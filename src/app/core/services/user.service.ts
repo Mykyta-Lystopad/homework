@@ -27,21 +27,25 @@ export class UserService {
 
   // Verify JWT in localstorage with server & load user's info.
   // This runs once on application startup.
-  populate() {
+   populate(): boolean {
 
     // If JWT detected, attempt to get & store user's info
     if (this.jwtService.token) {
-      this.apiService.get('api/profile')
-        .subscribe(
+      this.apiService.get('api/profile').subscribe(
           data => {
             this.setAuth(data.data, this.jwtService.token);
-            this.router.navigate([`/${data.data.id}`]);
+            this.router.navigate([`home`]);
+            return true;
           },
-          err => this.purgeAuth()
+          err => {
+            this.purgeAuth();
+            return false;
+          }
         );
     } else {
       // Remove any potential remnants of previous auth states
       this.purgeAuth();
+      return false;
     }
   }
 
@@ -88,7 +92,7 @@ export class UserService {
   }
 
   logout() {
-    if(this.isAuth()) {
+    if (this.isAuth()) {
       this.apiService.post('api/auth/logout', '').subscribe(res => {
         if (res) {
           this.purgeAuth(); // стирание куки и стримов

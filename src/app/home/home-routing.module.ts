@@ -7,9 +7,11 @@ import {LayoutHomeComponent} from './components/layout-home/layout-home.componen
 const routes: Routes = [
   {
     path: '', component: LayoutHomeComponent, children: [
-      {path: '', redirectTo: 'profile', pathMatch: 'full'},
+      {path: '', redirectTo: 'groups', pathMatch: 'full'},
       {path: 'profile', loadChildren: () => import('../profile/profile.module').then(m => m.ProfileModule)},
       {path: 'groups', loadChildren: () => import('../groups/groups.module').then(m => m.GroupsModule)},
+
+      {path: '**', redirectTo: '/'}
     ]
   },
 
@@ -24,3 +26,4 @@ export class HomeRoutingModule {
 
 
 }
+

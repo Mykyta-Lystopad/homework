@@ -23,7 +23,5 @@ export class AuthGuard implements CanActivate {
       this.userService.logout()
       return false;
     }
-
-
   }
 }

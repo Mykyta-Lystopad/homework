@@ -1,15 +1,18 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import {BrowserModule} from '@angular/platform-browser';
+import {NgModule} from '@angular/core';
 
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
+import {AppRoutingModule} from './app-routing.module';
+import {AppComponent} from './app.component';
 import {SharedModule} from './shared/shared.module';
 import {CoreModule} from './core';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import {AppLoaderModule} from './app-loader.module';
+import {NgxUiLoaderModule} from 'ngx-ui-loader';
+import {NgxPaginationModule} from 'ngx-pagination';
 import {FooterComponent} from './shared/components/footer/footer.component';
 import {HeaderComponent} from './shared/components/header/header.component';
 import {SignInComponent} from './shared/components/sign-in/sign-in.component';
-
+import {ResPasswordComponent} from './shared/components/res-password/res-password.component';
 
 
 
@@ -19,6 +22,7 @@ import {SignInComponent} from './shared/components/sign-in/sign-in.component';
     FooterComponent,
     HeaderComponent,
     SignInComponent,
+    ResPasswordComponent
 
 
   ],
@@ -27,9 +31,12 @@ import {SignInComponent} from './shared/components/sign-in/sign-in.component';
     BrowserModule,
     AppRoutingModule,
     SharedModule,
-    NgbModule
+    NgbModule,
+    AppLoaderModule,
+    NgxUiLoaderModule,
+    NgxPaginationModule
   ],
-  providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}

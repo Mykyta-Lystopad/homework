@@ -1,5 +1,5 @@
 
-
+<ngx-ui-loader></ngx-ui-loader>
   <form [formGroup]="form" (ngSubmit)="submit()" class="form-register">
     <div class="row justify-content-between">
     <h2>Регистрация</h2>
@@ -69,13 +69,25 @@
         </div>
       </div>
     </div>
-    <div class="col-auto my-1">
+
+    <div
+      class="form-group col-auto my-1"
+      [ngClass]="{invalid: form.get('role').touched && form.get('role').invalid}"
+    >
       <label class="mr-sm-2" for="inlineFormCustomSelect">Тип пользователя</label>
       <select class="custom-select mr-sm-2" id="inlineFormCustomSelect" formControlName="role">
         <option value="teacher" >Учитель</option>
         <option value="student">Ученик</option>
         <option value="parent">Родитель</option>
       </select>
+      <div
+        *ngIf="form.get('role').touched && form.get('role').invalid"
+        class="validation"
+      >
+        <div class="alert alert-warning" role="alert" *ngIf="form.get('role').errors.required">
+          Вы не указали тип
+        </div>
+      </div>
     </div>
 
 
