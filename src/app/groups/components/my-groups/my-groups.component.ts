@@ -14,7 +14,6 @@ export class MyGroupsComponent implements OnInit {
 
   groups$: BehaviorSubject<Group[]> = new BehaviorSubject([]);
   group: Group[];
-  activeTab = false;
   title = '';
   idGroup: number;
   showTitleBlock = false;
@@ -31,12 +30,14 @@ export class MyGroupsComponent implements OnInit {
       })).subscribe(response => {
       this.groups$.next(response);
       this.group = response;
-      this.router.navigate(['groups',this.group[0].id]);
+      if (this.group) {
+        this.idGroup = this.group[0].id
+        this.router.navigate(['groups', this.idGroup]);
+      }
     });
   }
 
   addGroup() {
-    // проверка на заполнение title
     this.apiService.post('api/groups', {
       title: this.title,
       subject_id: 1
@@ -55,5 +56,10 @@ export class MyGroupsComponent implements OnInit {
         this.group = this.group.filter(group => group.id !== id);
         this.groups$.next(this.group);
       });
+  }
+
+  showUsers(id: number) {
+    this.idGroup = id;
+    this.router.navigate(['groups', this.idGroup]);
   }
 }

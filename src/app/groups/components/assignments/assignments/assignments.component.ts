@@ -37,6 +37,7 @@ export class AssignmentsComponent implements OnInit {
     })
     this.apiServive.get(`api/assignments?page=1&group_id=${this.group_id}`)
       .subscribe(res => {
+        console.log(res)
       this.assignments = res['data']['collection'];
     })
   }
