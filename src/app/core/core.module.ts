@@ -1,7 +1,7 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { HttpTokenInterceptor } from './interceptors/http.token.interceptor';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {HTTP_INTERCEPTORS} from '@angular/common/http';
+import {HttpTokenInterceptor} from './interceptors/http.token.interceptor';
 
 import {
   AlertService,
@@ -9,11 +9,11 @@ import {
   ArticlesService,
   AuthGuard,
   CommentsService,
-  JwtService, NamesService,
+  JwtService,
+  NamesService,
   ProfilesService,
   TagsService,
   UserService,
-
 } from './services';
 
 
@@ -22,7 +22,7 @@ import {
     CommonModule
   ],
   providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: HttpTokenInterceptor, multi: true },
+    {provide: HTTP_INTERCEPTORS, useClass: HttpTokenInterceptor, multi: true},
     ApiService,
     ArticlesService,
     AuthGuard,
@@ -36,4 +36,5 @@ import {
   ],
   declarations: []
 })
-export class CoreModule { }
+export class CoreModule {
+}

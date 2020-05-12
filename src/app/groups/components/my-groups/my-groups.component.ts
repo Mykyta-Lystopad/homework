@@ -3,7 +3,7 @@ import {BehaviorSubject} from 'rxjs';
 import {Group} from '../../../core/models/group.model';
 import {ApiService} from '../../../core/services';
 import {map} from 'rxjs/operators';
-import {RelationshipsService} from '../../../core/services/relationships.service';
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-my-groups',
@@ -21,7 +21,7 @@ export class MyGroupsComponent implements OnInit {
 
   constructor(
     private  apiService: ApiService,
-    private relationshipsService: RelationshipsService) {
+    private router: Router) {
   }
 
   ngOnInit(): void {
@@ -31,6 +31,7 @@ export class MyGroupsComponent implements OnInit {
       })).subscribe(response => {
       this.groups$.next(response);
       this.group = response;
+      this.router.navigate(['groups',this.group[0].id]);
     });
   }
 
@@ -46,11 +47,6 @@ export class MyGroupsComponent implements OnInit {
         this.group.unshift(res.data);
         this.groups$.next(this.group);
       });
-  }
-
-  getUsersGroup(id: number) {
-    this.idGroup = id;
-    this.relationshipsService.setId(id);
   }
 
   deleteGroup(id: number) {

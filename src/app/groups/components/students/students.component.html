@@ -4,7 +4,9 @@
       *ngIf="users; else loading"
     >
       <div *ngFor="let user of users" class="list-group">
-        <a href="#" class="list-group-item list-group-item-action">
+        <a
+          [routerLink]="['/groups',idGroup,'student',user.id]"
+          class="list-group-item list-group-item-action">
           <div class="d-flex w-100 justify-content-between">
             <h5 class="mb-1">{{user.first_name}} {{user.last_name}}</h5>
             <small>{{user.role}}</small>
@@ -13,6 +15,7 @@
         </a>
       </div>
     </div>
+
 
     <ng-template #loading>
       <div class="alert alert-primary" role="alert">

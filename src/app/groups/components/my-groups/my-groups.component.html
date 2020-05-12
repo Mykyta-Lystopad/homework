@@ -21,7 +21,7 @@
             *ngFor="let group of groups$|async; let idx=index"
             class="list-group-item d-flex justify-content-between align-items-center"
             [ngClass]="{'active': group.id === idGroup}">
-            <div (click)="getUsersGroup(group.id)" class="info-group">
+            <div  class="info-group">
               <p>{{group.title}}</p>
               <p>{{group.subject}}</p>
             </div>
@@ -62,8 +62,7 @@
 
     </div>
     <div>
-      <app-assignments *ngIf="!activeTab"></app-assignments>
-      <app-students *ngIf="activeTab"></app-students>
+      <router-outlet></router-outlet>
     </div>
   </div>
 </div>
