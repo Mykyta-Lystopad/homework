@@ -1,0 +1,21 @@
+<div class="card">
+    <h5 class="mb-0">{{ problem.title }}</h5>
+</div>       
+<div class="row d-flex flex-row flex-wrap align-items-center" >
+    <div class="col-1">
+        <input type="checkbox" (click)="onSolve()">
+    </div>
+    <div class="col-11">
+        <div class="card-body">
+            {{ problem.description }}
+        </div>
+    </div>    
+</div>
+
+<div *ngIf = 'user.role == "teacher"; else solution' class="d-flex flex-row flex-wrap align-items-center justify-content-end">        
+    <button class="btn btn-primary" >To classes</button>   
+</div>
+
+<ng-template #solution >
+        <app-solution [solution] = 'problem.solutions'></app-solution>
+</ng-template>

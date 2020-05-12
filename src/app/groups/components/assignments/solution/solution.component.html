@@ -1,0 +1,9 @@
+<div class="d-flex justify-content-between">
+
+   <div class="col-10">
+         <app-attachment *ngFor="let attach of solution[0].attachments" [attachment]='attach'></app-attachment>
+    </div>
+    <div class="col-2">
+       Mark: {{solution[0].teacher_mark}}
+    </div>
+</div> 

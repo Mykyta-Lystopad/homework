@@ -1,0 +1,27 @@
+<div class="container">
+  <div class="wrap">
+    <h2>{{ assign.title }}</h2>
+    <h4>{{ assign.description }}</h4>
+    <ul class="list-group d-flex flex-row">
+      <li class="list-group-item">Date of create</li>
+      <li class="list-group-item">Due date</li>
+    </ul>
+    <hr>
+    <div class="shadow p-3 mb-5 bg-light rounded">
+      <app-problem *ngFor="let prob of assign.problems" [problem]='prob' [user]='user' ></app-problem>
+    </div>
+
+    <app-attachment *ngFor="let attach of assign.attachments" [attachment] = 'attach'></app-attachment>
+
+
+    <div class="input-group" *ngIf="(user.role != 'teacher')">
+      <input type="text" class="form-control"placeholder="message..." aria-label="message">
+      <div class="input-group-append">
+        <button class="btn btn-success" type="button">Send</button>
+      </div>
+    </div>
+
+
+    <app-message *ngFor="let mess of assign.messages" [message]='mess'></app-message>
+  </div>
+</div>
