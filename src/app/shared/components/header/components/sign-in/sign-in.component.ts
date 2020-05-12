@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {UserResponseModel, User} from '../../../core/models';
-import {AlertService, ApiService, UserService} from '../../../core/services';
+import {UserResponseModel, User} from '../../../../../core/models';
+import {AlertService, ApiService, UserService} from '../../../../../core/services';
 import {Router} from '@angular/router';
 import {NgxUiLoaderService} from 'ngx-ui-loader';
 
@@ -38,17 +38,17 @@ export class SignInComponent implements OnInit {
       email: this.form.value.email,
       password: this.form.value.password,
     };
+
     this.apiService.post('api/auth/login', user).subscribe((res: UserResponseModel) => {
+
       if (res.success) {
         this.userService.setAuth(res.data);
-        this.router.navigate([`home`]);
-
-
+        this.router.navigate([`groups`]);
+        this.ngxService.stop();
       }
-      this.ngxService.stop();
-      this.form.reset();
-
-    });
+    }
+    );
+    this.ngxService.stop();
   }
 
 

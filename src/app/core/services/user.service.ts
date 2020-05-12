@@ -34,7 +34,7 @@ export class UserService {
       this.apiService.get('api/profile').subscribe(
           data => {
             this.setAuth(data.data, this.jwtService.token);
-            this.router.navigate([`home`]);
+            this.router.navigate([`groups`]);
             return true;
           },
           err => {

@@ -3,13 +3,14 @@ import {RouterModule, Routes} from '@angular/router';
 import {LayoutGroupComponent} from './components/layout-group/layout-group.component';
 import {CreateGroupComponent} from './components/create-group/create-group.component';
 import {MyGroupsComponent} from './components/my-groups/my-groups.component';
+import {AuthGuard} from '../core/services';
 
 
 
 
 const routes: Routes = [
   {
-    path: '', component: LayoutGroupComponent, children: [
+    path: '', component: LayoutGroupComponent, canActivate: [AuthGuard], children: [
       {path: '', redirectTo: 'myGroups', pathMatch: 'full'},
       {path: 'myGroups',  component: MyGroupsComponent},
       {path: 'createGroup',  component: CreateGroupComponent},

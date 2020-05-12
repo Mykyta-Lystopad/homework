@@ -1,13 +1,13 @@
-<div id="header" class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4  bg-white border-bottom shadow-sm">
-  <h5 class="my-0 mr-md-auto font-weight-normal">{{nameServise.headerName}}</h5>
+<div id="header" class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4   shadow-sm">
+  <h5 class="my-0 mr-md-auto ">{{nameServise.headerName}}</h5>
 
   <app-alert></app-alert>
 
   <nav class="my-2 my-md-0 mr-md-3"  *appShowAuthed="false">
     <app-sign-in></app-sign-in>
-
   </nav>
-  <nav class="my-2 my-md-0 mr-md-3" ngxUiLoaderBlurred *appShowAuthed="true">
-    <button class="btn btn-outline-dark" [routerLink]="'/'+curentUser.id+'/profile'">{{curentUser.first_name}}</button>
+
+  <nav class="my-2 my-md-0 mr-md-3" *appShowAuthed="true">
+    <app-dropdown-menu></app-dropdown-menu>
   </nav>
 </div>

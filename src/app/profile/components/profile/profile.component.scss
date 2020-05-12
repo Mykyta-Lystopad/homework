@@ -1,8 +1,7 @@
-
-.profile-block{
-
+.container-profile{
+  height: 100%;
+  margin: 0 5px;
 }
-
 .emp-profile{
   padding: 3%;
   margin-top: 3%;
@@ -11,11 +10,16 @@
   background: #fff;
 }
 .profile-img{
+  margin: 0 auto;
+  background: white;
+  box-shadow: 1px 1px 3px gray;
+  max-width: 200px;
+  padding: 10px ;
   text-align: center;
 }
 .profile-img img{
-  width: 70%;
-  height: 100%;
+  width: 100%;
+  height: auto;
 }
 .profile-img .file {
   position: relative;
@@ -98,9 +102,21 @@
 
 
 ////////////////////////////////////////////
-.btn-settings{
+.img-settings{
     display: inline-block;
     width: 30px;
     height: 30px;
     margin: 0;
+}
+.btn-settings{
+  background: none;
+  border: none;
+  position: absolute;
+  top: 5px;
+  right: 0;
+}
+.bg-profile{
+  padding: 0;
+  padding: 10px;
+  box-shadow: 1px 1px 3px gray;
 }
