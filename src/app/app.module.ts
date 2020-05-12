@@ -11,7 +11,7 @@ import {HeaderComponent} from './shared/components/header/header.component';
 import {SignInComponent} from './shared/components/header/components/sign-in/sign-in.component';
 import {ResPasswordComponent} from './shared/components/res-password/res-password.component';
 import {DropdownMenuComponent} from './shared/components/header/components/dropdown-menu/dropdown-menu.component';
-import {CoreModule} from './core';
+
 
 
 
@@ -21,14 +21,15 @@ import {CoreModule} from './core';
     FooterComponent,
     HeaderComponent,
     SignInComponent,
-
-
+    ResPasswordComponent,
+    DropdownMenuComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     SharedModule,
     CoreModule,
+    NgbModule
   ],
   bootstrap: [AppComponent]
 })
