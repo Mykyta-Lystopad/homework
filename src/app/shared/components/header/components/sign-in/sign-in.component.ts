@@ -1,8 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {UserResponseModel, User} from '../../../core/models';
-import {AlertService, ApiService, UserService} from '../../../core/services';
+import {UserResponseModel, User} from '../../../../../core/models';
+import {AlertService, ApiService, UserService} from '../../../../../core/services';
 import {Router} from '@angular/router';
+import {NgxUiLoaderService} from 'ngx-ui-loader';
 
 @Component({
   selector: 'app-sign-in',
@@ -16,7 +17,8 @@ export class SignInComponent implements OnInit {
     private apiService: ApiService,
     private router: Router,
     private userService: UserService,
-    private Alert: AlertService
+    private Alert: AlertService,
+    private ngxService: NgxUiLoaderService
   ) {
   }
 
@@ -31,20 +33,27 @@ export class SignInComponent implements OnInit {
     if (this.form.invalid) {
       return;
     }
+    this.ngxService.start();
     const user: User = {
       email: this.form.value.email,
       password: this.form.value.password,
     };
+
     this.apiService.post('api/auth/login', user).subscribe((res: UserResponseModel) => {
-      if(res.success){
+
+      if (res.success) {
         this.userService.setAuth(res.data);
-        this.router.navigate([`/${res.data.id}`]);
+        this.router.navigate([`groups`]);
+        this.ngxService.stop();
       }
-      this.form.reset();
-    });
+    }
+    );
+    this.ngxService.stop();
   }
+
 
   redirectRegister() {
     this.router.navigate(['/register']);
   }
 }
+

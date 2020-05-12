@@ -1,17 +1,17 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import {BrowserModule} from '@angular/platform-browser';
+import {NgModule} from '@angular/core';
 
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
+import {AppRoutingModule} from './app-routing.module';
+import {AppComponent} from './app.component';
 import {SharedModule} from './shared/shared.module';
 import {CoreModule} from './core';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import {FooterComponent} from './shared/components/footer/footer.component';
 import {HeaderComponent} from './shared/components/header/header.component';
-import {SignInComponent} from './shared/components/sign-in/sign-in.component';
-import {RelationshipsService} from "./core/services/relationships.service";
-import {HomeModule} from "./home/home.module";
-
+import {SignInComponent} from './shared/components/header/components/sign-in/sign-in.component';
+import {ResPasswordComponent} from './shared/components/res-password/res-password.component';
+import {DropdownMenuComponent} from './shared/components/header/components/dropdown-menu/dropdown-menu.component';
+import {CoreModule} from './core';
 
 
 
@@ -24,15 +24,13 @@ import {HomeModule} from "./home/home.module";
 
 
   ],
-    imports: [
-        CoreModule,
-        BrowserModule,
-        AppRoutingModule,
-        SharedModule,
-        NgbModule,
-        HomeModule
-    ],
-  providers: [RelationshipsService],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    SharedModule,
+    CoreModule,
+  ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}

@@ -15,27 +15,26 @@ body{
   height:100%;
   display:flex;
   flex-direction: column;
+  background: radial-gradient(at top, #FEFFFF, #dde3e3);
 }
 
-app-root,
-app-layout-index,
-app-index,
-app-layout-home,
-app-profile{
-  flex: 1 0 auto;
-  display: flex;
-  flex-direction: column;
-}
+  app-root,
+  app-layout-index,
+  app-index,
+  app-profile,
+  app-layout-profile,
+  app-profile-settings,
+  app-layout-group,
+  app-my-groups{
+    flex: 1 0 auto;
+    display: flex;
+    flex-direction: column;
+  }
 
-app-index{
-  width: 100%;
-  flex-direction: row;
-
-}
-app-layout-home{
-  flex-direction: row;
-}
-
+  app-index{
+    width: 100%;
+    flex-direction: row;
+  }
 
 
 
