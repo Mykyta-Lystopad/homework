@@ -57,21 +57,14 @@
   <div class="col-7 container-for-groups">
     <div class="container">
       <div class="row" *ngIf="role === 'teacher'">
-        <nav>
-          <div class="nav nav-tabs" id="nav-tab" role="tablist">
-            <a class="nav-item nav-link"
-               [routerLink]="[idGroup ,'allAssignments',idGroup]"
-               [ngClass]="{'active': activeTab}"
-               (click)="activeTab=!activeTab"
-               data-toggle="tab"
-               role="tab"
-               aria-selected="true">All assignments</a>
-            <a class="nav-item nav-link"
-               data-toggle="tab" role="tab"
-               (click)="location.back();activeTab=!activeTab"
-               [ngClass]="{'active': !activeTab}"
-               aria-selected="false">Students</a>
-          </div>
+        <nav class="nav nav-pills flex-column flex-sm-row mt-2 mb-2">
+          <a class="flex-sm-fill text-sm-center nav-link"
+             [routerLink]="[idGroup ,'allAssignments',idGroup]"
+             [ngClass]="{'active': activeTab}"
+             (click)="activeTab=true">All assignments</a>
+          <a class="flex-sm-fill text-sm-center nav-link users-style"
+             (click)="location.back();activeTab=false"
+             [ngClass]="{'active': !activeTab}">Students</a>
         </nav>
       </div>
     </div>
