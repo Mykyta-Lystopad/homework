@@ -14,8 +14,9 @@ import {
   ProfilesService,
   TagsService,
   UserService,
+  RoleService
 } from './services';
-import {RoleService} from "./services/role.service";
+
 
 
 @NgModule({

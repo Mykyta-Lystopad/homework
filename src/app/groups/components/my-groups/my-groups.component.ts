@@ -2,10 +2,9 @@ import {Component, OnInit} from '@angular/core';
 import {Location} from '@angular/common';
 import {BehaviorSubject} from 'rxjs';
 import {Group} from '../../../core/models/group.model';
-import {ApiService, UserService} from '../../../core/services';
-import {map} from 'rxjs/operators';
+import {ApiService, RoleService, UserService} from '../../../core/services';
 import {Router} from "@angular/router";
-import {RoleService} from "../../../core/services/role.service";
+
 import {environment} from "../../../../environments/environment";
 
 @Component({

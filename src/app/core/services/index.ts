@@ -8,4 +8,5 @@ export * from './tags.service';
 export * from './user.service';
 export * from './alert.service';
 export * from './names.service';
+export * from './role.service'
 
