@@ -17,6 +17,9 @@ export class UserService {
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
   public isAuthenticated = this.isAuthenticatedSubject.asObservable().pipe(distinctUntilChanged());
 
+  storage: any = window.localStorage;
+  readonly KEY: string = 'user-role';
+
   constructor(
     private apiService: ApiService,
     private http: HttpClient,
@@ -56,6 +59,8 @@ export class UserService {
     } else {
       this.jwtService.setToken(user.api_token);
     }
+   // Set role
+    this.storage.setItem(this.KEY, user.role);
     // Set current user data into observable
     this.currentUserSubject.next(user);
     // Set isAuthenticated to true

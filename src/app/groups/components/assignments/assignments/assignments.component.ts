@@ -22,7 +22,7 @@ export class AssignmentsComponent implements OnInit {
   constructor(
     private assignSvc: AssignmentService,
     private activeRoute: ActivatedRoute,
-    private apiServive: ApiService
+    private apiServive: ApiService,
   ) {
   }
 
@@ -37,7 +37,6 @@ export class AssignmentsComponent implements OnInit {
     })
     this.apiServive.get(`api/assignments?page=1&group_id=${this.group_id}`)
       .subscribe(res => {
-        console.log(res)
       this.assignments = res['data']['collection'];
     })
   }
@@ -49,4 +48,6 @@ export class AssignmentsComponent implements OnInit {
     this.currentAssignment.title = '';
     this.currentAssignment.description = '';
   }
+
+
 }

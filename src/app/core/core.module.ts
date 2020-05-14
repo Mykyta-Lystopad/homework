@@ -15,6 +15,7 @@ import {
   TagsService,
   UserService,
 } from './services';
+import {RoleService} from "./services/role.service";
 
 
 @NgModule({
@@ -33,6 +34,7 @@ import {
     UserService,
     AlertService,
     NamesService,
+
   ],
   declarations: []
 })

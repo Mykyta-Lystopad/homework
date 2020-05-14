@@ -6,7 +6,8 @@ import {Environment} from './interface';
 
 export const environment: Environment = {
   api_url: 'https://homework.grassbusinesslabs.ml/',
-  production: false
+  production: false,
+  KEY_ROLE: 'user-role'
 };
 
 /*

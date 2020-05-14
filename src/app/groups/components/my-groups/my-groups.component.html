@@ -6,8 +6,9 @@
         <button
           type="button"
           class="btn btn-primary"
-          (click)="showTitleBlock = !showTitleBlock">+</button>
-    </div>
+          (click)="showTitleBlock = !showTitleBlock">+
+        </button>
+      </div>
     </div>
     <div *ngIf="showTitleBlock" class="input-group mb-3">
       <div class="input-group-prepend">
@@ -25,7 +26,7 @@
             *ngFor="let group of groups$|async; let idx=index"
             class="list-group-item d-flex justify-content-between align-items-center"
             [ngClass]="{'active': group.id === idGroup}">
-            <div  class="info-group" (click)="showUsers(group.id)">
+            <div class="info-group" (click)="showUsers(group.id)">
               <p>{{group.title}}</p>
               <p>{{group.subject}}</p>
             </div>
@@ -33,9 +34,17 @@
               <span class="btn-for-group" (click)="deleteGroup(group.id)"><img src="../../../../assets/img/trashcan.svg"
                                                                                alt=""></span>
               <span class="badge badge-success badge-pill pill">14</span>
-              <span class="btn-for-group"><img src="../../../../assets/img/pencil.svg" alt=""></span>
+              <span class="btn-for-group" (click)="idGroup=group.id;showEditBlock=true">
+                <img src="../../../../assets/img/pencil.svg">
+              </span>
             </div>
           </li>
+          <div *ngIf="showEditBlock" class="input-group mb-3">
+            <div class="input-group-prepend">
+              <button class="btn btn-outline-secondary" (click)="addGroup()" type="button">Add</button>
+            </div>
+            <input type="text" class="form-control" placeholder="Title" [(ngModel)]="title">
+          </div>
         </ul>
       </div>
     </div>
@@ -47,10 +56,24 @@
 
   <div class="col-7 container-for-groups">
     <div class="container">
-      <div class="row">
-        <h4>Students</h4>
+      <div class="row" *ngIf="role === 'teacher'">
+        <nav>
+          <div class="nav nav-tabs" id="nav-tab" role="tablist">
+            <a class="nav-item nav-link"
+               [routerLink]="[idGroup ,'allAssignments',idGroup]"
+               [ngClass]="{'active': activeTab}"
+               (click)="activeTab=!activeTab"
+               data-toggle="tab"
+               role="tab"
+               aria-selected="true">All assignments</a>
+            <a class="nav-item nav-link"
+               data-toggle="tab" role="tab"
+               (click)="location.back();activeTab=!activeTab"
+               [ngClass]="{'active': !activeTab}"
+               aria-selected="false">Students</a>
+          </div>
+        </nav>
       </div>
-
     </div>
     <div>
       <router-outlet></router-outlet>
