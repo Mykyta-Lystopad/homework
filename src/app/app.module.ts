@@ -31,7 +31,7 @@ import {DropdownMenuComponent} from './shared/components/header/components/dropd
     CoreModule,
     NgbModule
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent, ]
 })
 export class AppModule {
 }

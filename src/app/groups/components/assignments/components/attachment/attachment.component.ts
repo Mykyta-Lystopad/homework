@@ -1,4 +1,4 @@
-import { Attachment } from '../../../../core/models/attachment.model';
+import { Attachment } from '../../../../../core/models/attachment.model';
 import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
@@ -11,8 +11,7 @@ export class AttachmentComponent implements OnInit {
   @Input () attachment: Attachment;
   constructor() {}
 
-  ngOnInit(): void {
-
+  ngOnInit() {
   }
 
 }

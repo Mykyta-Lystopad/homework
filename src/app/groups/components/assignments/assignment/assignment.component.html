@@ -11,8 +11,7 @@
       <app-problem *ngFor="let prob of assign.problems" [problem]='prob' [user]='user' ></app-problem>
     </div>
 
-    <app-attachment *ngFor="let attach of assign.attachments" [attachment] = 'attach'></app-attachment>
-
+    <app-attachments [attachments] = 'assign.attachments'></app-attachments>
 
     <div class="input-group" *ngIf="(user.role != 'teacher')">
       <input type="text" class="form-control"placeholder="message..." aria-label="message">
