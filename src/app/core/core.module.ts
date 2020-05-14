@@ -34,7 +34,7 @@ import {RoleService} from "./services/role.service";
     UserService,
     AlertService,
     NamesService,
-
+    RoleService
   ],
   declarations: []
 })
