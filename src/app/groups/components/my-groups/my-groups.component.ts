@@ -1,5 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {Location} from '@angular/common';
 import {BehaviorSubject} from 'rxjs';
 import {Group} from '../../../core/models/group.model';
 import {ApiService, RoleService, UserService} from '../../../core/services';
