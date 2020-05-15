@@ -3,7 +3,11 @@ import {HttpClientModule} from '@angular/common/http';
 import {CommonModule} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ShowAuthedDirective} from './directives/show-authed.directive';
-import { AlertComponent } from './components/alert/alert.component';
+import {AppLoaderModule} from '../app-loader.module';
+import {NgxUiLoaderModule} from 'ngx-ui-loader';
+import {NgxPaginationModule} from 'ngx-pagination';
+import { AlertComponent } from './components/header/components/alert/alert.component';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 
 
@@ -13,10 +17,15 @@ import { AlertComponent } from './components/alert/alert.component';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
+    AppLoaderModule,
+    NgxUiLoaderModule,
+    NgxPaginationModule,
+    NgbModule,
   ],
   declarations: [
     ShowAuthedDirective,
     AlertComponent,
+
 
   ],
   exports: [
@@ -25,7 +34,11 @@ import { AlertComponent } from './components/alert/alert.component';
     FormsModule,
     ReactiveFormsModule,
     ShowAuthedDirective,
-    AlertComponent
+    AlertComponent,
+    AppLoaderModule,
+    NgxUiLoaderModule,
+    NgxPaginationModule,
+    NgbModule,
   ],
 
 })

@@ -1,0 +1,69 @@
+
+
+<div class="container">
+  <div class="wrap">
+    <div *ngIf="!showEditAssignment; else editAssign">
+      <h2>{{ assign.title }}</h2> 
+      <h4>{{ assign.description }}</h4>
+    </div>  
+    <ng-template #editAssign>
+    <div class="card-text d-flex flex-column">       
+
+      Title <input type="text" [(ngModel)]="currentAssign.title">
+      Description <input type="text" [(ngModel)]="currentAssign.description">
+
+    </div> 
+    <button class="btn btn-success" (click)="assignmentEdit()">Save</button>
+    <button class="btn btn-warning" (click)="showEditAssignment = false">Cancel</button>
+    </ng-template>
+    
+    <div *ngIf="!showEditAssignment">
+      <div *ngIf="user.role == 'teacher'" class="d-flex justify-content-between">
+        <span class="badge badge-warning" (click)="showEditAssign()">Edit assignment</span>
+        <span class="badge badge-danger" (click)="assignDelete()">Delete assignment</span>
+        
+      </div>
+    </div>
+    <ul class="list-group d-flex flex-row">
+      <li class="list-group-item">Date of create</li>
+      <li class="list-group-item">Due date</li>
+    </ul>
+    
+    <hr>
+    <div class="shadow p-3 mb-5 bg-light rounded">
+      <app-problem *ngFor="let prob of assign.problems" [problem]='prob' [user]='user' (emitDel)='probDel($event)' (emitEdit)='probEdit($event)'></app-problem>
+    </div>
+<!---------------------------------- Add Problem --------------------------------->
+  <div class="d-block"> 
+    <button class="btn btn-success" (click)="showCreateProblem = true" *ngIf="!showCreateProblem">Create problem</button>
+    <div class="card" *ngIf="showCreateProblem">
+      <div class="card-body">
+        <h4 class="card-title">Create problem</h4>
+        <div class="card-text d-flex flex-column">
+          Title <input type="text" [(ngModel)]="currentProblem.title">
+          Description <input type="text" [(ngModel)]="currentProblem.description">
+        </div>
+        <button class="btn btn-success" (click)="createProblem()">Create</button>
+        <button class="btn btn-warning" (click)="showCreateProblem = false">Cancel</button>
+      </div>
+    </div>
+  </div>   
+<!--end----------------------------- Add Problem --------------------------------->
+
+    <app-attachment *ngFor="let attach of assign.attachments" [attachment] = 'attach'></app-attachment>
+
+
+<!----------------------------- messages block -------------------------------------------->
+    <div class="input-group" *ngIf="(user.role != 'teacher')">
+      <input type="text" class="form-control"placeholder="message..." aria-label="message">
+      <div class="input-group-append">
+        <button class="btn btn-success" type="button">Send</button>
+      </div>
+    </div>
+
+
+    <app-message *ngFor="let mess of assign.messages" [message]='mess'></app-message>
+  </div>
+</div>
+
+

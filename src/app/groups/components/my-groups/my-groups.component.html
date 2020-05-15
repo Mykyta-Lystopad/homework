@@ -1,1 +1,59 @@
-<p>тут мои группы</p>
+<div class="row">
+  <div class="col-4 container container-for-groups">
+    <div class="row m-2">
+      <div class="group-title">
+        <p>MY GROUPS</p>
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="showTitleBlock = !showTitleBlock">+</button>
+    </div>
+    </div>
+    <div *ngIf="showTitleBlock" class="input-group mb-3">
+      <div class="input-group-prepend">
+        <button class="btn btn-outline-secondary" (click)="addGroup()" type="button">Add</button>
+      </div>
+      <input type="text" class="form-control" placeholder="Title" [(ngModel)]="title">
+    </div>
+
+    <div
+      *ngIf="group; else loading"
+    >
+      <div>
+        <ul class="list-group">
+          <li
+            *ngFor="let group of groups$|async; let idx=index"
+            class="list-group-item d-flex justify-content-between align-items-center"
+            [ngClass]="{'active': group.id === idGroup}">
+            <div  class="info-group" (click)="showUsers(group.id)">
+              <p>{{group.title}}</p>
+              <p>{{group.subject}}</p>
+            </div>
+            <div class="group-manager">
+              <span class="btn-for-group" (click)="deleteGroup(group.id)"><img src="../../../../assets/img/trashcan.svg"
+                                                                               alt=""></span>
+              <span class="badge badge-success badge-pill pill">14</span>
+              <span class="btn-for-group"><img src="../../../../assets/img/pencil.svg" alt=""></span>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <ng-template #loading>
+      <p>Загрузка...</p>
+    </ng-template>
+  </div>
+
+  <div class="col-7 container-for-groups">
+    <div class="container">
+      <div class="row">
+        <h4>Students</h4>
+      </div>
+
+    </div>
+    <div>
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

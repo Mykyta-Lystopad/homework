@@ -1,18 +1,14 @@
 
-
-<div  class="profile-block" ngxUiLoaderBlurred>
-  <div class="row">
-    <div class="col-md-4">
+  <div class="row container-profile bg-profile">
+    <div class="col-md-3">
       <div class="profile-img">
         <img src="https://media.pn.am/media/issue/197/297/photo/197297.jpg" alt="">
-        <div class="file btn  btn-primary">
-          Change Photo
-          <input type="file" name="file">
-        </div>
+
       </div>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-9 ">
       <div class="profile-head">
+        <button class="btn-settings" [routerLink]="'settings'"><img class="img-settings" src="https://image.flaticon.com/icons/svg/126/126472.svg"></button>
         <h5>
           {{curentUser.first_name}} {{curentUser.last_name}}
         </h5>
@@ -28,17 +24,8 @@
             <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Timeline</a>
           </li>
         </ul>
-      </div>
-    </div>
-    <div class="col-md-2">
-      <button class="close" [routerLink]="'settings'"><img class="btn-settings" src="https://image.flaticon.com/icons/svg/126/126472.svg"></button>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-4">
+        </div>
 
-    </div>
-    <div class="col-md-8">
       <div class="tab-content profile-tab" id="myTabContent">
         <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
           <div class="row">
@@ -46,7 +33,7 @@
               <label>User Id</label>
             </div>
             <div class="col-md-6">
-              <p>{{curentUser.id}} </p>
+              <p>{{curentUser.id}}</p>
             </div>
           </div>
           <div class="row">
@@ -75,12 +62,15 @@
           </div>
         </div>
         <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-
         </div>
       </div>
+
+
+
     </div>
   </div>
-</div>
+
+
 
 
 

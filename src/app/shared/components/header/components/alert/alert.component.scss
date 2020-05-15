@@ -1,0 +1,42 @@
+
+.alert-wrap{
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  max-width: 250px;
+  z-index: 999;
+}
+
+.alerts {
+  padding: 15px 20px;
+  margin: 1rem 0;
+  opacity: .96;
+  background: transparent;
+  color: white;
+  border: none;
+  font-size: 20px;
+}
+.alert-dangers {
+  background: #de3447;
+}
+.alert-successs {
+  background: #2dd188;
+}
+.alert-warnings {
+  background: #e68a37;
+}
+.alert-warnings,
+.alert-successs,
+.alert-dangers{
+  color: #fff;
+  span{
+    word-wrap: break-word;
+    font-size: 18px;
+    background: transparent;
+  }
+}
+
+/*
+
+*/
+

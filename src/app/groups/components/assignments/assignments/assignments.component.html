@@ -1,0 +1,64 @@
+
+<div class="container">
+  <div *ngFor="let assign of assignments">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">{{ assign.title }}</h4>
+        <h6
+          class="card-subtitle
+                mb-2 text-muted">created at {{ assign.createDate }} make to {{ assign.dueDate }}</h6>
+        <p class="card-text">
+          {{ assign.description }}
+        </p>
+        <a
+          [routerLink]="['assignments', assign.id]"
+          routerLinkActive="router-link-active"
+          class="card-link">Open</a>
+      </div>
+    </div>
+  </div>
+<!--
+  <p *ngIf="((assignments.problems | async)?.length === 0)">List is empty</p>
+-->
+</div>
+ 
+<div *ngIf="currentUser.role == 'teacher'" class="card">
+  <button type="button" class="btn btn-primary" *ngIf="!createAssignFlag" (click)="createAssignFlag = true">
+    Create new assignment
+  </button>
+</div>
+
+
+<!-------------------------------- Create assignment modal ---------------------------------------->
+<div  class="card" *ngIf="createAssignFlag">
+    <div class="card-body">
+      <h4 class="card-title">Create new assignment</h4>
+      <div class="card-text">
+        <form [formGroup]="form">
+          <div class="modal-body">
+            Title
+            <input
+              class="input-group"
+              type="text"
+              formControlName="title"
+              [(ngModel)]="currentAssignment.title">
+  
+            Assignment
+            <input
+              class="input-group"
+              type="text"
+              formControlName="description"
+              [(ngModel)]="currentAssignment.description">
+          </div>
+          <div class="modal-footer">            
+          </div>
+        </form>
+      </div>
+      <button type="button" class="btn btn-success" [disabled]="!form.valid" (click)='onSubmit()'>Save changes</button>
+      <button type="button" class="btn btn-warning" data-dismiss="modal" (click)="createAssignFlag = false">Close</button>
+    </div>
+
+</div>
+
+
+

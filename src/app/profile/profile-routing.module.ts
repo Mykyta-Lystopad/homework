@@ -3,11 +3,16 @@ import {NgModule} from '@angular/core';
 import {LayoutProfileComponent} from './components/layout-profile/layout-profile.component';
 import {ProfileComponent} from './components/profile/profile.component';
 import {ProfileSettingsComponent} from './components/profile-settings/profile-settings.component';
+import {AuthGuard} from '../core/services';
 
 
 const routes: Routes = [
-  {path: '', component: ProfileComponent},
-  {path: 'settings', component: ProfileSettingsComponent}
+  {path: '', component: LayoutProfileComponent, children: [
+      {path: '', component: ProfileComponent, canActivate: [AuthGuard]},
+      {path: 'settings', component: ProfileSettingsComponent, canActivate: [AuthGuard]},
+      {path: '**', redirectTo: '/'}
+    ]}
+
 ];
 
 

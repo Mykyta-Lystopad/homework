@@ -10,7 +10,7 @@ import {NgxUiLoaderService} from 'ngx-ui-loader';
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss']
 })
-export class ProfileComponent implements OnInit , OnDestroy {
+export class ProfileComponent implements OnInit, OnDestroy {
 
   private userSub: Subscription;
   public curentUser: User;
@@ -19,7 +19,6 @@ export class ProfileComponent implements OnInit , OnDestroy {
   constructor(
     private userService: UserService,
     private router: Router,
-
   ) {
   }
 
@@ -27,11 +26,8 @@ export class ProfileComponent implements OnInit , OnDestroy {
     this.userSub = this.userService.currentUser
       .subscribe(res => {
         this.curentUser = res;
-
       });
   }
-
-
 
 
   ngOnDestroy() {

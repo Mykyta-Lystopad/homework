@@ -56,7 +56,7 @@ export class RegisterComponent implements OnInit {
         if (res.success) {
           this.userService.setAuth(res.data);
           this.ngxService.stop();
-          this.router.navigate([`home`]);
+          this.router.navigate([`groups`]);
           this.Alert.success('Вы успешно зарегистрировались');
         }
 
