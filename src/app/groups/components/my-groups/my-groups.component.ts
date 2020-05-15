@@ -70,18 +70,5 @@ export class MyGroupsComponent implements OnInit {
     this.idGroup = id;
     this.activeTab=false
     this.router.navigate(['groups', this.idGroup]);
-  }
-
-  deleteGroup(id: number) {
-    this.apiService.delete(`api/groups/${id.toString()}`)
-      .subscribe(() => {
-        this.group = this.group.filter(group => group.id !== id);
-        this.groups$.next(this.group);
-      });
-  }
-
-  showUsers(id: number) {
-    this.idGroup = id;
-    this.router.navigate(['groups', this.idGroup]);
-  }
+  }  
 }
