@@ -28,7 +28,6 @@ export class MyGroupsComponent implements OnInit {
     private  apiService: ApiService,
     private router: Router,
     private userService: UserService,
-    public location: Location,
     private roleService: RoleService
   ) {
   }
@@ -70,6 +69,7 @@ export class MyGroupsComponent implements OnInit {
 
   showUsers(id: number) {
     this.idGroup = id;
+    this.activeTab=false
     this.router.navigate(['groups', this.idGroup]);
   }
 

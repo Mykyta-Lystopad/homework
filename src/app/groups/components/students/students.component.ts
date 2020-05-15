@@ -10,6 +10,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 })
 export class StudentsComponent implements OnInit {
   idGroup: number
+  showSpinner = true
   users: User[] = [];
 
   constructor(
@@ -24,6 +25,7 @@ export class StudentsComponent implements OnInit {
       this.apiService.get(`api/groups/${idGroup.id}`)
         .subscribe(response => {
           this.users = response.data.users;
+          this.showSpinner = false
         });
     });
 

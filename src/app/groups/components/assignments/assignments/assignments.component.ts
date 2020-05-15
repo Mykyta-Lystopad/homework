@@ -29,6 +29,7 @@ export class AssignmentsComponent implements OnInit {
   ngOnInit(): void {
     this.activeRoute.params.subscribe(response => {
       this.group_id = response.id
+      console.log()
     })
 
     this.form = new FormGroup({

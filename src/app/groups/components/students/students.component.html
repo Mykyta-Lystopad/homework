@@ -1,11 +1,11 @@
 <div class="row">
   <div class="container-fluid container-for-groups">
     <div
-      *ngIf="users; else loading"
+      *ngIf="users.length; else loading"
     >
       <div *ngFor="let user of users" class="list-group">
         <a
-          [routerLink]="['/groups',idGroup,'student',user.id]"
+          [routerLink]="['/groups',idGroup,'student',idGroup]"
           class="list-group-item list-group-item-action">
           <div class="d-flex w-100 justify-content-between">
             <h5 class="mb-1">{{user.first_name}} {{user.last_name}}</h5>
@@ -18,8 +18,11 @@
 
 
     <ng-template #loading>
-      <div class="alert alert-primary" role="alert">
-        A simple primary alert—check it out!
+      <div class="text-center">
+        <div class="spinner-border" role="status" *ngIf="showSpinner">
+          <span class="sr-only">Loading...</span>
+        </div>
+        <h3>Empty...</h3>
       </div>
     </ng-template>
   </div>

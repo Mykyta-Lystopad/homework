@@ -50,7 +50,12 @@
     </div>
 
     <ng-template #loading>
-      <p>Загрузка...</p>
+      <div class="text-center">
+        <div class="spinner-border" role="status">
+          <span class="sr-only">Loading...</span>
+        </div>
+        <h3>Empty...</h3>
+      </div>
     </ng-template>
   </div>
 
@@ -63,7 +68,8 @@
              [ngClass]="{'active': activeTab}"
              (click)="activeTab=true">ALL ASSIGNMENTS</a>
           <a class="flex-sm-fill text-sm-center nav-link users-style"
-             (click)="location.back();activeTab=false"
+             [routerLink]="[idGroup]"
+             (click)="activeTab=false"
              [ngClass]="{'active': !activeTab}">STUDENTS</a>
         </nav>
       </div>
