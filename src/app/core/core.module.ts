@@ -14,7 +14,7 @@ import {
   ProfilesService,
   TagsService,
   UserService,
-  RoleService
+  RoleService,
 } from './services';
 
 
