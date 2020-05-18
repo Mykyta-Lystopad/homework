@@ -10,7 +10,7 @@ import { tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: "root"
-})
+}) 
 
 export class AssignmentService {
   private assignments: Assignment[];

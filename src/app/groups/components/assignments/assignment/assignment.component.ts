@@ -17,6 +17,8 @@ import {UserService} from "../../../../core/services";
 export class AssignmentComponent implements OnInit {
   showCreateProblem = false;
   showEditAssignment = false;
+  studentId: number = 7;//////////////////////////надо получить как параметр
+  student = '';////////////////////////////////////временное решение для наладки интерфейса
   user: User;
   private assignId: number;
   currentProblem: Problem = {
@@ -43,8 +45,10 @@ export class AssignmentComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.assingSvc.getAssign(this.assignId, this.user.id).subscribe(res => {
+    this.assingSvc.getAssign(this.assignId, this.studentId).subscribe(res => {
       this.assign = res['data']
+      console.log(this.assign);
+      
     })
 
   }
@@ -55,9 +59,11 @@ export class AssignmentComponent implements OnInit {
     })
   }
   showEditAssign(){
-    this.showEditAssignment = !this.showEditAssignment
-    this.currentAssign.title = this.assign.title
-    this.currentAssign.description = this.assign.description    
+    if (this.user.role == 'teacher' && !this.studentId){
+      this.showEditAssignment = !this.showEditAssignment
+      this.currentAssign.title = this.assign.title
+      this.currentAssign.description = this.assign.description    
+    }    
   }
   assignmentEdit(){
     this.assingSvc.editAssignment(this.currentAssign).subscribe(res =>{
@@ -92,6 +98,19 @@ export class AssignmentComponent implements OnInit {
         this.assign.problems[index].description = res.data.description;
       }
     })
+  }
+  back(){
+    this.location.back();
+  }
+  ////////////////////////////////////временное решение для наладки интерфейса
+  changeInterface(){
+    if (this.studentId){
+      this.studentId = undefined
+      this.student = 'Teacher interface'
+    } else {
+      this.studentId = 7
+      this.student = 'Student interface'
+    }
   }
 
 }

@@ -1,19 +1,18 @@
 
 <div class="container">
   <div *ngFor="let assign of assignments">
-    <div class="card">
+    <div class="card"
+    [routerLink]="['assignments', assign.id]"
+    routerLinkActive="router-link-active">
       <div class="card-body">
         <h4 class="card-title">{{ assign.title }}</h4>
-        <h6
-          class="card-subtitle
-                mb-2 text-muted">created at {{ assign.createDate }} make to {{ assign.dueDate }}</h6>
-        <p class="card-text">
-          {{ assign.description }}
-        </p>
-        <a
-          [routerLink]="['assignments', assign.id]"
-          routerLinkActive="router-link-active"
-          class="card-link">Open</a>
+        <div class="d-flex flex-row">
+          <div *ngIf="assign.description" class="col-9"> Note: {{ assign.description }}</div>
+          <div class="col-3">created at {{ assign.createDate }} make to {{ assign.dueDate }}</div>
+        </div>  
+        <ul>
+          <li *ngFor="let prob of assign.problems">{{prob.title}}</li>
+        </ul>     
       </div>
     </div>
   </div>
@@ -47,7 +46,7 @@
             <input
               class="input-group"
               type="text"
-              formControlName="description"
+              formControlName="note"
               [(ngModel)]="currentAssignment.description">
           </div>
           <div class="modal-footer">            

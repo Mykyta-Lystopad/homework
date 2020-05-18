@@ -5,7 +5,7 @@
     >
       <div *ngFor="let user of users" class="list-group">
         <a
-          [routerLink]="['/groups',idGroup,'student',idGroup]"
+          [routerLink]="['/groups',idGroup,'student', user.id]"
           class="list-group-item list-group-item-action">
           <div class="d-flex w-100 justify-content-between">
             <h5 class="mb-1">{{user.first_name}} {{user.last_name}}</h5>

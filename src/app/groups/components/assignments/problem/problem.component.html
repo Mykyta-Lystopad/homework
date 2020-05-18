@@ -1,42 +1,34 @@
 <div class="card">
-    <h5 class="mb-0" *ngIf="!editProblemFlag; else editTitle">{{ problem.title }}</h5>
-    <ng-template #editTitle>    
-        <input type="text" [(ngModel)]="editedProblem.title" >
-    </ng-template>
-</div>       
-
-
-<div class="row d-flex flex-row flex-wrap align-items-center" >
-    <div *ngIf = '!(user.role == "teacher"); else editDeleteBlock' class="col-2">
-        <span class="badge badge-pill badge-primary" (click)="onSolve()">Add solution</span>
+    <!-- for student --------------------- +solution-->
+    <div >
+        <div *ngIf='studentId; else editDeleteBlock' class="col-2">
+            <span class="badge badge-pill badge-primary" (click)="onSolve()">Add solution</span>
+        </div>
     </div>
-    <ng-template #editDeleteBlock>
-        <div class="d-flex col-2" *ngIf="!editProblemFlag">
-            <span class="badge badge-pill badge-warning d-block" (click)="editProblemChange()">Edit</span>
-            <span class="badge badge-pill badge-danger d-block" (click)="onDelete()">Delete</span>        
-        </div>
-    </ng-template>
-    
-    <div class="col-10" *ngIf="!editProblemFlag; else edit">
-        <div class="card-body"> 
-            {{ problem.description }}
-        </div>
-    </div>    
-    <ng-template #edit>
-        <div class="card-body"> 
-            <div class="input-group col-12" >
-                <div class="input-group-prepend">
-                   <button class="btn btn-warning" type="button" (click)="editProblemChange()">Cancel</button>
+    <!--------------------------------------- problem -->
+    <div class="d-flex justify-content-between">
+        <div *ngIf="!editProblemFlag; else editTitle" (click)="editProblemChange()">{{ problem.title }}</div>
+        
+        <ng-template #editDeleteBlock>
+            <div *ngIf="!studentId">
+                <div class="d-flex justify-content-end" *ngIf="!editProblemFlag">
+                    <span class="badge badge-pill badge-danger" (click)="onDelete()">X</span>        
                 </div>
-                <input type="text" [(ngModel)]="editedProblem.description">
-                <div class="input-group-append">                    
-                    <button class="btn btn-success" type="button" (click)="onEdit()">Save</button>
-                </div>
-            </div>
-        </div>
-    </ng-template>
-    
-</div>
+            </div>    
+        </ng-template>        
+    </div>
+   <!-------------------------------------------- edit -->
+    <ng-template #editTitle>    
+        <div class="d-block">
+            <input type="text" class="col-12" [(ngModel)]="editedProblem.title" >
+            <div class="d-flex">
+                <button class="badge badge-pill badge-success" (click)="onEdit()">Save</button>  
+                <button class="badge badge-pill badge-warning " (click)="editProblemChange()">Cancel</button>
+            </div>        
+      </div>  
+    </ng-template>       
+
+</div>       
 
 <div *ngIf = '!(user.role == "teacher")' class="d-flex flex-row flex-wrap align-items-center justify-content-end">        
     <app-solution [solution] = 'problem.solutions'></app-solution>

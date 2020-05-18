@@ -12,6 +12,7 @@ export class ProblemComponent implements OnInit {
  
   @Input() problem: Problem;
   @Input() user: User;
+  @Input() studentId: number;
   @Output() emitDel: EventEmitter<{}> = new EventEmitter();
   @Output() emitEdit: EventEmitter<Problem> = new EventEmitter(); 
   
@@ -32,8 +33,6 @@ export class ProblemComponent implements OnInit {
   }
 
   onEdit(){
-    //this.problem.title = this.editedProblem.editTitle
-    //this.problem.description = this.editedProblem.editDescription
     this.editedProblem.id = this.problem.id;
     this.emitEdit.emit(this.editedProblem)    
     this.editProblemChange();
@@ -46,8 +45,10 @@ export class ProblemComponent implements OnInit {
   }
 
   editProblemChange(){
-    this.editProblemFlag = !this.editProblemFlag
-    this.editedProblem.title = this.problem.title
-    this.editedProblem.description = this.problem.description
+    if (this.user.role == 'teacher' && this.studentId == undefined){
+      this.editProblemFlag = !this.editProblemFlag
+      this.editedProblem.title = this.problem.title
+      this.editedProblem.description = this.problem.description
+    }    
   }
 }
