@@ -18,7 +18,7 @@ const routes: Routes = [
               import('../groups/components/assignments/assignments.module').then(m => m.AssignmentsModule)
           },
           {
-            path: ':id/student/:id', loadChildren: () =>
+            path: ':id/student/:idStudent', loadChildren: () =>
               import('../groups/components/assignments/assignments.module').then(m => m.AssignmentsModule)
           },
         ]
