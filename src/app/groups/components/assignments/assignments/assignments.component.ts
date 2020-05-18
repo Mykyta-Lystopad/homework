@@ -1,5 +1,5 @@
-import { User } from './../../../../core/models/user.model';
-import { UserService } from './../../../../core/services/user.service';
+import {User} from './../../../../core/models/user.model';
+import {UserService} from './../../../../core/services/user.service';
 import {Component, OnInit} from '@angular/core';
 import {AssignmentService} from "../../../../core/services/assigntments.service";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
@@ -18,9 +18,9 @@ export class AssignmentsComponent implements OnInit {
   currentUser: User;
   assignments: Assignment[];
   group_id: number;
+  user_id: number;
   currentAssignment: Assignment = new AssignmentModel(this.group_id);
   createAssignFlag = false;
-  editAssignFlag = false;
 
   constructor(
     private assignSvc: AssignmentService,
@@ -31,9 +31,10 @@ export class AssignmentsComponent implements OnInit {
 
   ngOnInit(): void {
     this.activeRoute.params.subscribe(response => {
-    this.group_id = response.id
-    this.currentAssignment.group_id = this.group_id
-    this.currentUser = this.userSvc.getCurrentUser();
+      this.group_id = response.id
+      this.user_id = response.idStudent
+      this.currentAssignment.group_id = this.group_id
+      this.currentUser = this.userSvc.getCurrentUser();
     })
 
     this.form = new FormGroup({
@@ -41,14 +42,14 @@ export class AssignmentsComponent implements OnInit {
       description: new FormControl('', [Validators.minLength(3), Validators.maxLength(200)])
     })
 
-    this.assignSvc.getAssignments(this.group_id).subscribe(res =>{
+    this.assignSvc.getAssignments(this.group_id).subscribe(res => {
       this.assignments = res;
     })
   }
 
   onSubmit() {
-    if (this.assignSvc.addAssign(this.currentAssignment)) 
-    this.currentAssignment.title = '';
+    if (this.assignSvc.addAssign(this.currentAssignment))
+      this.currentAssignment.title = '';
     this.currentAssignment.description = '';
     this.createAssignFlag = false;
   }
