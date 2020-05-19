@@ -11,10 +11,13 @@
       <app-problem *ngFor="let prob of assign.problems" [problem]='prob' [user]='user' ></app-problem>
     </div>
 
-    <app-attachments [attachments] = 'assign.attachments'></app-attachments>
+    <app-attachments
+      [attachments] = 'attachments'
+      [assignID] = 'assign.id'
+    ></app-attachments>
 
     <div class="input-group" *ngIf="(user.role != 'teacher')">
-      <input type="text" class="form-control"placeholder="message..." aria-label="message">
+      <input type="text" class="form-control" placeholder="message..." aria-label="message">
       <div class="input-group-append">
         <button class="btn btn-success" type="button">Send</button>
       </div>
