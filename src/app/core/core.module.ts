@@ -35,7 +35,7 @@ import {
     UserService,
     AlertService,
     NamesService,
-    RoleService
+    RoleService,
     AttachmentService
   ],
   declarations: []
