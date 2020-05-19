@@ -108,8 +108,6 @@ export class AssignmentService {
   }
   changeSolutionStatus(solutionId: number, completed:{}){
     return this.apiSvc.put(`api/solutions/${solutionId}`, completed).pipe(tap( res =>{
-      console.log('res in update soluton ',res);
-      
      if (res['data']['completed'] === true){
        this.alertSvc.success('Problem checked as solved')
      } else{

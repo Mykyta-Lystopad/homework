@@ -57,8 +57,6 @@ export class AssignmentComponent implements OnInit {
         this.studentId = undefined
       }
       this.assign.student_id = this.studentId
-      console.log('assign ',this.assign);
-      
     })
 
   }
@@ -110,16 +108,13 @@ export class AssignmentComponent implements OnInit {
     })
   }
   probCompletedChsnge(e:{}){
-    console.log(e['problem_id']);
-    console.log(this.assign);
+
     let index = this.assign.problems.findIndex(prob => prob.id == e['problem_id'])
     if (!this.assign.problems[index].userSolution){
       this.assingSvc.completedProblemSolve(e).subscribe(res => {    
       this.assign.problems[index].userSolution.completed = res['data']['completed']
       })
     } else {
-      console.log('перед передачей параметры',e);
-      
       this.assingSvc.changeSolutionStatus(this.assign.problems[index].userSolution.id, {completed:e['completed']}).subscribe(res => {    
       this.assign.problems[index].userSolution.completed = res['data']['completed']
     }
