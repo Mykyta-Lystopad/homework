@@ -6,7 +6,7 @@ import {HttpTokenInterceptor} from './interceptors/http.token.interceptor';
 import {
   AlertService,
   ApiService,
-  ArticlesService,
+  ArticlesService, AttachmentService,
   AuthGuard,
   CommentsService,
   JwtService,
@@ -36,6 +36,7 @@ import {
     AlertService,
     NamesService,
     RoleService
+    AttachmentService
   ],
   declarations: []
 })
