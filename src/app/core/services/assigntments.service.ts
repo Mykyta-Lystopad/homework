@@ -2,8 +2,7 @@ import { AlertService } from './alert.service';
 import { Problem } from './../models/problem.model';
 import {UserService} from './user.service';
 import {ApiService} from './api.service';
-import {User} from './../models/user.model';
-import { BehaviorSubject, Observable, ReplaySubject } from 'rxjs';
+import { BehaviorSubject, Observable} from 'rxjs';
 import {Injectable} from '@angular/core';
 import {Assignment} from '../models/assignment.model';
 import { tap } from 'rxjs/operators';
@@ -15,7 +14,6 @@ import { tap } from 'rxjs/operators';
 export class AssignmentService {
   private assignments: Assignment[];
   private subj: BehaviorSubject<any> = new BehaviorSubject([]);
-
   constructor(
     private apiSvc: ApiService,
     private userSvc: UserService,
@@ -27,9 +25,13 @@ export class AssignmentService {
     return this.subj.asObservable();
   }
 
-  getAssignments(group_id: number) {
+  getAssignments(group_id: number, student_id?: number) {
     if (this.userSvc.isAuth) {
-      this.apiSvc.get(`api/assignments?page=1&group_id=${group_id}`).subscribe(res => {
+      let student_idStr = ''
+      if (student_id){
+        student_idStr = `&user_id=${student_id}`
+      }
+        this.apiSvc.get(`api/assignments?page=1&group_id=${group_id}${student_idStr}`).subscribe(res => {
         this.assignments = res['data']['collection'];
         this.subj.next(this.assignments);
       })
@@ -93,5 +95,29 @@ export class AssignmentService {
       this.alertSvc.danger(error['data']['description'])
     }))
   }
+  completedProblemSolve(e:{}){
+     return this.apiSvc.post('api/solutions', e).pipe(tap( res =>{
+      if (res['data']['completed'] === true){
+        this.alertSvc.success('Problem checked as solved')
+      } else{
+        this.alertSvc.success('Problem checked as not solved')
+      }
+    }, error => {
+      this.alertSvc.danger(error['data']['description'])
+    }))
+  }
+  changeSolutionStatus(solutionId: number, completed:{}){
+    return this.apiSvc.put(`api/solutions/${solutionId}`, completed).pipe(tap( res =>{
+      console.log('res in update soluton ',res);
+      
+     if (res['data']['completed'] === true){
+       this.alertSvc.success('Problem checked as solved')
+     } else{
+       this.alertSvc.success('Problem checked as not solved')
+     }
+   }, error => {
+     this.alertSvc.danger(error['data']['description'])
+   }))
+ }
 
 }

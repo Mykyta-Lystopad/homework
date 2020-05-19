@@ -1,26 +1,6 @@
 
 <div class="container">
-  <div *ngFor="let assign of assignments">
-    <div class="card"
-    [routerLink]="['assignments', assign.id]"
-    routerLinkActive="router-link-active">
-      <div class="card-body">
-        <h4 class="card-title">{{ assign.title }}</h4>
-        <div class="d-flex flex-row">
-          <div *ngIf="assign.description" class="col-9"> Note: {{ assign.description }}</div>
-          <div class="col-3">created at {{ assign.createDate }} make to {{ assign.dueDate }}</div>
-        </div>  
-        <ul>
-          <li *ngFor="let prob of assign.problems">{{prob.title}}</li>
-        </ul>     
-      </div>
-    </div>
-  </div>
-<!--
-  <p *ngIf="((assignments.problems | async)?.length === 0)">List is empty</p>
--->
-</div>
- 
+   
 <div *ngIf="currentUser.role == 'teacher'" class="card">
   <button type="button" class="btn btn-primary" *ngIf="!createAssignFlag" (click)="createAssignFlag = true">
     Create new assignment
@@ -42,7 +22,7 @@
               formControlName="title"
               [(ngModel)]="currentAssignment.title">
   
-            Assignment
+            Note
             <input
               class="input-group"
               type="text"
@@ -58,6 +38,27 @@
     </div>
 
 </div>
+  <div *ngFor="let assign of assignments">
+    <div class="card"
+    [routerLink]="['assignments', assign.id]"
+    routerLinkActive="router-link-active">
+      <div class="card-body">
+        <h4 class="card-title">{{ assign.title }}</h4>
+        <div class="d-flex flex-row">
+          <div *ngIf="assign.description" class="col-9"> Note: {{ assign.description }}</div>
+          <div class="col-3">created at {{ assign.createDate }} make to {{ assign.dueDate }}</div>
+        </div>  
+        <ul>
+          <li *ngFor="let prob of assign.problems">{{prob.title}}</li>
+        </ul>     
+      </div>
+    </div>
+  </div>
+<!--
+  <p *ngIf="((assignments.problems | async)?.length === 0)">List is empty</p>
+-->
+</div>
+
 
 
 

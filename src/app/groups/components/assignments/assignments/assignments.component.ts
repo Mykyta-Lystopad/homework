@@ -31,16 +31,11 @@ export class AssignmentsComponent implements OnInit {
 
   ngOnInit(): void {
     this.activeRoute.params.subscribe(response => {
-      console.log(response);
-      
     this.student_id = response.idStudent
-    this.group_id = response.id////////////////////////////////////////////////////////////////////////////////////////////
-    this.currentAssignment.group_id = this.group_id//////////////////////////////////////////////////////////
+    this.group_id = response.id
     this.currentUser = this.userSvc.getCurrentUser();
-   //   this.group_id = response.id
-   //   this.user_id = response.idStudent
-      this.currentAssignment.group_id = this.group_id
-      this.currentUser = this.userSvc.getCurrentUser();
+    this.currentAssignment.group_id = this.group_id
+    this.currentUser = this.userSvc.getCurrentUser();
     })
 
     this.form = new FormGroup({
@@ -48,7 +43,7 @@ export class AssignmentsComponent implements OnInit {
       note: new FormControl('', [Validators.maxLength(200)])
     })
 
-    this.assignSvc.getAssignments(this.group_id).subscribe(res =>{///////////////////////////////////////////
+    this.assignSvc.getAssignments(this.group_id, this.student_id).subscribe(res =>{
       this.assignments = res;
     })
   }

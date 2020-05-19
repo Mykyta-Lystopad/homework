@@ -1,10 +1,13 @@
 <div class="card">
     <div class="card-body">
-      <h6 class="card-subtitle mb-2 text-muted">{{message.created_at | date}} ({{message.user.first_name}} {{message.user.last_name}})</h6>
+      <span class="card-subtitle mb-2 text-muted">{{message.created_at | date}} ({{message.user.first_name}} {{message.user.last_name}})</span>
+      <hr>
       <p class="card-text">
         {{message.message}} ()
       </p>
-      <app-attachment *ngFor="let attach of message.attachments" [attachment] = 'attach'></app-attachment>
+      <div *ngIf="message.attachments">
+        <app-attachment *ngFor="let attach of message.attachments" [attachment] = 'attach'></app-attachment>
+      </div>  
     </div>
   </div>
 

@@ -15,6 +15,7 @@ export class ProblemComponent implements OnInit {
   @Input() studentId: number;
   @Output() emitDel: EventEmitter<{}> = new EventEmitter();
   @Output() emitEdit: EventEmitter<Problem> = new EventEmitter(); 
+  @Output() emitSolve: EventEmitter<{}> = new EventEmitter();
   
   editProblemFlag = false;
   editedProblem: Problem = {
@@ -25,11 +26,14 @@ export class ProblemComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-
+    if (isNaN(this.studentId))
+    {
+      this.studentId = undefined
+    }
   }
 
   onSolve(){
-    alert('Solve problem')
+    this.emitSolve.emit({problem_id: this.problem.id, completed: !this.problem.userSolution.completed})
   }
 
   onEdit(){

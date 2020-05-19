@@ -3,7 +3,7 @@ import { Problem } from './../../../../core/models/problem.model';
 import {User} from '../../../../core/models';
 import {AssignmentModel} from '../../../../core/models/assignmentModel';
 import {Assignment} from '../../../../core/models/assignment.model';
-import {Component, OnInit} from '@angular/core';
+import { Component, OnInit, enableProdMode } from '@angular/core';
 import {AssignmentService} from "../../../../core/services/assigntments.service";
 import {ActivatedRoute} from "@angular/router";
 import {UserService} from "../../../../core/services";
@@ -17,8 +17,7 @@ import {UserService} from "../../../../core/services";
 export class AssignmentComponent implements OnInit {
   showCreateProblem = false;
   showEditAssignment = false;
-  studentId: number = 7;//////////////////////////надо получить как параметр
-  student = '';////////////////////////////////////временное решение для наладки интерфейса
+  studentId: number;
   user: User;
   private assignId: number;
   currentProblem: Problem = {
@@ -29,7 +28,7 @@ export class AssignmentComponent implements OnInit {
   assign: Assignment = new AssignmentModel(this.assignId);
   currentAssign: Assignment = new AssignmentModel(this.assignId);
 
-
+ 
   constructor(
     route: ActivatedRoute,
     private assingSvc: AssignmentService,
@@ -37,17 +36,28 @@ export class AssignmentComponent implements OnInit {
     private location: Location
     )
   {
-    this.assignId = +route.snapshot.params.id;
-    this.currentProblem.assignment_id = this.assignId;
-    this.currentAssign.id = this.assignId;
     this.user = this.userSvc.getCurrentUser();
+    this.assignId = +route.snapshot.params.id;
+    if (this.user.role === 'teacher') {
+      this.studentId = +route.snapshot['parent']['params']['idStudent']; 
+      if (isNaN(this.studentId)){
+        this.studentId = undefined
+      }
+    } else {
+      this.studentId = this.user.id
+    }
+    this.currentProblem.assignment_id = this.assignId;    
   }
 
 
   ngOnInit(): void {
-    this.assingSvc.getAssign(this.assignId, this.studentId).subscribe(res => {
+    this.assingSvc.getAssign(this.assignId, this.studentId).subscribe(res => {      
       this.assign = res['data']
-      console.log(this.assign);
+      if (isNaN(this.studentId)){
+        this.studentId = undefined
+      }
+      this.assign.student_id = this.studentId
+      console.log('assign ',this.assign);
       
     })
 
@@ -99,18 +109,30 @@ export class AssignmentComponent implements OnInit {
       }
     })
   }
+  probCompletedChsnge(e:{}){
+    console.log(e['problem_id']);
+    console.log(this.assign);
+    let index = this.assign.problems.findIndex(prob => prob.id == e['problem_id'])
+    if (!this.assign.problems[index].userSolution){
+      this.assingSvc.completedProblemSolve(e).subscribe(res => {    
+      this.assign.problems[index].userSolution.completed = res['data']['completed']
+      })
+    } else {
+      console.log('перед передачей параметры',e);
+      
+      this.assingSvc.changeSolutionStatus(this.assign.problems[index].userSolution.id, {completed:e['completed']}).subscribe(res => {    
+      this.assign.problems[index].userSolution.completed = res['data']['completed']
+    }
+      )}
+
+  }
+
   back(){
     this.location.back();
   }
-  ////////////////////////////////////временное решение для наладки интерфейса
-  changeInterface(){
-    if (this.studentId){
-      this.studentId = undefined
-      this.student = 'Teacher interface'
-    } else {
-      this.studentId = 7
-      this.student = 'Student interface'
-    }
+  sendMessage(){
+    
   }
+  
 
 }

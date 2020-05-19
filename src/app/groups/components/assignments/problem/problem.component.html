@@ -1,35 +1,69 @@
-<div class="card">
-    <!-- for student --------------------- +solution-->
-    <div >
-        <div *ngIf='studentId; else editDeleteBlock' class="col-2">
-            <span class="badge badge-pill badge-primary" (click)="onSolve()">Add solution</span>
+<div *ngIf="!(user.role == 'teacher'); else teacher">
+    <div class="d-flex flex-row">
+        <div >
+            <div class="col-2">
+                <input type="checkbox" [(ngModel)]="problem.userSolution.completed" [disabled]='true' >
+            </div>
+        </div>
+        <div class="d-flex justify-content-between" (click)="onSolve()">
+            <div>{{ problem.title }}</div>
+            <div *ngIf="problem.userSolution; else notMarked"> {{problem.userSolution.teacher_mark}} </div>
+            <ng-template #notMarked>
+                not marked
+            </ng-template>
+                        
         </div>
     </div>
-    <!--------------------------------------- problem -->
-    <div class="d-flex justify-content-between">
-        <div *ngIf="!editProblemFlag; else editTitle" (click)="editProblemChange()">{{ problem.title }}</div>
-        
-        <ng-template #editDeleteBlock>
-            <div *ngIf="!studentId">
-                <div class="d-flex justify-content-end" *ngIf="!editProblemFlag">
-                    <span class="badge badge-pill badge-danger" (click)="onDelete()">X</span>        
-                </div>
-            </div>    
-        </ng-template>        
-    </div>
-   <!-------------------------------------------- edit -->
-    <ng-template #editTitle>    
-        <div class="d-block">
-            <input type="text" class="col-12" [(ngModel)]="editedProblem.title" >
-            <div class="d-flex">
-                <button class="badge badge-pill badge-success" (click)="onEdit()">Save</button>  
-                <button class="badge badge-pill badge-warning " (click)="editProblemChange()">Cancel</button>
-            </div>        
-      </div>  
-    </ng-template>       
-
-</div>       
-
-<div *ngIf = '!(user.role == "teacher")' class="d-flex flex-row flex-wrap align-items-center justify-content-end">        
-    <app-solution [solution] = 'problem.solutions'></app-solution>
 </div>
+
+<ng-template #teacher>
+    <div class="">
+        <!-- for student --------------------- +solution-->
+        <div class="d-flex flex-row">
+            <div >
+                <div *ngIf='studentId; else editDeleteBlock' class="col-2">
+                    <input type="checkbox" [ngModel]="problem.userSolution.completed" [disabled]='true'>
+                </div>
+            </div>
+            <!--------------------------------------- problem -->
+            <div class="d-flex justify-content-between">
+                <div *ngIf="!editProblemFlag; else editTitle" (click)="editProblemChange()">{{ problem.title }}</div>
+                <div *ngIf="problem.userSolution"> {{problem.userSolution.teacher_mark}} </div>
+                <ng-template #editDeleteBlock>
+                    <div *ngIf="!studentId">
+                        <div class="d-flex justify-content-end" *ngIf="!editProblemFlag">
+                            <span class="badge badge-pill badge-danger" (click)="onDelete()">X</span>        
+                        </div>
+                    </div>    
+                </ng-template>        
+            </div>
+        </div>
+    <!-------------------------------------------- edit -->
+        <ng-template #editTitle>    
+            <div class="d-block">
+                <input type="text" class="col-12" [(ngModel)]="editedProblem.title" >
+                <div class="d-flex">
+                    <button class="badge badge-pill badge-success" (click)="onEdit()">Save</button>  
+                    <button class="badge badge-pill badge-warning " (click)="editProblemChange()">Cancel</button>
+                </div>        
+        </div>  
+        </ng-template>
+    </div>       
+</ng-template>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <div *ngIf = '!(user.role == "teacher")' class="d-flex flex-row flex-wrap align-items-center justify-content-end">        
+    <app-solution [solution] = 'problem.solutions'></app-solution>
+</div> -->
