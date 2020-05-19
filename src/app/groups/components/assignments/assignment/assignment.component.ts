@@ -40,6 +40,7 @@ export class AssignmentComponent implements OnInit {
     this.assignId = +route.snapshot.params.id;
     this.currentProblem.assignment_id = this.assignId;
     this.currentAssign.id = this.assignId;
+    this.assignId = +route.snapshot.params.id;
     this.user = this.userSvc.getCurrentUser();
   }
 
