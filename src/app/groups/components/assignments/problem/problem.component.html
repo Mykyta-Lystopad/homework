@@ -28,7 +28,10 @@
         <div class="d-flex flex-row">
             <div >
                 <div *ngIf='studentId; else editDeleteBlock' class="col-2">
-                    <input type="checkbox" [ngModel]="problem.userSolution.completed" [disabled]='true'>
+                    <span class="material-icons checked" *ngIf="problem.userSolution.completed; else notCopmleted">check_circle</span>
+                    <ng-template #notCopmleted>
+                        <span class="material-icons ">radio_button_unchecked</span>
+                    </ng-template>
                 </div>
             </div>
             <!--------------------------------------- problem -->
