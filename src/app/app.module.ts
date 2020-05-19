@@ -30,8 +30,9 @@ import {DropdownMenuComponent} from './shared/components/header/components/dropd
     SharedModule,
     CoreModule,
     NgbModule
+
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent, ]
 })
 export class AppModule {
 }

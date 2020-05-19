@@ -4,9 +4,9 @@ import {User} from '../../../../core/models';
 import {AssignmentModel} from '../../../../core/models/assignmentModel';
 import {Assignment} from '../../../../core/models/assignment.model';
 import {Component, OnInit} from '@angular/core';
-import {AssignmentService} from "../../../../core/services/assigntments.service";
-import {ActivatedRoute} from "@angular/router";
-import {UserService} from "../../../../core/services";
+import {AssignmentService} from '../../../../core/services/assigntments.service';
+import {ActivatedRoute} from '@angular/router';
+import {AttachmentService, UserService} from '../../../../core/services';
 
 
 @Component({
@@ -23,12 +23,14 @@ export class AssignmentComponent implements OnInit {
     id : undefined,
     title: '',
     description: '',
-  } 
+  }
   assign: Assignment = new AssignmentModel(this.assignId);
+  attachments: [][];
   currentAssign: Assignment = new AssignmentModel(this.assignId);
 
 
   constructor(
+    private attachmentService: AttachmentService,
     route: ActivatedRoute,
     private assingSvc: AssignmentService,
     private userSvc: UserService,
@@ -42,10 +44,13 @@ export class AssignmentComponent implements OnInit {
   }
 
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.assingSvc.getAssign(this.assignId, this.user.id).subscribe(res => {
-      this.assign = res['data']
-    })
+      this.assign = res['data'];
+
+      this.attachments = this.attachmentService.createDoubleArray(res['data'].attachments, 5);
+
+    });
 
   }
   assignDelete(){
@@ -57,7 +62,7 @@ export class AssignmentComponent implements OnInit {
   showEditAssign(){
     this.showEditAssignment = !this.showEditAssignment
     this.currentAssign.title = this.assign.title
-    this.currentAssign.description = this.assign.description    
+    this.currentAssign.description = this.assign.description
   }
   assignmentEdit(){
     this.assingSvc.editAssignment(this.currentAssign).subscribe(res =>{

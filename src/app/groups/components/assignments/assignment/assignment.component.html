@@ -50,12 +50,14 @@
   </div>   
 <!--end----------------------------- Add Problem --------------------------------->
 
-    <app-attachment *ngFor="let attach of assign.attachments" [attachment] = 'attach'></app-attachment>
-
+    <app-attachments
+      [attachments] = 'attachments'
+      [assignID] = 'assign.id'
+    ></app-attachments>
 
 <!----------------------------- messages block -------------------------------------------->
     <div class="input-group" *ngIf="(user.role != 'teacher')">
-      <input type="text" class="form-control"placeholder="message..." aria-label="message">
+      <input type="text" class="form-control" placeholder="message..." aria-label="message">
       <div class="input-group-append">
         <button class="btn btn-success" type="button">Send</button>
       </div>
