@@ -1,3 +1,4 @@
+import { Solution } from './../../../../core/models/solution.model';
 import { Problem } from './../../../../core/models/problem.model';
 import { User } from '../../../../core/models';
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
@@ -16,6 +17,12 @@ export class ProblemComponent implements OnInit {
   @Output() emitDel: EventEmitter<{}> = new EventEmitter();
   @Output() emitEdit: EventEmitter<Problem> = new EventEmitter(); 
   @Output() emitSolve: EventEmitter<{}> = new EventEmitter();
+
+  private emptySolution:Solution = {
+    id: null,
+    teacher_mark : null,
+    completed : false
+  }
   
   editProblemFlag = false;
   editedProblem: Problem = {
@@ -30,6 +37,10 @@ export class ProblemComponent implements OnInit {
     {
       this.studentId = undefined
     }
+    if (!this.problem.userSolution){
+      this.problem.userSolution = this.emptySolution
+    }
+    
   }
 
   onSolve(){

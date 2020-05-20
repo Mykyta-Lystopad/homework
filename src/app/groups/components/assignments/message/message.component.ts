@@ -1,6 +1,6 @@
 import {Message} from '../../../../core/models/message.model';
 
-import {Component, Input, OnInit} from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-message',
@@ -9,10 +9,26 @@ import {Component, Input, OnInit} from '@angular/core';
 })
 export class MessageComponent implements OnInit {
   @Input() message: Message
+  @Input() currentUserId: number
+  @Output() editEmit = new EventEmitter;
+  @Output() deleteEmit = new EventEmitter;
+  editedMessage = ''
+  editShow = false
   constructor() { }
 
   ngOnInit(): void {
-
+   
   }
-
+  deleteMessage(){
+    this.deleteEmit.emit(this.message.id)   
+  }  
+  changeEditShow(){
+    this.editShow = !this.editShow
+    this.editedMessage = this.message.message
+  }
+  editMessage(){
+    this.editEmit.emit({messageId: this.message.id, message: this.editedMessage})
+    this.editShow = false
+    this.editedMessage = '' 
+  }
 }

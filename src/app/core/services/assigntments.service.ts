@@ -1,3 +1,4 @@
+import { Message } from './../models/message.model';
 import { AlertService } from './alert.service';
 import { Problem } from './../models/problem.model';
 import {UserService} from './user.service';
@@ -38,7 +39,7 @@ export class AssignmentService {
     }
     return this.subj;
   }
-
+  ///////////////////////////////////////////////////// Assign ///////////////////////////////////////////
   getAssign(assignId: number, userId: number) {
     return this.apiSvc.get(`api/assignments/${assignId}?user_id=${userId}`)
   }
@@ -49,10 +50,10 @@ export class AssignmentService {
       .subscribe(res => {
         this.alertSvc.success('New assignment created successful')
         success = res.success;
-        this.assignments.push(res['data']);
+        this.assignments.unshift(res['data']);
         this.subj.next(this.assignments);
       }, error => {
-        this.alertSvc.danger(error['data']['description'])
+        this.alertSvc.danger(error['data'])
       });
     return success;
   }
@@ -63,38 +64,40 @@ export class AssignmentService {
       this.assignments.splice(index, 1)
       this.subj.next(this.assignments)
     }, error => {
-      this.alertSvc.danger(error['data']['description'])
+      this.alertSvc.danger(error['data'])
     }))
   }
   editAssignment(assin: Assignment){
+    console.log(assin);
     return this.apiSvc.put(`api/assignments/${assin.id}`,assin).pipe(tap(res => {
       this.alertSvc.success('Assignment changed successfsul')
     }, error => {
-      this.alertSvc.danger(error['data']['description'])
+      this.alertSvc.danger(error['data'])
     }))
   }
-
+  ////////////////////////////////////////////////////// Problems ////////////////////////////////////////
   createProblem(problem:Problem){
     return this.apiSvc.post('api/problems',problem).pipe(tap(res => {
       this.alertSvc.success('Problem added successfsul')
     }, error => {
-      this.alertSvc.danger(error['data']['description'])
+      this.alertSvc.danger(error['data'])
     }))
   }
   deleteProblem (problemId: number){
     return this.apiSvc.delete(`api/problems/${problemId}`).pipe(tap(res => {
       this.alertSvc.success('Problem deleted successfsul')
     }, error => {
-      this.alertSvc.danger(error['data']['description'])
+      this.alertSvc.danger(error['data'])
     }))
   }
   updateProblem(prob:Problem){
     return this.apiSvc.put(`api/problems/${prob.id}`,prob).pipe(tap(res => {
       this.alertSvc.success('Problem changed successfsul')
     }, error => {
-      this.alertSvc.danger(error['data']['description'])
+      this.alertSvc.danger(error['data'])
     }))
   }
+  ///////////////////////////////////////////// Solutions ////////////////////////////////////////////
   completedProblemSolve(e:{}){
      return this.apiSvc.post('api/solutions', e).pipe(tap( res =>{
       if (res['data']['completed'] === true){
@@ -103,7 +106,7 @@ export class AssignmentService {
         this.alertSvc.success('Problem checked as not solved')
       }
     }, error => {
-      this.alertSvc.danger(error['data']['description'])
+      this.alertSvc.danger(error['data'])
     }))
   }
   changeSolutionStatus(solutionId: number, completed:{}){
@@ -114,8 +117,33 @@ export class AssignmentService {
        this.alertSvc.success('Problem checked as not solved')
      }
    }, error => {
-     this.alertSvc.danger(error['data']['description'])
+     this.alertSvc.danger(error['data'])
    }))
+ }
+//////////////////////////////////// Messages ///////////////////////////////////////////////////////
+ createMessage(message: Message){
+  return this.apiSvc.post('api/messages', message).pipe(tap(res => {
+    this.alertSvc.success('Message was sent')
+  }, error => {
+    this.alertSvc.danger(error['data'])
+  }))
+ }
+ editMessage(mess:{}){
+   let message = {message: mess['message']}
+  return this.apiSvc.put(`api/messages/${mess['messageId']}`, message).pipe(tap(res => {
+    console.log(res['data']);
+    
+    this.alertSvc.success('Message was updated')
+  }, error => {
+    this.alertSvc.danger(error['data'])
+  }))
+ }
+ deleteMessage(messageId: number){
+  return this.apiSvc.delete(`api/messages/${messageId}`).pipe(tap(res => {
+    this.alertSvc.success('Message was deleted')
+  }, error => {
+    this.alertSvc.danger(error['data'])
+  }))
  }
 
 }

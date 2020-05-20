@@ -21,6 +21,7 @@ export class AssignmentsComponent implements OnInit {
   student_id: number;
   currentAssignment: Assignment = new AssignmentModel(this.group_id);
   createAssignFlag = false;
+  
 
   constructor(
     private assignSvc: AssignmentService,
@@ -46,6 +47,10 @@ export class AssignmentsComponent implements OnInit {
     this.assignSvc.getAssignments(this.group_id, this.student_id).subscribe(res =>{
       this.assignments = res;
     })
+   
+  }
+  addProblem(){
+    //this.currentAssignment.problems.push({id:1})
   }
 
   onSubmit() {

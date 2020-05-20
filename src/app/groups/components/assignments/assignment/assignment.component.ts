@@ -1,9 +1,10 @@
+import { Message } from './../../../../core/models/message.model';
 import { Location } from '@angular/common';
 import { Problem } from './../../../../core/models/problem.model';
 import {User} from '../../../../core/models';
 import {AssignmentModel} from '../../../../core/models/assignmentModel';
 import {Assignment} from '../../../../core/models/assignment.model';
-import { Component, OnInit, enableProdMode } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import {AssignmentService} from "../../../../core/services/assigntments.service";
 import {ActivatedRoute} from "@angular/router";
 import {UserService} from "../../../../core/services";
@@ -18,13 +19,19 @@ export class AssignmentComponent implements OnInit {
   showCreateProblem = false;
   showEditAssignment = false;
   studentId: number;
-  user: User;
-  private assignId: number;
+  message: Message = {
+    id: null,
+    message: '',
+    student_id: null,
+    assignment_id: null,
+  };  
   currentProblem: Problem = {
     id : undefined,
     title: '',
     description: '',
   } 
+  user: User;
+  private assignId: number;
   assign: Assignment = new AssignmentModel(this.assignId);
   currentAssign: Assignment = new AssignmentModel(this.assignId);
 
@@ -57,9 +64,13 @@ export class AssignmentComponent implements OnInit {
         this.studentId = undefined
       }
       this.assign.student_id = this.studentId
-    })
-
+      this.currentAssign.id = this.assign.id
+    })    
   }
+  back(){
+    this.location.back();
+  }
+  ///////////////////////////////////////////////////// Assign ///////////////////////////////////////////
   assignDelete(){
     if (confirm(`Do you really want to delete ${this.assign.title} assignment?`))
     this.assingSvc.deleteAssignment(this.assignId).subscribe(res => {
@@ -81,7 +92,7 @@ export class AssignmentComponent implements OnInit {
     })
   }
 
-
+  //////////////////////////////////////////////////// Problem ///////////////////////////////////////////
   createProblem(){
     this.assingSvc.createProblem(this.currentProblem).subscribe(res => {
       if (res.success === true){
@@ -122,11 +133,37 @@ export class AssignmentComponent implements OnInit {
 
   }
 
-  back(){
-    this.location.back();
-  }
+  ////////////////////////////////////////////////////////////// Messages ///////////////////////////////////
   sendMessage(){
+    this.message.assignment_id = this.assign.id;
+    this.message.student_id = this.studentId;
+    this.message.attachments = null;
+    this.assingSvc.createMessage(this.message).subscribe(res => {
+      console.log(this.assign);
+      debugger
+      // if (!this.assign.userAnswer){
+      //   this.assign.userAnswer: UserAnswer
+      //     //messages: Message[]
+      //   }
+      // }
+
+
+      this.assign.userAnswer.messages.push(res['data'])
+      this.message.message = ''
+    })
+  } 
+  editMessage(mess:{}){
     
+    this.assingSvc.editMessage(mess).subscribe(res => {
+      let index = this.assign.userAnswer.messages.findIndex(message => mess['messageId'] == message.id)
+      this.assign.userAnswer.messages[index].message = mess['message']
+    })
+  }
+  deleteMessage(messageId: number){
+    this.assingSvc.deleteMessage(messageId).subscribe(res => {
+      let index = this.assign.userAnswer.messages.findIndex(mess => mess.id == messageId)
+      this.assign.userAnswer.messages.splice(index, 1)
+    })    
   }
   
 

@@ -11,6 +11,6 @@ export interface Assignment {
     problems?: Problem[];
     attachments?: Attachment[];
     userAnswer?: UserAnswer;    
-    createDate?: number;
+    created_at?: number;
     dueDate?: number;
 }

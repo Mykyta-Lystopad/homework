@@ -3,7 +3,14 @@
 <div class="container">
   <div class="wrap">
     <button class="btn btn-success" (click)="back()">back...</button>
-    <!-- <button class="btn btn-warning" (click)="changeInterface()">{{student}}</button> -->
+
+
+  
+  <div *ngIf="!showEditAssignment; else editAssign" (click)="showEditAssign()">
+    <h4>{{ assign.title }}</h4> 
+    <h6 *ngIf="assign.description">Note: {{ assign.description }}</h6>
+  </div>  
+  
   <div *ngIf="!assign.student_id">
     <div *ngIf="!showEditAssignment">
       <div *ngIf="user.role == 'teacher'" class="d-flex justify-content-end">
@@ -11,10 +18,6 @@
       </div>
     </div> 
   </div>
-    <div *ngIf="!showEditAssignment; else editAssign" (click)="showEditAssign()">
-      <h4>{{ assign.title }}</h4> 
-      <h6 *ngIf="assign.description">Note: {{ assign.description }}</h6>
-    </div>  
 <!-------------------------------------------------- edit -->
     <ng-template #editAssign>
       <div class="card-text d-flex flex-column border border-warning">    
@@ -36,21 +39,24 @@
 <!--------------------------------------------------------- problems -->
        
     <hr>
-    <div class="shadow p-3 mb-5 bg-light rounded">
-      <app-problem *ngFor="let prob of assign.problems" 
-      [problem]='prob' 
-      [user]='user' 
-      [studentId]='studentId' 
-      (emitDel)='probDel($event)' 
-      (emitEdit)='probEdit($event)'
-      (emitSolve)='probCompletedChsnge($event)'
-      ></app-problem>
-    </div>
-    <div *ngIf="!assign.student_id">
-      <div *ngIf="user.role == 'teacher'">
-        <button class="btn btn-success col-12" (click)="showCreateProblem = true" *ngIf="!showCreateProblem">Add problem</button>
+    <div *ngIf="assign.problems">
+      <div class="shadow p-3 mb-5 bg-light rounded">
+        <app-problem *ngFor="let prob of assign.problems" 
+        [problem]='prob' 
+        [user]='user' 
+        [studentId]='studentId' 
+        (emitDel)='probDel($event)' 
+        (emitEdit)='probEdit($event)'
+        (emitSolve)='probCompletedChsnge($event)'
+        ></app-problem>
+      </div>
+      <div *ngIf="!assign.student_id">
+        <div *ngIf="user.role == 'teacher'">
+          <button class="btn btn-success col-12" (click)="showCreateProblem = true" *ngIf="!showCreateProblem">Add problem</button>
+        </div>
       </div>
     </div>
+    
     
 <!---------------------------------- Add Problem --------------------------------->
   <div class="d-block" *ngIf="showCreateProblem">     
@@ -73,26 +79,35 @@
 
   <!-- ------------------------dates ----------------------------------------- -->
   <ul class="list-group d-flex flex-row justify-content-end">
-    <li class="list-group-item">Date of create</li>
+    <li class="list-group-item">Date of create {{ assign.created_at | date:"dd/MM/yy" }}</li>
     <li class="list-group-item">Due date</li>
   </ul>
   <!------------------------------- Attaches --------------------------------->
   <div *ngIf="assign.userAnswer">
     <h6>User answer</h6>
     <app-attachment *ngFor="let attach of assign.userAnswer.attachments" [attachment] = 'attach'></app-attachment>
-  
+  </div> 
 
     <!----------------------------- messages block -------------------------------------------->
-    <div class="input-group">
-      <input type="text" class="form-control"placeholder="message..." aria-label="message">
+    <div *ngIf="assign.userAnswer">
+      <app-message *ngFor="let mess of assign.userAnswer.messages" 
+      [message]='mess' 
+      [currentUserId]='user.id'
+      (deleteEmit) = 'deleteMessage($event)'
+      (editEmit) = 'editMessage($event)'
+      ></app-message>
+    </div>
+
+    <div class="input-group" *ngIf="studentId">
+      <input type="text" class="form-control" [(ngModel)]="message.message" placeholder="message..." aria-label="message">
       <div class="input-group-append">
         <button class="btn btn-success" type="button" (click)="sendMessage()">Send</button>
       </div>
     </div> 
 
 
-    <app-message *ngFor="let mess of assign.userAnswer.messages" [message]='mess'></app-message>
-  </div>  
+    
+   
   </div>
 </div>
 

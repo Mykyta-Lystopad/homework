@@ -1,5 +1,4 @@
 import { UserAnswer } from './userAnsver.model';
-import { Message } from './message.model';
 import { Attachment } from './attachment.model';
 import { Problem } from './problem.model';
 import { Assignment } from './assignment.model';
@@ -10,7 +9,7 @@ export class AssignmentModel implements Assignment{
     id?: number;
     title:string;
     description?: string;
-    createDate?: number;
+    created_at?: number;
     dueDate?: number;
     problems?: Problem[];
     attachments?: Attachment[];
@@ -22,7 +21,7 @@ export class AssignmentModel implements Assignment{
         this.id = null;
         this.title = '';
         this.description = '';
-        this.createDate = Date.now();
+        this.created_at = Date.now();
         this.dueDate = null;
         this.problems = [];
         this.attachments = [];
