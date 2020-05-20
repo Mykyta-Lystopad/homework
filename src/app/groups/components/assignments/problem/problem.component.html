@@ -21,42 +21,39 @@
 </div>
 
 <ng-template #teacher>
-    <div class="">
-        <!-- for student --------------------- +solution-->
-        <div class="d-flex flex-row">
-            <div >
-                <div *ngIf='studentId; else editDeleteBlock' class="col-2">
+        <div>
+            <!--------------------------------------- problem -------------------------->
+            <div *ngIf='studentId; else editDeleteBlock' class="d-flex flex-row" >
+                <div>
                     <span class="material-icons checked" *ngIf="problem.userSolution.completed; else notCopmleted">check_circle</span>
                     <ng-template #notCopmleted>
                         <span class="material-icons ">radio_button_unchecked</span>
                     </ng-template>
-
                 </div>
+                <div>{{ problem.title }}</div>
             </div>
-            <!--------------------------------------- problem -->
+
+            <ng-template #editDeleteBlock>
             <div class="d-flex justify-content-between">
                 <div *ngIf="!editProblemFlag; else editTitle" (click)="editProblemChange()">{{ problem.title }}</div>
-                <div *ngIf="problem.userSolution"> {{problem.userSolution.teacher_mark}} </div>
-                <ng-template #editDeleteBlock>
                     <div *ngIf="!studentId">
-                        <div class="d-flex justify-content-end" *ngIf="!editProblemFlag">
-                            <span class="badge badge-pill badge-danger" (click)="onDelete()">X</span>        
-                        </div>
+                        <span *ngIf="!editProblemFlag" class="material-icons delete" (click)="onDelete()">delete</span>      
                     </div>    
-                </ng-template>        
+                <!-- <div *ngIf="problem.userSolution"> {{problem.userSolution.teacher_mark}} </div>        -->
             </div>
+            </ng-template> 
         </div>
-    <!-------------------------------------------- edit -->
-        <ng-template #editTitle>    
-            <div class="d-block">
-                <input type="text" class="col-12" [(ngModel)]="editedProblem.title" >
-                <div class="d-flex">
-                    <button class="badge badge-pill badge-success" (click)="onEdit()">Save</button>  
-                    <button class="badge badge-pill badge-warning " (click)="editProblemChange()">Cancel</button>
-                </div>        
-        </div>  
-        </ng-template>
-    </div>       
+    <!-------------------------------------------- edit ------------------------------------------->
+    <ng-template #editTitle>    
+        <div class="d-block">
+            <input type="text" class="col-12" [(ngModel)]="editedProblem.title" >
+            <div class="d-flex">
+                <button class="badge badge-pill badge-success" (click)="onEdit()">Save</button>  
+                <button class="badge badge-pill badge-warning " (click)="editProblemChange()">Cancel</button>
+            </div>        
+    </div>  
+    </ng-template>
+
 </ng-template>
 
 

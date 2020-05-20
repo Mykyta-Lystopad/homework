@@ -68,7 +68,6 @@ export class AssignmentService {
     }))
   }
   editAssignment(assin: Assignment){
-    console.log(assin);
     return this.apiSvc.put(`api/assignments/${assin.id}`,assin).pipe(tap(res => {
       this.alertSvc.success('Assignment changed successfsul')
     }, error => {
@@ -98,7 +97,7 @@ export class AssignmentService {
     }))
   }
   ///////////////////////////////////////////// Solutions ////////////////////////////////////////////
-  completedProblemSolve(e:{}){
+  completedProblemSolve(e:object){
      return this.apiSvc.post('api/solutions', e).pipe(tap( res =>{
       if (res['data']['completed'] === true){
         this.alertSvc.success('Problem checked as solved')
@@ -109,7 +108,7 @@ export class AssignmentService {
       this.alertSvc.danger(error['data'])
     }))
   }
-  changeSolutionStatus(solutionId: number, completed:{}){
+  changeSolutionStatus(solutionId: number, completed:object){
     return this.apiSvc.put(`api/solutions/${solutionId}`, completed).pipe(tap( res =>{
      if (res['data']['completed'] === true){
        this.alertSvc.success('Problem checked as solved')
@@ -128,7 +127,7 @@ export class AssignmentService {
     this.alertSvc.danger(error['data'])
   }))
  }
- editMessage(mess:{}){
+ editMessage(mess:object){
    let message = {message: mess['message']}
   return this.apiSvc.put(`api/messages/${mess['messageId']}`, message).pipe(tap(res => {
     console.log(res['data']);

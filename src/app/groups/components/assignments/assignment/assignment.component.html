@@ -14,7 +14,7 @@
   <div *ngIf="!assign.student_id">
     <div *ngIf="!showEditAssignment">
       <div *ngIf="user.role == 'teacher'" class="d-flex justify-content-end">
-        <span class="badge badge-danger" (click)="assignDelete()">X</span>        
+        <span class="material-icons delete" (click)="assignDelete()">delete</span>
       </div>
     </div> 
   </div>

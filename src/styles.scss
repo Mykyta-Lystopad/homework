@@ -35,8 +35,14 @@ body{
     width: 100%;
     flex-direction: row;
   }
-
-
-
+.material-icons{
+    cursor: pointer;
+}
+.delete{
+    color: red;
+}
+.edit{
+    color: orange;
+}
 
 

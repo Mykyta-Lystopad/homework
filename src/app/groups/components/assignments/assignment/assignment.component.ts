@@ -118,7 +118,7 @@ export class AssignmentComponent implements OnInit {
       }
     })
   }
-  probCompletedChsnge(e:{}){
+  probCompletedChsnge(e:object){
 
     let index = this.assign.problems.findIndex(prob => prob.id == e['problem_id'])
     if (!this.assign.problems[index].userSolution){
@@ -152,7 +152,7 @@ export class AssignmentComponent implements OnInit {
       this.message.message = ''
     })
   } 
-  editMessage(mess:{}){
+  editMessage(mess:object){
     
     this.assingSvc.editMessage(mess).subscribe(res => {
       let index = this.assign.userAnswer.messages.findIndex(message => mess['messageId'] == message.id)

@@ -20,7 +20,9 @@ export class MessageComponent implements OnInit {
    
   }
   deleteMessage(){
-    this.deleteEmit.emit(this.message.id)   
+    if (confirm(`Do you really want to delete message: ${this.message.message}`)){
+     this.deleteEmit.emit(this.message.id)   
+    }     
   }  
   changeEditShow(){
     this.editShow = !this.editShow
