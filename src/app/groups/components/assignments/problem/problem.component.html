@@ -33,15 +33,25 @@
                     </div>
                     <div>{{ problem.title }}</div>
                 </div> 
-                <div *ngIf="problem.userSolution" class="d-flex justify-content-end tech-mark"> 
-                    <div *ngIf="problem.userSolution.teacher_mark; else noMark"> {{problem.userSolution.teacher_mark}} </div>
-                    <ng-template #noMark>
-                        no mark
+                <div *ngIf="problem.userSolution"> 
+                    <div *ngIf="!editMark; else editMarkBlock" class="tech-mark" (click)="showEditMark()">
+                        <div *ngIf="problem.userSolution.teacher_mark; else noMark"> {{problem.userSolution.teacher_mark}} </div>
+                        <ng-template #noMark>
+                            no mark
+                        </ng-template>                    
+                    </div>   
+                    <ng-template #editMarkBlock>
+                        <div class="d-flex justify-content-end">
+                            <input  type="number" [(ngModel)]="currentMark" min="0" max="100">
+                            <div class="d-flex flex-row">
+                                <button class="badge badge-pill badge-success" (click)="saveMark()">Save</button>  
+                                <button class="badge badge-pill badge-warning " (click)="showEditMark()">Cancel</button>
+                            </div>
+                        </div>
+                        
                     </ng-template>
-                    
-                </div>       
+                </div>
             </div>
-
             <ng-template #editDeleteBlock>
             <div class="d-flex justify-content-between">
                 <div *ngIf="!editProblemFlag; else editTitle" (click)="editProblemChange()">{{ problem.title }}</div>

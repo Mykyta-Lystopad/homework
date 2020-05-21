@@ -76,10 +76,6 @@ export class AssignmentComponent implements OnInit {
       this.currentAssign.id = this.assign.id
       if (this.studentId && this.user.role == 'teacher') this.getStudentName()
       
-      console.log(this.assign);
-      
-
-
     })    
   }
 
