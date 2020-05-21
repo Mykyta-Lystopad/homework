@@ -8,6 +8,7 @@ import {NgxUiLoaderModule} from 'ngx-ui-loader';
 import {NgxPaginationModule} from 'ngx-pagination';
 import { AlertComponent } from './components/header/components/alert/alert.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import {ImageDrawingModule} from 'ngx-image-drawing';
 
 
 
@@ -21,6 +22,7 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
     NgxUiLoaderModule,
     NgxPaginationModule,
     NgbModule,
+    ImageDrawingModule
   ],
   declarations: [
     ShowAuthedDirective,
@@ -39,6 +41,7 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
     NgxUiLoaderModule,
     NgxPaginationModule,
     NgbModule,
+    ImageDrawingModule
   ],
 
 })

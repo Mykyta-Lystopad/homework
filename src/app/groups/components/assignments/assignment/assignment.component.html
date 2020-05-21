@@ -85,8 +85,15 @@
   <!------------------------------- Attaches --------------------------------->
   <div *ngIf="assign.userAnswer">
     <h6>User answer</h6>
-    <app-attachment *ngFor="let attach of assign.userAnswer.attachments" [attachment] = 'attach'></app-attachment>
+    <!-- <app-attachment *ngFor="let attach of assign.userAnswer.attachments" [attachment] = 'attach'></app-attachment> -->
+  
+    <app-attachments
+      [attachments] = 'attachments'
+      [assignID] = 'assign.id'
+    ></app-attachments>
+  
   </div> 
+
 
     <!----------------------------- messages block -------------------------------------------->
     <div *ngIf="assign.userAnswer">

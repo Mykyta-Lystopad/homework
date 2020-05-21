@@ -1,3 +1,4 @@
+import { AttachmentService } from './../../../../core/services/attachment.service';
 import { Message } from './../../../../core/models/message.model';
 import { Location } from '@angular/common';
 import { Problem } from './../../../../core/models/problem.model';
@@ -33,16 +34,22 @@ export class AssignmentComponent implements OnInit {
   user: User;
   private assignId: number;
   assign: Assignment = new AssignmentModel(this.assignId);
+  attachments: [][];
   currentAssign: Assignment = new AssignmentModel(this.assignId);
 
  
   constructor(
+    private attachmentService: AttachmentService,
     route: ActivatedRoute,
     private assingSvc: AssignmentService,
     private userSvc: UserService,
     private location: Location
     )
   {
+    this.assignId = +route.snapshot.params.id;
+    this.currentProblem.assignment_id = this.assignId;
+    this.currentAssign.id = this.assignId;
+    this.assignId = +route.snapshot.params.id;
     this.user = this.userSvc.getCurrentUser();
     this.assignId = +route.snapshot.params.id;
     if (this.user.role === 'teacher') {
@@ -60,6 +67,7 @@ export class AssignmentComponent implements OnInit {
   ngOnInit(): void {
     this.assingSvc.getAssign(this.assignId, this.studentId).subscribe(res => {      
       this.assign = res['data']
+      this.attachments = this.attachmentService.createDoubleArray(res['data'].attachments, 5);
       if (isNaN(this.studentId)){
         this.studentId = undefined
       }
