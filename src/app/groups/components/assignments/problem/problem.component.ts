@@ -40,6 +40,8 @@ export class ProblemComponent implements OnInit {
     if (!this.problem.userSolution){
       this.problem.userSolution = this.emptySolution
     }
+    console.log(this.problem);
+    //if (!this.problem.userSolution.teacher_mark) this.problem.userSolution.teacher_mark = 0;
     
   }
 

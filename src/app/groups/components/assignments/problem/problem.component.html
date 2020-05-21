@@ -1,21 +1,21 @@
 <div *ngIf="!(user.role == 'teacher'); else teacher">
-    <div class="d-flex flex-row" *ngIf="problem">
-        <div >
-            <div class="col-2">
-                <div (click)="onSolve()">
-                    <span class="material-icons checked" *ngIf="problem.userSolution.completed; else notCopmleted">check_circle</span>
-                    <ng-template #notCopmleted>
-                        <span class="material-icons ">radio_button_unchecked</span>
-                    </ng-template>
-                </div>
+    <div *ngIf="problem" class="d-flex flex-row justify-content-between">
+        <div class="d-flex flex-row ">
+            <div (click)="onSolve()">
+                <span class="material-icons checked" *ngIf="problem.userSolution.completed; else notCopmleted">check_circle</span>
+                <ng-template #notCopmleted>
+                    <span class="material-icons ">radio_button_unchecked</span>
+                </ng-template>
             </div>
+            <div>{{ problem.title }}</div>     
         </div>
-        <div class="d-flex justify-content-between" (click)="onSolve()" *ngIf="problem.userSolution">
-            <div>{{ problem.title }}</div>
-            <div *ngIf="problem.userSolution; else notMarked"> {{problem.userSolution.teacher_mark}} </div>
-            <ng-template #notMarked>
-                not marked
-            </ng-template>                        
+        <div *ngIf="problem.userSolution">
+            <div *ngIf="problem.userSolution" class="d-flex justify-content-end tech-mark"> 
+                <div *ngIf="problem.userSolution.teacher_mark; else noMark"> {{problem.userSolution.teacher_mark}} </div>
+                <ng-template #noMark>
+                    no mark
+                </ng-template>                
+            </div>                       
         </div>
     </div>
 </div>
@@ -23,14 +23,23 @@
 <ng-template #teacher>
         <div>
             <!--------------------------------------- problem -------------------------->
-            <div *ngIf='studentId; else editDeleteBlock' class="d-flex flex-row" >
-                <div>
-                    <span class="material-icons checked" *ngIf="problem.userSolution.completed; else notCopmleted">check_circle</span>
-                    <ng-template #notCopmleted>
-                        <span class="material-icons ">radio_button_unchecked</span>
+            <div *ngIf='studentId; else editDeleteBlock' class="d-flex flex-row justify-content-between" >
+                <div class="d-flex flex-row">   
+                    <div>
+                        <span class="material-icons checked" *ngIf="problem.userSolution.completed; else notCopmleted">check_circle</span>
+                        <ng-template #notCopmleted>
+                            <span class="material-icons ">radio_button_unchecked</span>
+                        </ng-template>
+                    </div>
+                    <div>{{ problem.title }}</div>
+                </div> 
+                <div *ngIf="problem.userSolution" class="d-flex justify-content-end tech-mark"> 
+                    <div *ngIf="problem.userSolution.teacher_mark; else noMark"> {{problem.userSolution.teacher_mark}} </div>
+                    <ng-template #noMark>
+                        no mark
                     </ng-template>
-                </div>
-                <div>{{ problem.title }}</div>
+                    
+                </div>       
             </div>
 
             <ng-template #editDeleteBlock>

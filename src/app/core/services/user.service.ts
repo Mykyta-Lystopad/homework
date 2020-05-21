@@ -1,10 +1,10 @@
+import { User } from './../models/user.model';
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable, BehaviorSubject, ReplaySubject} from 'rxjs';
 
 import {ApiService} from './api.service';
 import {JwtService} from './jwt.service';
-import {User} from '../models';
 import {map, distinctUntilChanged} from 'rxjs/operators';
 import {Router} from '@angular/router';
 
@@ -119,6 +119,10 @@ export class UserService {
         this.currentUserSubject.next(data.user);
         return data.user;
       }));
+  }
+
+  getUserById(userId: number){
+
   }
 
 

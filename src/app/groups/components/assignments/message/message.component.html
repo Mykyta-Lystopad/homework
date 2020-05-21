@@ -21,7 +21,14 @@
       </ng-template>
       
       <div *ngIf="message.attachments">
-        <app-attachment *ngFor="let attach of message.attachments" [attachment] = 'attach'></app-attachment>
+        <!-- <app-attachment *ngFor="let attach of message.attachments" [attachment] = 'attach'></app-attachment> -->
+        <!-- PROBLEM ---------------------------- assignid does not exist!!!!!!!!!!!!!!!!!!!!!!!1  -->
+       
+        <!-- <app-attachments -->
+        <!-- [attachments] = 'message.attachments' -->
+        <!-- [assignID] = 'assign.id' -->
+      <!-- ></app-attachments> -->
+
       </div>  
     </div>
   </div>

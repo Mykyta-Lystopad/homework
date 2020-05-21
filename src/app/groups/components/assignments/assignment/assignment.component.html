@@ -3,6 +3,7 @@
 <div class="container">
   <div class="wrap">
     <button class="btn btn-success" (click)="back()">back...</button>
+    <span *ngIf="user.role == 'teacher'"> {{studentName}} </span>
 
 
   
@@ -71,24 +72,29 @@
       </div>
     </div>
   </div>   
-  <!------------------------------- Attaches in assignment --------------------------------->
-
-  <div *ngIf="assign.attachments">
-    <app-attachment *ngFor="let attach of assign.attachments" [attachment] = 'attach'></app-attachment>
-  </div>
-
   <!-- ------------------------dates ----------------------------------------- -->
   <ul class="list-group d-flex flex-row justify-content-end">
     <li class="list-group-item">Date of create {{ assign.created_at | date:"dd/MM/yy" }}</li>
-    <li class="list-group-item">Due date</li>
+    <li class="list-group-item">Due date {{ assign.due_date | date:"dd/MM/yy" }} </li>
   </ul>
+
+  <!------------------------------- Attaches in assignment --------------------------------->
+
+  <div *ngIf="assign.attachments">
+    <!-- <app-attachment *ngFor="let attach of assign.attachments" [attachment] = 'attach'></app-attachment> -->
+    <app-attachments
+      [attachments] = 'assign.attachments'
+      [assignID] = 'assign.id'
+    ></app-attachments>
+  </div>
+
   <!------------------------------- Attaches --------------------------------->
-  <div *ngIf="assign.userAnswer">
+  <div *ngIf="assign.userAnswer && assign.student_id">
     <h6>User answer</h6>
     <!-- <app-attachment *ngFor="let attach of assign.userAnswer.attachments" [attachment] = 'attach'></app-attachment> -->
   
     <app-attachments
-      [attachments] = 'attachments'
+      [attachments] = 'assign.userAnswer.attachments'
       [assignID] = 'assign.id'
     ></app-attachments>
   

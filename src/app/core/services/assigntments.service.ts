@@ -39,6 +39,15 @@ export class AssignmentService {
     }
     return this.subj;
   }
+
+  getStudentName(group_id: number){
+    return this.apiSvc.get(`api/groups/${group_id}`).pipe(tap(res => {
+
+    }, error => {
+      this.alertSvc.danger('Error of getting student name:' + error['data'])
+    }))
+
+  }
   ///////////////////////////////////////////////////// Assign ///////////////////////////////////////////
   getAssign(assignId: number, userId: number) {
     return this.apiSvc.get(`api/assignments/${assignId}?user_id=${userId}`)
