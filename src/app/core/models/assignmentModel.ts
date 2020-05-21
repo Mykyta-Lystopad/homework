@@ -10,7 +10,7 @@ export class AssignmentModel implements Assignment{
     title:string;
     description?: string;
     created_at?: number;
-    dueDate?: number;
+    due_date?: number;
     problems?: Problem[];
     attachments?: Attachment[];
     userAnswer?: UserAnswer;   
@@ -22,7 +22,7 @@ export class AssignmentModel implements Assignment{
         this.title = '';
         this.description = '';
         this.created_at = Date.now();
-        this.dueDate = null;
+        this.due_date = null;
         this.problems = [];
         this.attachments = [];
         this.userAnswer = null;

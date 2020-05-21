@@ -45,8 +45,7 @@ export class AssignmentComponent implements OnInit {
     route: ActivatedRoute,
     private assignSvc: AssignmentService,
     private userSvc: UserService,
-    private location: Location
-    )
+    private location: Location)
   {
     this.assignId = +route.snapshot.params.id;
     this.currentProblem.assignment_id = this.assignId;
@@ -76,8 +75,14 @@ export class AssignmentComponent implements OnInit {
       this.assign.student_id = this.studentId
       this.currentAssign.id = this.assign.id
       if (this.studentId && this.user.role == 'teacher') this.getStudentName()
+      
+      console.log(this.assign);
+      
+
+
     })    
   }
+
   back(){
     this.location.back();
   }

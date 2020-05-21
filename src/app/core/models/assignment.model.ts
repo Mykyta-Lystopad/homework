@@ -12,5 +12,5 @@ export interface Assignment {
     attachments?: Attachment[];
     userAnswer?: UserAnswer;    
     created_at?: number;
-    dueDate?: number;
+    due_date?: number;
 }
