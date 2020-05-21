@@ -135,19 +135,10 @@ export class AssignmentComponent implements OnInit {
 
   ////////////////////////////////////////////////////////////// Messages ///////////////////////////////////
   sendMessage(){
-    this.message.assignment_id = this.assign.id;
-    this.message.student_id = this.studentId;
-    this.message.attachments = null;
-    this.assingSvc.createMessage(this.message).subscribe(res => {
-      console.log(this.assign);
-      debugger
-      // if (!this.assign.userAnswer){
-      //   this.assign.userAnswer: UserAnswer
-      //     //messages: Message[]
-      //   }
-      // }
-
-
+      this.message.assignment_id = this.assign.id;
+      this.message.student_id = this.studentId;
+      this.message.attachments = null;
+      this.assingSvc.createMessage(this.message).subscribe(res => {
       this.assign.userAnswer.messages.push(res['data'])
       this.message.message = ''
     })
