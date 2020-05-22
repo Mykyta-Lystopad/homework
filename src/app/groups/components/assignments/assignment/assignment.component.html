@@ -2,23 +2,28 @@
 
 <div class="container">
   <div class="wrap">
-    <button class="btn btn-success" (click)="back()">back...</button>
+    <div class="d-flex justify-content-between flex-row">
+      <button class="btn btn-success" (click)="back()">back...</button>
+      <div *ngIf="!assign.student_id">
+        <div *ngIf="!showEditAssignment">
+          <div *ngIf="user.role == 'teacher'" class="d-flex justify-content-end">
+            <span class="material-icons delete" (click)="assignDelete()">delete</span>
+          </div>
+        </div> 
+      </div>
+
+
+    </div>
     <span *ngIf="user.role == 'teacher'"> {{studentName}} </span>
 
+    
 
   
   <div *ngIf="!showEditAssignment; else editAssign" (click)="showEditAssign()">
     <h4>{{ assign.title }}</h4> 
     <h6 *ngIf="assign.description">Note: {{ assign.description }}</h6>
   </div>  
-  
-  <div *ngIf="!assign.student_id">
-    <div *ngIf="!showEditAssignment">
-      <div *ngIf="user.role == 'teacher'" class="d-flex justify-content-end">
-        <span class="material-icons delete" (click)="assignDelete()">delete</span>
-      </div>
-    </div> 
-  </div>
+
 <!-------------------------------------------------- edit -->
     <ng-template #editAssign>
       <div class="card-text d-flex flex-column border border-warning">    

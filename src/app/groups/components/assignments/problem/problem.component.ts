@@ -1,6 +1,6 @@
 import { AlertService } from './../../../../core/services/alert.service';
 import { AssignmentService } from './../../../../core/services/assigntments.service';
-import { Solution } from './../../../../core/models/solution.model';
+import { UserSolution } from './../../../../core/models/solution.model';
 import { Problem } from './../../../../core/models/problem.model';
 import { User } from '../../../../core/models';
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
@@ -22,7 +22,7 @@ export class ProblemComponent implements OnInit {
   @Output() emitEdit: EventEmitter<Problem> = new EventEmitter(); 
   @Output() emitSolve: EventEmitter<{}> = new EventEmitter();
 
-  private emptySolution:Solution = {
+  private emptySolution:UserSolution = {
     id: null,
     teacher_mark : null,
     completed : false
@@ -30,9 +30,7 @@ export class ProblemComponent implements OnInit {
   
   editProblemFlag = false;
   editedProblem: Problem = {
- 
-    title : '',
-    description : ''
+     title : '',
   }
   constructor(
     private assignSvc: AssignmentService,
@@ -45,9 +43,7 @@ export class ProblemComponent implements OnInit {
     }
     if (!this.problem.userSolution){
       this.problem.userSolution = this.emptySolution
-    }
-    console.log(this.problem.userSolution.completed);
-    
+    }    
   }
 
   onSolve(){
@@ -72,7 +68,6 @@ export class ProblemComponent implements OnInit {
     if (this.user.role == 'teacher' && this.studentId == undefined){
       this.editProblemFlag = !this.editProblemFlag
       this.editedProblem.title = this.problem.title
-      this.editedProblem.description = this.problem.description
     }    
   }
   showEditMark(){

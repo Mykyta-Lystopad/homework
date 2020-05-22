@@ -2,7 +2,7 @@
 <div class="container">
    
 <div *ngIf="currentUser.role == 'teacher' && !student_id; else studentNameBlock"  class="card">
-  <button type="button" class="btn btn-primary" *ngIf="!createAssignFlag" (click)="createAssignFlag = true">
+  <button type="button" class="btn btn-primary" *ngIf="!createAssignFlag" (click)="showNewAssignBlock()">
     Create new assignment
   </button>
 </div>
@@ -16,31 +16,49 @@
     <div class="card-body">
       <h4 class="card-title">Create new assignment</h4>
       <div class="card-text">
-        <form [formGroup]="form">
+        <!-- <form [formGroup]="form"> -->
+          <!-- formControlName="title" -->
+          <!-- formControlName="note" -->
           <div class="modal-body">
             Title
             <input
               class="input-group"
               type="text"
-              formControlName="title"
-              [(ngModel)]="currentAssignment.title">
-  
+              
+              [(ngModel)]="currentAssignment.title">  
             Note (if necessary)
             <input
               class="input-group"
               type="text"
-              formControlName="note"
+              
               [(ngModel)]="currentAssignment.description">
+            Due date (if necessary)
+            <!-- <input class="input-group" type="date" [(ngModel)]="currentAssignment.due_date"> -->
+            <div class="col-xs-12 col-12 col-md-4 form-group">
+              <input type="text"
+                     placeholder="Datepicker, installing in process"
+                     class="form-control"
+                     bsDatepicker>
+            </div>
+          </div>
+            Problems:
+          <div *ngFor="let problemM of currentAssignment.problems; let i = index" class="d-flex flex-row justify-content-between m-1">
+            <span>{{i+1}}: </span> 
+            <input class="input-problem col" type="text" [(ngModel)]="problemM.title"> 
+            <span class="material-icons delete" (click)="removeProblem(i)">delete</span>
           </div>
           <button type="button" class="btn btn-primary col-12" (click)="addProblem()">Add problem to assignment</button>
-
-          
-        </form>
+          <P> Need to solve problem with: attachments needs assignment id, but it's dos't exist </P>
+          <!-- [disabled]="!form.valid" -->
+        <!-- </form> -->
       </div>
-      <button type="button" class="btn btn-success" [disabled]="!form.valid" (click)='onSubmit()'>Save changes</button>
-      <button type="button" class="btn btn-warning" data-dismiss="modal" (click)="createAssignFlag = false">Close</button>
-    </div>
+      <div class="d-flex justify-content-between">
+        <button type="button" class="btn btn-warning" data-dismiss="modal" (click)="createAssignFlag = false">Close</button>
+        <button type="button" class="btn btn-success"  (click)='onSubmit()'>Save changes</button>
 
+      </div>
+     </div>
+<!-- --------------------------------------Assignments ------------------------------------------------>
 </div>
   <div *ngFor="let assign of assignments">
     <div class="card"

@@ -17,11 +17,12 @@ export class MyGroupsComponent implements OnInit {
   group: Group[];
   title = '';
   activeTab = false;
-  idGroup: number;s
+  idGroup: number;
   showTitleBlock = false;
   role: string;
   showEditBlock = false;
   storage: any = window.localStorage;
+
 
   constructor(
     private  apiService: ApiService,

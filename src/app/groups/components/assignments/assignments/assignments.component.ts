@@ -1,11 +1,14 @@
+import { Problem } from './../../../../core/models/problem.model';
 import {User} from './../../../../core/models/user.model';
 import {UserService} from './../../../../core/services/user.service';
 import {Component, OnInit} from '@angular/core';
 import {AssignmentService} from "../../../../core/services/assigntments.service";
-import {FormControl, FormGroup, Validators} from "@angular/forms";
+// import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {Assignment} from "../../../../core/models/assignment.model";
 import {AssignmentModel} from "../../../../core/models/assignmentModel";
 import {ActivatedRoute} from "@angular/router";
+import { formatDate } from '@angular/common';
+import { ProblemModel } from 'src/app/core/models/problemModel';
 
 
 @Component({
@@ -14,7 +17,7 @@ import {ActivatedRoute} from "@angular/router";
   styleUrls: ['./assignments.component.scss']
 })
 export class AssignmentsComponent implements OnInit {
-  form: FormGroup;
+  // form: FormGroup;
   currentUser: User;
   assignments: Assignment[];
   group_id: number;
@@ -41,14 +44,16 @@ export class AssignmentsComponent implements OnInit {
     if (this.student_id) this.getStudentName()
     })
 
-    this.form = new FormGroup({
-      title: new FormControl('', [Validators.required, Validators.minLength(6), Validators.maxLength(200)]),
-      note: new FormControl('', [Validators.maxLength(200)])
-    })
+    // this.form = new FormGroup({
+    //   title: new FormControl('', [Validators.required, Validators.minLength(6), Validators.maxLength(200)]),
+    //   note: new FormControl('', [Validators.maxLength(200)]),
+    //   newProblem: new FormGroup({})
+    // })
 
     this.assignSvc.getAssignments(this.group_id, this.student_id).subscribe(res =>{
       this.assignments = res;
     })
+    
    
   }
   getStudentName(){
@@ -57,9 +62,24 @@ export class AssignmentsComponent implements OnInit {
       this.studentName =  `${res['data']['users'][index].first_name} ${res['data']['users'][index].last_name}`;
     })
   }
+  showNewAssignBlock(){
+    this.createAssignFlag = !this.createAssignFlag
+    this.currentAssignment.title = formatDate(new Date(), 'dd/MM/yyyy', 'en') + ': '
+  }
 
   addProblem(){
+    let prob: Problem = new ProblemModel(null)
+    // let someObj = {
+    //   title: 'text'
+    // }
+    // this.currentAssignment.problems.push(someObj)
+    this.currentAssignment.problems.push(prob)
+    console.log(this.currentAssignment);
+    
     //this.currentAssignment.problems.push({id:1})
+  }
+  removeProblem(index: number){
+    this.currentAssignment.problems.splice(index,1)
   }
 
   onSubmit() {

@@ -31,7 +31,6 @@ export class AssignmentComponent implements OnInit {
   currentProblem: Problem = {
     id : undefined,
     title: '',
-    description: '',
   };
   user: User;
   private assignId: number;
@@ -119,7 +118,6 @@ export class AssignmentComponent implements OnInit {
     })
       this.showCreateProblem = !this.showCreateProblem
       this.currentProblem.title = ''
-      this.currentProblem.description = ''
   }
   probDel(probId: number){
     this.assignSvc.deleteProblem(probId).subscribe(res => {
@@ -132,7 +130,6 @@ export class AssignmentComponent implements OnInit {
       if (res.success){
         let index = this.assign.problems.findIndex(prob => prob.id == res.data.id)
         this.assign.problems[index].title = res.data.title;
-        this.assign.problems[index].description = res.data.description;
       }
     })
   }

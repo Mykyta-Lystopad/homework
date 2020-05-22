@@ -11,7 +11,8 @@ import {HeaderComponent} from './shared/components/header/header.component';
 import {SignInComponent} from './shared/components/header/components/sign-in/sign-in.component';
 import {ResPasswordComponent} from './shared/components/res-password/res-password.component';
 import {DropdownMenuComponent} from './shared/components/header/components/dropdown-menu/dropdown-menu.component';
-
+// import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+// import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
 
 
@@ -22,7 +23,9 @@ import {DropdownMenuComponent} from './shared/components/header/components/dropd
     HeaderComponent,
     SignInComponent,
     ResPasswordComponent,
-    DropdownMenuComponent
+    DropdownMenuComponent,
+    // BrowserAnimationsModule,
+    // BsDatepickerModule.forRoot(),
   ],
   imports: [
     BrowserModule,

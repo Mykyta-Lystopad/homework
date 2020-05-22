@@ -35,43 +35,49 @@
                 </div> 
                 <div *ngIf="problem.userSolution"> 
                     <div *ngIf="!editMark; else editMarkBlock" class="tech-mark" (click)="showEditMark()">
-                        <div *ngIf="problem.userSolution.teacher_mark; else noMark"> {{problem.userSolution.teacher_mark}} </div>
+                        <div *ngIf="problem.userSolution.teacher_mark; else noMark"> 
+                            {{problem.userSolution.teacher_mark}} 
+                        </div>
                         <ng-template #noMark>
                             no mark
                         </ng-template>                    
                     </div>   
                     <ng-template #editMarkBlock>
-                        <div class="d-flex justify-content-end">
-                            <input  type="number" [(ngModel)]="currentMark" min="0" max="100">
+                        <div class="d-flex align-items-end flex-column">
+                            <input class="edit-tech-mark" type="number" [(ngModel)]="currentMark" min="0" max="100">
                             <div class="d-flex flex-row">
                                 <button class="badge badge-pill badge-success" (click)="saveMark()">Save</button>  
                                 <button class="badge badge-pill badge-warning " (click)="showEditMark()">Cancel</button>
                             </div>
-                        </div>
-                        
+                        </div>                        
                     </ng-template>
                 </div>
             </div>
             <ng-template #editDeleteBlock>
-            <div class="d-flex justify-content-between">
-                <div *ngIf="!editProblemFlag; else editTitle" (click)="editProblemChange()">{{ problem.title }}</div>
-                    <div *ngIf="!studentId">
-                        <span *ngIf="!editProblemFlag" class="material-icons delete" (click)="onDelete()">delete</span>      
-                    </div>    
-                <!-- <div *ngIf="problem.userSolution"> {{problem.userSolution.teacher_mark}} </div>        -->
-            </div>
+                <div *ngIf="!editProblemFlag; else editTitle">
+                    <div class="d-flex justify-content-between">
+                        <div  (click)="editProblemChange()">
+                            {{ problem.title }}
+                        </div>
+                        <div *ngIf="!studentId && !editProblemFlag">
+                            <span class="material-icons delete" (click)="onDelete()">delete</span>      
+                        </div>    
+                    </div>
+                </div>
+                
+            <!-------------------------------------------- edit ------------------------------------------->
+                <ng-template #editTitle>    
+                    <div class="d-flex flex-column">
+                        <input type="text" class="col-12" [(ngModel)]="editedProblem.title" >
+                        <div class="d-flex">
+                            <button class="badge badge-pill badge-success" (click)="onEdit()">Save</button>  
+                            <button class="badge badge-pill badge-warning " (click)="editProblemChange()">Cancel</button>
+                        </div>        
+                </div>  
+                </ng-template>
             </ng-template> 
         </div>
-    <!-------------------------------------------- edit ------------------------------------------->
-    <ng-template #editTitle>    
-        <div class="d-block">
-            <input type="text" class="col-12" [(ngModel)]="editedProblem.title" >
-            <div class="d-flex">
-                <button class="badge badge-pill badge-success" (click)="onEdit()">Save</button>  
-                <button class="badge badge-pill badge-warning " (click)="editProblemChange()">Cancel</button>
-            </div>        
-    </div>  
-    </ng-template>
+    
 
 </ng-template>
 
