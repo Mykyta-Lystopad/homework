@@ -3,49 +3,73 @@
     <div class="row m-2">
       <div class="group-title">
         <p>MY GROUPS</p>
-        <button
-          type="button"
-          class="btn btn-primary"
-          (click)="showTitleBlock = !showTitleBlock">+
-        </button>
       </div>
-    </div>
-    <div *ngIf="showTitleBlock" class="input-group mb-3">
-      <div class="input-group-prepend">
-        <button class="btn btn-outline-secondary" (click)="addGroup()" type="button">Add</button>
-      </div>
-      <input type="text" class="form-control" placeholder="Title" [(ngModel)]="title">
     </div>
 
     <div
-      *ngIf="group; else loading"
+      *ngIf="(groupsTets$ | async)?.length !== 0"
     >
-      <div>
-        <ul class="list-group">
-          <li
-            *ngFor="let group of groups$|async; let idx=index"
-            class="list-group-item d-flex justify-content-between align-items-center"
-            [ngClass]="{'active': group.id === idGroup}">
-            <div class="info-group" (click)="showUsers(group.id)">
-              <p>{{group.title}}</p>
-              <p>{{group.subject}}</p>
-            </div>
-            <div class="group-manager">
-              <span class="btn-for-group" (click)="deleteGroup(group.id)"><img src="../../../../assets/img/trashcan.svg"
-                                                                               alt=""></span>
-              <span class="badge badge-success badge-pill pill">14</span>
-              <span class="btn-for-group" (click)="idGroup=group.id;showEditBlock=true">
-                <img src="../../../../assets/img/pencil.svg">
-              </span>
-            </div>
+      <div class="row justify-content-around">
+        <ul class="c-tile-list">
+          <li class="c-tile-list__item"
+              *ngFor="let group of groupsTets$|async"
+          >
+            <article class="c-article-tile t-sass">
+              <div class="c-article-tile__header">
+                <a class="c-article-tile__category text-dark">
+                  {{group.title}}
+                </a>
+              </div>
+
+              <div class="c-article-tile__body">
+                <h2 class="c-article-tile__title">
+                  <a
+                    [ngClass]="(group.id === idGroup) ? 'text-primary':'text-dark'"
+                    (click)="showUsers(group.id)">{{group.subject}}</a>
+                </h2>
+              </div>
+
+              <footer class="c-article-tile__footer">
+        <span class="c-article-tile__author">
+          <a class="text-dark">Some information</a>
+        </span>
+              </footer>
+            </article>
           </li>
-          <div *ngIf="showEditBlock" class="input-group mb-3">
-            <div class="input-group-prepend">
-              <button class="btn btn-outline-secondary" (click)="addGroup()" type="button">Add</button>
-            </div>
-            <input type="text" class="form-control" placeholder="Title" [(ngModel)]="title">
-          </div>
+
+          <!-- New group -->
+          <li class="c-tile-list__item">
+            <article class="c-article-tile t-sass">
+              <div class="c-article-tile__header">
+                <a class="c-article-tile__category text-dark">
+                  Subject
+                </a>
+              </div>
+
+              <div class="c-article-tile__body">
+                <h2 class="c-article-tile__title">
+                  <input
+                    type="text"
+                    class="form-control"
+                    [(ngModel)]="title"
+                    placeholder="Title for group">
+                </h2>
+              </div>
+
+              <footer class="c-article-tile__footer">
+        <span class="c-article-tile__author">
+          <button
+            type="button"
+            class="btn btn-success"
+            (click)="addGroup()"
+          >Add</button>
+        </span>
+
+              </footer>
+            </article>
+          </li>
         </ul>
+
       </div>
     </div>
 
@@ -65,15 +89,16 @@
         <nav class="nav nav-pills flex-column flex-sm-row mt-2 mb-2">
           <a class="flex-sm-fill text-sm-center nav-link"
              [routerLink]="[idGroup ,'allAssignments',idGroup]"
-             [ngClass]="{'active': activeTab}"
-             (click)="activeTab=true">ALL ASSIGNMENTS</a>
+             [ngClass]="{'active': activeTab==='assignment'}"
+             (click)="activeTab='assignment'">ALL ASSIGNMENTS</a>
           <a class="flex-sm-fill text-sm-center nav-link users-style"
              [routerLink]="[idGroup]"
-             (click)="activeTab=false"
-             [ngClass]="{'active': !activeTab}">STUDENTS</a>
+             (click)="activeTab='student'"
+             [ngClass]="{'active': activeTab==='student'}">STUDENTS</a>
         </nav>
       </div>
     </div>
+
     <div>
       <router-outlet></router-outlet>
     </div>

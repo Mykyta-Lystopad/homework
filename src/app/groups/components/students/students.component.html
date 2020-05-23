@@ -3,19 +3,37 @@
     <div
       *ngIf="users.length; else loading"
     >
-      <div *ngFor="let user of users" class="list-group">
-        <a
-          [routerLink]="['/groups',idGroup,'student', user.id]"
-          class="list-group-item list-group-item-action">
-          <div class="d-flex w-100 justify-content-between">
-            <h5 class="mb-1">{{user.first_name}} {{user.last_name}}</h5>
-            <small>{{user.role}}</small>
-          </div>
-          <p class="mb-1">{{user.email}}</p>
-        </a>
-      </div>
-    </div>
+      <ul class="c-tile-list">
+        <li class="c-tile-list__item"
+            style="width: 33.3%"
+            *ngFor="let user of users"
+        >
+          <article class="c-article-tile t-sass">
+            <div class="c-article-tile__header">
+              <a class="c-article-tile__category text-dark">
+                {{user.role}}
+              </a>
 
+            </div>
+
+            <div class="c-article-tile__body">
+              <h2 class="c-article-tile__title">
+                <a class="text-dark" [routerLink]="['/groups',idGroup,'student',user.id]">
+                  {{user.first_name}} {{user.last_name}}</a>
+              </h2>
+            </div>
+
+            <footer class="c-article-tile__footer">
+        <span class="c-article-tile__author">
+          <a class="text-dark">{{user.email}}</a>
+        </span>
+
+            </footer>
+          </article>
+        </li>
+
+      </ul>
+    </div>
 
     <ng-template #loading>
       <div class="text-center">

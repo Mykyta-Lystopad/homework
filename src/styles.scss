@@ -46,3 +46,126 @@ body{
 }
 
 
+
+.c-tile-list {
+  list-style: none; /* 1 */
+  margin: 0; /* 1 */
+  padding: 0; /* 1 */
+  display: flex; /* 2 */
+  flex-wrap: wrap; /* 2 */
+
+}
+
+/**
+ * 1. Flexbox used for equal-height tiles on a same line.
+ * 2. Make sure a time never looks distorded.
+ * 3. Spacing between tiles.
+ */
+.c-tile-list__item {
+  display: flex; /* 1 */
+  flex-direction: column; /* 1 */
+  width: 50%;
+  margin-bottom: 10px;
+  text-decoration: none;
+}
+
+
+/* -------------------------------------------------------------------------- *\
+ * .c-article-tile
+ * -------------------------------------------------------------------------- */
+
+/**
+ * 1. Make it possible to bottom align the footer in a tile that has a minimum
+ *    height.
+ * 2. Make sure the tile spread across the full height of the parent if inside
+ *    a flex container.
+ */
+.c-article-tile {
+  display: flex; /* 1 */
+  flex-direction: column; /* 1 */
+  flex: 1 0 auto; /* 2 */
+  border: 2px solid rgba(0, 0, 0, 0.1);
+  background-color: rgb(255, 255, 255);
+}
+
+.c-article-tile__header,
+.c-article-tile__body,
+.c-article-tile__footer {
+  display: flex;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.c-article-tile__header,
+.c-article-tile__footer {
+  font-size: 80%;
+}
+
+.c-article-tile__header {
+  padding-top: 15px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #000;
+}
+
+.c-article-tile__category {
+  font-weight: bold;
+}
+
+/**
+ * 1. Right align the comment count container in the header.
+ */
+.c-article-tile__comment-count {
+  margin-left: auto; /* 1 */
+}
+
+.c-article-tile__body {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.c-article-tile__title {
+  margin: 0;
+  color: #333;
+  font-size: 150%;
+  cursor: pointer;
+}
+
+/**
+ * 1. Make the title link inherit the color only when not active / hovered,
+ *    effectively making it themed when active / hovered.
+ */
+
+
+/**
+ * 1. Bottom align the footer in the tile.
+ * 2. Prevent any content from the footer from wrapping, effectively forcing it
+ *    on a single line at all time.
+ */
+.c-article-tile__footer {
+  padding-top: 10px;
+  padding-bottom: 15px;
+  margin-top: auto; /* 1 */
+  white-space: nowrap; /* 2 */
+  color: #949494;
+}
+
+/**
+ * 1. Prevent the author and the date from overlapping in case they both don’t
+ *    fit on the line; add an ellipsis to the author name.
+ * 2. Visually no effect when both the author and the date fit; however make
+ *    sure they are slightly spaced from each other if they meet on the line.
+ */
+.c-article-tile__author {
+  text-overflow: ellipsis; /* 1 */
+  overflow: hidden; /* 1 */
+  margin-right: 5px; /* 2 */
+}
+
+/**
+ * 1. Right align the date container in the footer.
+ */
+.c-article-tile__date {
+  margin-left: auto; /* 1 */
+}
+
+

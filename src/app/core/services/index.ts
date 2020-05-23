@@ -10,4 +10,5 @@ export * from './alert.service';
 export * from './names.service';
 export * from './attachment.service';
 export * from './role.service';
+export * from './groups.service';
 
