@@ -13,12 +13,11 @@ import {environment} from "../../../../environments/environment";
 })
 export class MyGroupsComponent implements OnInit {
 
-  groups$: BehaviorSubject<Group[]> = new BehaviorSubject([]);
-  groupsTets$: Observable<Group[]>
+  groups$: Observable<Group[]>
   group: Group[];
   title = '';
   activeTab = 'student';
-  idGroup: number;s
+  idGroup: number;
   role: string;
   storage: any = window.localStorage;
 
@@ -33,10 +32,10 @@ export class MyGroupsComponent implements OnInit {
 
   ngOnInit(): void {
     this.role = this.storage.getItem(environment.KEY_ROLE)
-    this.groupsTets$ = this.groupService.group
+    this.groups$ = this.groupService.group
     this.groupService.load(this.role)
 
-    this.groupsTets$.subscribe(groups => {
+    this.groups$.subscribe(groups => {
       if (groups.length) {
         this.idGroup = groups[0].id
         this.role === 'teacher' ? this.router.navigate(['groups', this.idGroup]) :
@@ -50,13 +49,6 @@ export class MyGroupsComponent implements OnInit {
     this.groupService.add(this.title, 1)
   }
 
-  deleteGroup(id: number) {
-    this.apiService.delete(`api/groups/${id.toString()}`)
-      .subscribe(() => {
-        this.group = this.group.filter(group => group.id !== id);
-        this.groups$.next(this.group);
-      });
-  }
 
   showUsers(id: number) {
     this.idGroup = id;

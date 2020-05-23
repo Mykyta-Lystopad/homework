@@ -7,12 +7,12 @@
     </div>
 
     <div
-      *ngIf="(groupsTets$ | async)?.length !== 0"
+      *ngIf="(groups$ | async)?.length !== 0"
     >
       <div class="row justify-content-around">
         <ul class="c-tile-list">
           <li class="c-tile-list__item"
-              *ngFor="let group of groupsTets$|async"
+              *ngFor="let group of groups$|async"
           >
             <article class="c-article-tile t-sass">
               <div class="c-article-tile__header">
