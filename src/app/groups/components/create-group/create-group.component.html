@@ -1,1 +1,29 @@
-<p>create-group works!</p>
+<div class="container">
+  <div class="row justify-content-center">
+    <ul class="list-group col-9">
+      <li
+        class="list-group-item d-flex justify-content-between align-items-center"
+        *ngFor="let group of groups$|async"
+      >
+        <div class="row align-items-end">
+          <p>{{group.title}}</p>
+          <p class="ml-2 subject-title">{{group.subject}}</p>
+        </div>
+
+        <div>
+          <span
+            class="badge badge-img"
+          (click)="delete(group.id)">
+            <img src="./assets/img/icons8-удалить-96.png" alt="Удалить">
+          </span>
+          <span
+            class="badge badge-img"
+          (click)="edit(group.id)">
+            <img src="./assets/img/icons8-edit-64.png" alt="Изменить">
+            </span>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <button type="button" class="btn btn-success">Добавить группу</button>
+</div>

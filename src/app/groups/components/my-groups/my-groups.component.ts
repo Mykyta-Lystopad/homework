@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {Observable} from 'rxjs';
 import {Group} from '../../../core/models/group.model';
-import {ApiService, GroupsService, RoleService, UserService} from '../../../core/services';
+import {GroupsService, RoleService} from '../../../core/services';
 import {Router} from "@angular/router";
 
 import {environment} from "../../../../environments/environment";
@@ -14,17 +14,13 @@ import {environment} from "../../../../environments/environment";
 export class MyGroupsComponent implements OnInit {
 
   groups$: Observable<Group[]>
-  group: Group[];
-  title = '';
   activeTab = 'student';
   idGroup: number;
   role: string;
   storage: any = window.localStorage;
 
   constructor(
-    private apiService: ApiService,
     private router: Router,
-    private userService: UserService,
     private roleService: RoleService,
     private groupService: GroupsService
   ) {
@@ -34,19 +30,16 @@ export class MyGroupsComponent implements OnInit {
     this.role = this.storage.getItem(environment.KEY_ROLE)
     this.groups$ = this.groupService.group
     this.groupService.load(this.role)
-
-    this.groups$.subscribe(groups => {
-      if (groups.length) {
-        this.idGroup = groups[0].id
+    setTimeout(_=>{
+      this.idGroup = this.groupService.getGroupId()
+      console.log('fweff'+ this.idGroup)
+      if ( this.idGroup) {
         this.role === 'teacher' ? this.router.navigate(['groups', this.idGroup]) :
           this.router.navigate(['groups', this.idGroup, 'allAssignments', this.idGroup]);
       }
-    })
+    }, 1000)
 
-  }
 
-  addGroup() {
-    this.groupService.add(this.title, 1)
   }
 
 

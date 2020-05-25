@@ -1,10 +1,14 @@
 import {NgModule} from '@angular/core';
 import {Routes, RouterModule, PreloadAllModules} from '@angular/router';
+import {CreateGroupComponent} from "./groups/components/create-group/create-group.component";
 
 
 const routes: Routes = [
   {
     path: 'groups', loadChildren: () => import('./groups/groups.module').then(m => m.GroupsModule)
+  },
+  {
+    path: 'editGroups', component: CreateGroupComponent
   },
   {
     path: 'profile', loadChildren: () => import('./profile/profile.module').then(m => m.ProfileModule)},
