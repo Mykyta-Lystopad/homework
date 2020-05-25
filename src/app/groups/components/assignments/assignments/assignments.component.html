@@ -60,23 +60,21 @@
      </div>
 <!-- --------------------------------------Assignments ------------------------------------------------>
 </div>
-  <div *ngFor="let assign of assignments">
-    <div class="card"
-    [routerLink]="['assignments', assign.id]"
-    routerLinkActive="router-link-active">
+  <div *ngFor="let assign of assignments; let i = index">
+    <!-- <div class="card"[routerLink]="['assignments', assign.id]" routerLinkActive="router-link-active"> -->
       <div class="card-body">
         <h4 class="card-title">{{ assign.title }}</h4>
-        <div>
-          <div *ngIf="assign.description" class="col-12"> Note: {{ assign.description }}</div>          
-        </div>  
-        <ul>
-          <li *ngFor="let prob of assign.problems">{{prob.title}}</li>
-        </ul>     
+          <div>
+            <div *ngIf="assign.description" class="col-12"> Note: {{ assign.description }}</div>          
+          </div>  
+          <ul class="d-flex flex-row">
+            <li *ngFor="let prob of assign.problems"> {{prob.title}}; </li>
+          </ul>     
       </div>
       <div class="d-flex flex-wrap align-content-end">
-        <div >created at {{ assign.created_at | date:"dd/MM/yy" }} make to {{ assign.due_date }}</div>
+      <div >{{ assign.due_date }}</div>
       </div>  
-    </div>
+    <!-- </div> -->
   </div>
 <!--
   <p *ngIf="((assignments.problems | async)?.length === 0)">List is empty</p>

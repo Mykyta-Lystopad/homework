@@ -68,12 +68,8 @@
             <!-------------------------------------------- edit ------------------------------------------->
                 <ng-template #editTitle>    
                     <div class="d-flex flex-column">
-                        <input type="text" class="col-12" [(ngModel)]="editedProblem.title" >
-                        <div class="d-flex">
-                            <button class="badge badge-pill badge-success" (click)="onEdit()">Save</button>  
-                            <button class="badge badge-pill badge-warning " (click)="editProblemChange()">Cancel</button>
-                        </div>        
-                </div>  
+                        <input type="text" #editProbEl class="col-12" [(ngModel)]="editedProblem.title" (blur)="onEdit()">                
+                    </div>  
                 </ng-template>
             </ng-template> 
         </div>

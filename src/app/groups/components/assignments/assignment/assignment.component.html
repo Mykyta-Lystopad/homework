@@ -29,16 +29,16 @@
       <div class="card-text d-flex flex-column border border-warning">    
         <div class="d-block">
           <div class="d-flex justify-content-between">
-            <span class="col-2">Title</span> <input type="text" class="col-10" [(ngModel)]="currentAssign.title">
+            <span class="col-2">Title</span> <input type="text" #assignTitleEl class="col-10" [(ngModel)]="currentAssign.title" (blur)="assignmentEdit(0)" (focus)="assignFocusEditChange(0)">
           </div>
           <div class="d-flex justify-content-between">
-            <span class="col-2">Note</span> <input type="text" class="col-10" [(ngModel)]="currentAssign.description">
+            <span class="col-2">Note</span> <input type="text" #assignNoteEl class="col-10" [(ngModel)]="currentAssign.description" (blur)="assignmentEdit(1)" (focus)="assignFocusEditChange(1)"> 
           </div>       
         </div>
-        <div class="d-flex">
-          <button class="badge badge-pill badge-success" (click)="assignmentEdit()">Save</button>  
-          <button class="badge badge-pill badge-warning " (click)="showEditAssignment = false">Cancel</button>
-        </div>
+        <!-- <div class="d-flex"> -->
+          <!-- <button class="badge badge-pill badge-success" (click)="assignmentEdit()">Save</button>   -->
+          <!-- <button class="badge badge-pill badge-warning " (click)="showEditAssignment = false">Cancel</button> -->
+        <!-- </div> -->
       </div> 
     </ng-template>
     
@@ -58,7 +58,7 @@
       </div>
       <div *ngIf="!assign.student_id">
         <div *ngIf="user.role == 'teacher'">
-          <button class="btn btn-success col-12" (click)="showCreateProblem = true" *ngIf="!showCreateProblem">Add problem</button>
+          <button class="btn btn-success col-12" (click)="toShowCreateProblem()" *ngIf="!showCreateProblem">Add problem</button>
         </div>
       </div>
     </div>
@@ -69,17 +69,15 @@
     <div class="card" >
       <div class="card-body">
         <h4 class="card-title">Add problem</h4>
-          <input type="text" class="col-12" [(ngModel)]="currentProblem.title">
+          <input type="text" #addProblemEl class="col-12" [(ngModel)]="currentProblem.title" (blur)=createProblem()>
         <div class="d-flex">
           <button class="badge badge-pill badge-success" (click)="createProblem()">Create</button>
-          <button class="badge badge-pill badge-warning" (click)="showCreateProblem = false">Cancel</button>
         </div>
       </div>
     </div>
   </div>   
   <!-- ------------------------dates ----------------------------------------- -->
   <ul class="list-group d-flex flex-row justify-content-end">
-    <li class="list-group-item">Date of create {{ assign.created_at | date:"dd/MM/yy" }}</li>
     <li class="list-group-item">Due date {{ assign.due_date | date:"dd/MM/yy" }} </li>
   </ul>
 

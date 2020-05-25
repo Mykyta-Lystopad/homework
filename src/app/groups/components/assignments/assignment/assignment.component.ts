@@ -5,7 +5,7 @@ import { Problem } from './../../../../core/models/problem.model';
 import {User} from '../../../../core/models';
 import {AssignmentModel} from '../../../../core/models/assignmentModel';
 import {Assignment} from '../../../../core/models/assignment.model';
-import { Component, OnInit} from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef} from '@angular/core';
 import {AssignmentService} from "../../../../core/services/assigntments.service";
 import {ActivatedRoute} from "@angular/router";
 import {UserService} from "../../../../core/services";
@@ -37,6 +37,11 @@ export class AssignmentComponent implements OnInit {
   assign: Assignment = new AssignmentModel(this.assignId);
   attachments: [][];
   currentAssign: Assignment = new AssignmentModel(this.assignId);
+  @ViewChild('assignTitleEl') assignTitleEl: ElementRef;
+  @ViewChild('addProblemEl') addProblemEl: ElementRef;
+  @ViewChild('assignNoteEl') assignNoteEl: ElementRef;
+  assignFocusEdit = [0,0];
+
 
  
   constructor(
@@ -97,27 +102,65 @@ export class AssignmentComponent implements OnInit {
   showEditAssign(){
     if (this.user.role == 'teacher' && !this.studentId){
       this.showEditAssignment = !this.showEditAssignment
+      setTimeout(()=>{this.assignTitleEl.nativeElement.focus()},0)
       this.currentAssign.title = this.assign.title
       this.currentAssign.description = this.assign.description    
     }    
   }
-  assignmentEdit(){
-    this.assignSvc.editAssignment(this.currentAssign).subscribe(res =>{
-      this.assign.title = res.data.title
-      this.assign.description = res.data.description
-      this.showEditAssignment = false;
-    })
+  assignmentEdit(blurIndex:number){
+    console.log(this.assignFocusEdit);
+    this.assignFocusEdit[blurIndex] = 0;   
+    console.log(this.assignFocusEdit);
+    ////////////////////// задача не решается Nateive елементами //////////////////////////
+        if (this.currentAssign.title !== this.assign.title || this.currentAssign.description !== this.assign.description){
+         if (this.assignFocusEdit[0]+this.assignFocusEdit[1] === 0){
+   
+          
+        this.assignSvc.editAssignment(this.currentAssign).subscribe(res =>{
+        this.assign.title = res.data.title
+        this.assign.description = res.data.description        
+        })
+
+
+      }
+    this.showEditAssignment = false;   
+
+    }
+    
+      
+    
+  }
+  assignFocusEditChange(index:number){
+    
+    switch (index) {
+      case 0:
+        this.assignFocusEdit[0] = 1;
+        this.assignFocusEdit[1] = 0;
+        break;
+      case 1:
+        this.assignFocusEdit[0] = 0;
+        this.assignFocusEdit[1] = 1;
+        break;
+    }
+    console.log('focus log',this.assignFocusEdit);
+    
   }
 
   //////////////////////////////////////////////////// Problem ///////////////////////////////////////////
+  toShowCreateProblem(){
+    this.showCreateProblem = !this.showCreateProblem
+    setTimeout(()=>{ this.addProblemEl.nativeElement.focus()},0); 
+  }
   createProblem(){
-    this.assignSvc.createProblem(this.currentProblem).subscribe(res => {
-      if (res.success === true){
-        this.assign.problems.push(res['data'])
-      }
-    })
-      this.showCreateProblem = !this.showCreateProblem
-      this.currentProblem.title = ''
+    if (this.currentProblem.title){
+      this.assignSvc.createProblem(this.currentProblem).subscribe(res => {
+        if (res.success === true){
+          this.assign.problems.push(res['data'])
+        }
+      })
+    }    
+    this.toShowCreateProblem();
+    this.currentProblem.title = ''
   }
   probDel(probId: number){
     this.assignSvc.deleteProblem(probId).subscribe(res => {

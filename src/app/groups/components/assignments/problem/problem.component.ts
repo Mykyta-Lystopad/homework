@@ -3,7 +3,7 @@ import { AssignmentService } from './../../../../core/services/assigntments.serv
 import { UserSolution } from './../../../../core/models/solution.model';
 import { Problem } from './../../../../core/models/problem.model';
 import { User } from '../../../../core/models';
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 
 
 @Component({
@@ -21,6 +21,7 @@ export class ProblemComponent implements OnInit {
   @Output() emitDel: EventEmitter<{}> = new EventEmitter();
   @Output() emitEdit: EventEmitter<Problem> = new EventEmitter(); 
   @Output() emitSolve: EventEmitter<{}> = new EventEmitter();
+  @ViewChild('editProbEl') editProbEl: ElementRef;
 
   private emptySolution:UserSolution = {
     id: null,
@@ -53,8 +54,11 @@ export class ProblemComponent implements OnInit {
   }
 
   onEdit(){
-    this.editedProblem.id = this.problem.id;
-    this.emitEdit.emit(this.editedProblem)    
+    if (this.problem.title !== this.editedProblem.title && this.editedProblem.title){
+      this.editedProblem.id = this.problem.id;
+      this.emitEdit.emit(this.editedProblem)   
+    }     
+    if (this.editedProblem.title === '') this.onDelete()
     this.editProblemChange();
   }
 
@@ -67,7 +71,8 @@ export class ProblemComponent implements OnInit {
   editProblemChange(){
     if (this.user.role == 'teacher' && this.studentId == undefined){
       this.editProblemFlag = !this.editProblemFlag
-      this.editedProblem.title = this.problem.title
+      this.editedProblem.title = this.problem.title      
+      setTimeout(()=>{ this.editProbEl.nativeElement.focus()},0);   
     }    
   }
   showEditMark(){
@@ -75,7 +80,8 @@ export class ProblemComponent implements OnInit {
       this.currentMark = this.problem.userSolution.teacher_mark
     this.editMark = !this.editMark
     } else this.alertSvc.warning(`You can't mark uncompleted problem`) 
-  }
+ 
+    }
   saveMark(){
     this.assignSvc.changeMark(this.problem.userSolution.id, {"teacher_mark": this.currentMark}).subscribe(res => {
       this.problem.userSolution.teacher_mark = +res['data']['teacher_mark']
@@ -84,4 +90,5 @@ export class ProblemComponent implements OnInit {
     this.currentMark = null
     this.editMark = false
   }
+
 }
