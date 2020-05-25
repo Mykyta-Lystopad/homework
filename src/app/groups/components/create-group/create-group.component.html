@@ -13,12 +13,13 @@
         <div>
           <span
             class="badge badge-img"
-          (click)="delete(group.id)">
+            (click)="delete(group.id)">
             <img src="./assets/img/delete.png" alt="Удалить">
           </span>
           <span
             class="badge badge-img"
-          (click)="edit(group.id)">
+            [routerLink]="group.id"
+            (click)="edit(group.id)">
             <img src="./assets/img/edit.png" alt="Изменить">
             </span>
         </div>

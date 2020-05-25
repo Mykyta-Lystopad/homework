@@ -5,10 +5,11 @@ import {GroupsRoutingModule} from './groups-routing.module';
 import { CreateGroupComponent } from './components/create-group/create-group.component';
 import { MyGroupsComponent } from './components/my-groups/my-groups.component';
 import { StudentsComponent } from './components/students/students.component';
+import { EditGroupComponent } from './components/edit-group/edit-group.component';
 
 
 @NgModule({
-  declarations: [LayoutGroupComponent, CreateGroupComponent, MyGroupsComponent, StudentsComponent],
+  declarations: [LayoutGroupComponent, CreateGroupComponent, MyGroupsComponent, StudentsComponent, EditGroupComponent],
   imports: [
     SharedModule,
     GroupsRoutingModule
