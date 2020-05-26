@@ -1,8 +1,14 @@
-
-
 <div class="container">
   <div class="wrap">
+
+
+
+
     <div class="d-flex justify-content-between flex-row">
+      
+      <h4 *ngIf="assignCreationMode">Create new Assignment</h4>
+      <span *ngIf="user.role == 'teacher'"> {{studentName}} </span>
+      
       <div *ngIf="!assign.student_id">
         <div *ngIf="!showEditAssignment">
           <div *ngIf="user.role == 'teacher'" class="d-flex justify-content-end">
@@ -11,17 +17,19 @@
         </div> 
       </div>
     </div>
-    <span *ngIf="user.role == 'teacher'"> {{studentName}} </span>
-
+    <div *ngIf="assignCreationMode">
+      Due date <input class="list-group-item" [(ngModel)]="assign.due_date">
+    </div>
     
 
+    
   
-  <div *ngIf="!showEditAssignment; else editAssign" (click)="showEditAssign()">
-    <h4>{{ assign.title }}</h4> 
-    <h6 *ngIf="assign.description">Note: {{ assign.description }}</h6>
-  </div>  
+    <div *ngIf="!showEditAssignment; else editAssign" (click)="showEditAssign()">
+      <h4>{{ assign.title }}</h4> 
+      <h6 *ngIf="assign.description">Note: {{ assign.description }}</h6>
+    </div>  
 
-<!-------------------------------------------------- edit -->
+  <!-------------------------------------------------- edit -->
     <ng-template #editAssign>
       <div class="card-text d-flex flex-column border border-warning">    
         <div class="d-block">
@@ -32,10 +40,7 @@
             <span class="col-2">Note</span> <input type="text" #assignNoteEl class="col-10" [(ngModel)]="currentAssign.description" (blur)="assignmentEdit(1)" (focus)="assignFocusEditChange(1)"> 
           </div>       
         </div>
-        <!-- <div class="d-flex"> -->
-          <!-- <button class="badge badge-pill badge-success" (click)="assignmentEdit()">Save</button>   -->
-          <!-- <button class="badge badge-pill badge-warning " (click)="showEditAssignment = false">Cancel</button> -->
-        <!-- </div> -->
+       
       </div> 
     </ng-template>
     
@@ -50,7 +55,7 @@
         [studentId]='studentId' 
         (emitDel)='probDel($event)' 
         (emitEdit)='probEdit($event)'
-        (emitSolve)='probCompletedChsnge($event)'
+        (emitSolve)='probCompletedChange($event)'
         ></app-problem>
       </div>
       <div *ngIf="!assign.student_id">
@@ -62,43 +67,43 @@
     
     
 <!---------------------------------- Add Problem --------------------------------->
-  <div class="d-block" *ngIf="showCreateProblem">     
-    <div class="card" >
-      <div class="card-body">
-        <h4 class="card-title">Add problem</h4>
-          <input type="text" #addProblemEl class="col-12" [(ngModel)]="currentProblem.title" (blur)=createProblem()>
-        <div class="d-flex">
-          <button class="badge badge-pill badge-success" (click)="createProblem()">Create</button>
+    <div class="d-block" *ngIf="showCreateProblem">     
+      <div class="card" >
+        <div class="card-body">
+          <h4 class="card-title">Add problem</h4>
+            <input type="text" #addProblemEl class="col-12" [(ngModel)]="currentProblem.title" (blur)=createProblem()>
+          <div class="d-flex">
+            <button class="badge badge-pill badge-success" (click)="createProblem()">Create</button>
+          </div>
         </div>
       </div>
-    </div>
-  </div>   
-  <!-- ------------------------dates ----------------------------------------- -->
-  <ul class="list-group d-flex flex-row justify-content-end">
-    <li class="list-group-item">Due date {{ assign.due_date | date:"dd/MM/yy" }} </li>
-  </ul>
+    </div>   
+    <!-- ------------------------dates ----------------------------------------- -->
+    <ul class="list-group d-flex flex-row justify-content-end" *ngIf="!assignCreationMode">
+      <li class="list-group-item">Due date {{ assign.due_date | date:"dd/MM/yy" }} </li>
+    </ul>
 
   <!------------------------------- Attaches in assignment --------------------------------->
 
-  <div *ngIf="assign.attachments">
-    <!-- <app-attachment *ngFor="let attach of assign.attachments" [attachment] = 'attach'></app-attachment> -->
-    <app-attachments
-      [attachments] = 'assign.attachments'
-      [assignID] = 'assign.id'
-    ></app-attachments>
-  </div>
+    <div *ngIf="assign.attachments">
+      <!-- <app-attachment *ngFor="let attach of assign.attachments" [attachment] = 'attach'></app-attachment> -->
+      <app-attachments
+        [attachments] = 'assign.attachments'
+        [assignID] = 'assign.id'
+      ></app-attachments>
+    </div>
 
-  <!------------------------------- Attaches --------------------------------->
-  <div *ngIf="assign.userAnswer && assign.student_id">
-    <h6>User answer</h6>
-    <!-- <app-attachment *ngFor="let attach of assign.userAnswer.attachments" [attachment] = 'attach'></app-attachment> -->
-  
-    <app-attachments
-      [attachments] = 'assign.userAnswer.attachments'
-      [assignID] = 'assign.id'
-    ></app-attachments>
-  
-  </div> 
+    <!------------------------------- Attaches --------------------------------->
+    <div *ngIf="assign.userAnswer && assign.student_id">
+      <h6>User answer</h6>
+      <!-- <app-attachment *ngFor="let attach of assign.userAnswer.attachments" [attachment] = 'attach'></app-attachment> -->
+    
+      <app-attachments
+        [attachments] = 'assign.userAnswer.attachments'
+        [assignID] = 'assign.id'
+      ></app-attachments>
+    
+    </div> 
 
 
     <!----------------------------- messages block -------------------------------------------->
@@ -118,7 +123,10 @@
       </div>
     </div> 
 
-
+    <div *ngIf="assignCreationMode" class="d-flex justify-content-around">
+      <button class="btn btn-success" (click)="createAssign()">Create new Assignment</button>
+      <button class="btn btn-warning" (click)="assignDelete()">Cancel</button>
+    </div>
     
    
   </div>

@@ -65,17 +65,14 @@ export class AssignmentService {
   }
 
   addAssign(assign: Assignment) {
-    let success: boolean;
-    this.apiSvc.post('api/assignments', assign)
-      .subscribe(res => {
-        this.alertSvc.success('New assignment created successful')
-        success = res.success;
-        this.assignments.unshift(res['data']);
-        this.subj.next(this.assignments);
-      }, error => {
-        this.alertSvc.danger(this.collectErrors(error['data']))
-      });
-    return success;
+    return this.apiSvc.post('api/assignments', assign).pipe(tap(res => {
+      this.alertSvc.success('New assignment created successful')
+      this.assignments.unshift(res['data']);
+      this.subj.next(this.assignments);
+    }, error => {
+      console.log('error edit assign: ', error['data']);      
+      this.alertSvc.danger(this.collectErrors(error['data']))
+    }))
   }
   deleteAssignment(assignId: number){
     return this.apiSvc.delete(`api/assignments/${assignId}`).pipe(tap(res => {
@@ -91,8 +88,7 @@ export class AssignmentService {
     return this.apiSvc.put(`api/assignments/${assin.id}`,assin).pipe(tap(res => {
       this.alertSvc.success('Assignment changed successfsul')
     }, error => {
-      console.log('error edit assign: ', error['data']);
-      
+      console.log('error edit assign: ', error['data']);      
       this.alertSvc.danger(this.collectErrors(error['data']))
     }))
   }

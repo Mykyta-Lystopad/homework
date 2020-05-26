@@ -12,54 +12,14 @@
 
 
 <!-------------------------------- Create assignment modal ---------------------------------------->
-<div  class="card" *ngIf="createAssignFlag">
-    <div class="card-body">
-      <h4 class="card-title">Create new assignment</h4>
-      <div class="card-text">
-        <!-- <form [formGroup]="form"> -->
-          <!-- formControlName="title" -->
-          <!-- formControlName="note" -->
-          <div class="modal-body">
-            Title
-            <input
-              class="input-group"
-              type="text"
-              
-              [(ngModel)]="currentAssignment.title">  
-            Note (if necessary)
-            <input
-              class="input-group"
-              type="text"
-              
-              [(ngModel)]="currentAssignment.description">
-            Due date (if necessary)
-            <!-- <input class="input-group" type="date" [(ngModel)]="currentAssignment.due_date"> -->
-            <div class="col-xs-12 col-12 col-md-4 form-group">
-              <input type="text"
-                     placeholder="Datepicker, installing in process"
-                     class="form-control"
-                     bsDatepicker>
-            </div>
-          </div>
-            Problems:
-          <div *ngFor="let problemM of currentAssignment.problems; let i = index" class="d-flex flex-row justify-content-between m-1">
-            <span>{{i+1}}: </span> 
-            <input class="input-problem col" type="text" [(ngModel)]="problemM.title"> 
-            <span class="material-icons delete" (click)="removeProblem(i)">delete</span>
-          </div>
-          <button type="button" class="btn btn-primary col-12" (click)="addProblem()">Add problem to assignment</button>
-          <P> Need to solve problem with: attachments needs assignment id, but it's dos't exist </P>
-          <!-- [disabled]="!form.valid" -->
-        <!-- </form> -->
-      </div>
-      <div class="d-flex justify-content-between">
-        <button type="button" class="btn btn-warning" data-dismiss="modal" (click)="createAssignFlag = false">Close</button>
-        <button type="button" class="btn btn-success"  (click)='createAssignment()'>Save changes</button>
-
-      </div>
-     </div>
-<!-- --------------------------------------Assignments ------------------------------------------------>
+<div *ngIf="createAssignFlag">
+  <app-assignment 
+    [assignId] = 'this.group_id' 
+    [assignCreationMode] = true 
+    (emitHideCreateAssign) = 'hideCreateAssign($event)'
+    ></app-assignment>
 </div>
+<!-- --------------------------------------Assignments ------------------------------------------------>
   <div *ngFor="let assign of assignments; let i = index">
     <!-- <div class="card"[routerLink]="['assignments', assign.id]" routerLinkActive="router-link-active"> -->
       <div *ngIf="!assignments[i].show; else showAssignmentComponent" (click)="showAssignDetail(i)">

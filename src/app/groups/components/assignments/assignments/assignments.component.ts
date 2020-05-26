@@ -1,3 +1,4 @@
+import { environment } from './../../../../../environments/environment.prod';
 import { Problem } from './../../../../core/models/problem.model';
 import {User} from './../../../../core/models/user.model';
 import {UserService} from './../../../../core/services/user.service';
@@ -84,14 +85,19 @@ export class AssignmentsComponent implements OnInit {
     this.currentAssignment.problems.splice(index,1)
   }
 
-  createAssignment() {
-    console.log(this.currentAssignment);
-    debugger
+  createAssignment(assign:Assignment) {
     
-    if (this.assignSvc.addAssign(this.currentAssignment))
-      this.currentAssignment.title = '';
-    this.currentAssignment.description = '';
-    this.createAssignFlag = false;
+    // console.log(this.currentAssignment);
+    // debugger
+    
+    // if (this.assignSvc.addAssign(this.currentAssignment))
+    //   this.currentAssignment.title = '';
+    // this.currentAssignment.description = '';
+    // this.createAssignFlag = false;
+    
+  }
+  hideCreateAssign(flag:boolean){
+    this.createAssignFlag = flag
   }
   showAssignDetail(i?:number){
     this.assignments.forEach(elem => {elem.show = false})
