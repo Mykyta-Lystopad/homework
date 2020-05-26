@@ -54,7 +54,7 @@
       </div>
       <div class="d-flex justify-content-between">
         <button type="button" class="btn btn-warning" data-dismiss="modal" (click)="createAssignFlag = false">Close</button>
-        <button type="button" class="btn btn-success"  (click)='onSubmit()'>Save changes</button>
+        <button type="button" class="btn btn-success"  (click)='createAssignment()'>Save changes</button>
 
       </div>
      </div>
@@ -62,18 +62,27 @@
 </div>
   <div *ngFor="let assign of assignments; let i = index">
     <!-- <div class="card"[routerLink]="['assignments', assign.id]" routerLinkActive="router-link-active"> -->
-      <div class="card-body">
-        <h4 class="card-title">{{ assign.title }}</h4>
-          <div>
-            <div *ngIf="assign.description" class="col-12"> Note: {{ assign.description }}</div>          
-          </div>  
-          <ul class="d-flex flex-row">
-            <li *ngFor="let prob of assign.problems"> {{prob.title}}; </li>
-          </ul>     
-      </div>
-      <div class="d-flex flex-wrap align-content-end">
-      <div >{{ assign.due_date }}</div>
+      <div *ngIf="!assignments[i].show; else showAssignmentComponent" (click)="showAssignDetail(i)">
+        <div class="card-body" >
+          <h4 class="card-title">{{ assign.title }}</h4>
+            <div>
+              <div *ngIf="assign.description" class="col-12"> Note: {{ assign.description }}</div>          
+            </div>  
+            <ul class="d-flex flex-row">
+              <li *ngFor="let prob of assign.problems"> {{prob.title}}; </li>
+            </ul>     
+        </div>
+        <div class="d-flex flex-wrap align-content-end">
+          <div >{{ assign.due_date }}</div>  
+        </div>
       </div>  
+      <ng-template #showAssignmentComponent>
+        
+          <app-assignment [assignId] = 'assignments[i].id' ></app-assignment>  
+      
+        
+      </ng-template>
+      
     <!-- </div> -->
   </div>
 <!--

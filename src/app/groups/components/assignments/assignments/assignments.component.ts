@@ -9,6 +9,7 @@ import {AssignmentModel} from "../../../../core/models/assignmentModel";
 import {ActivatedRoute} from "@angular/router";
 import { formatDate } from '@angular/common';
 import { ProblemModel } from 'src/app/core/models/problemModel';
+import { threadId } from 'worker_threads';
 
 
 @Component({
@@ -64,6 +65,7 @@ export class AssignmentsComponent implements OnInit {
   }
   showNewAssignBlock(){
     this.createAssignFlag = !this.createAssignFlag
+    this.showAssignDetail(null)
     this.currentAssignment.title = formatDate(new Date(), 'dd/MM/yyyy', 'en') + ': '
   }
 
@@ -82,10 +84,20 @@ export class AssignmentsComponent implements OnInit {
     this.currentAssignment.problems.splice(index,1)
   }
 
-  onSubmit() {
+  createAssignment() {
+    console.log(this.currentAssignment);
+    debugger
+    
     if (this.assignSvc.addAssign(this.currentAssignment))
       this.currentAssignment.title = '';
     this.currentAssignment.description = '';
     this.createAssignFlag = false;
+  }
+  showAssignDetail(i?:number){
+    this.assignments.forEach(elem => {elem.show = false})
+    if (i !== null){
+      this.assignments[i].show = !this.assignments[i].show;
+    }
+    
   }
 }

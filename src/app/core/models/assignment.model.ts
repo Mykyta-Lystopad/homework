@@ -13,4 +13,5 @@ export interface Assignment {
     userAnswer?: UserAnswer;    
     created_at?: number;
     due_date?: number;
+    show?: boolean;
 }

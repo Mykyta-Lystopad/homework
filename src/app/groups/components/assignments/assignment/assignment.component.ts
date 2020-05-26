@@ -5,7 +5,7 @@ import { Problem } from './../../../../core/models/problem.model';
 import {User} from '../../../../core/models';
 import {AssignmentModel} from '../../../../core/models/assignmentModel';
 import {Assignment} from '../../../../core/models/assignment.model';
-import { Component, OnInit, ViewChild, ElementRef} from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Input} from '@angular/core';
 import {AssignmentService} from "../../../../core/services/assigntments.service";
 import {ActivatedRoute} from "@angular/router";
 import {UserService} from "../../../../core/services";
@@ -19,9 +19,19 @@ import {UserService} from "../../../../core/services";
 export class AssignmentComponent implements OnInit {
   showCreateProblem = false;
   showEditAssignment = false;
+  @Input() assignCreationMode = false
+  @Input() assignId: number;  
   studentId: number;
   groupId: number;
-  studentName = '';
+  studentName = '';  
+  user: User;
+  assign: Assignment = new AssignmentModel(this.assignId);
+  currentAssign: Assignment = new AssignmentModel(this.assignId);  
+  attachments: [][];
+  @ViewChild('assignTitleEl') assignTitleEl: ElementRef;
+  @ViewChild('addProblemEl') addProblemEl: ElementRef;
+  @ViewChild('assignNoteEl') assignNoteEl: ElementRef;
+  assignFocusEdit = [0,0];
   message: Message = {
     id: null,
     message: '',
@@ -32,16 +42,6 @@ export class AssignmentComponent implements OnInit {
     id : undefined,
     title: '',
   };
-  user: User;
-  private assignId: number;
-  assign: Assignment = new AssignmentModel(this.assignId);
-  attachments: [][];
-  currentAssign: Assignment = new AssignmentModel(this.assignId);
-  @ViewChild('assignTitleEl') assignTitleEl: ElementRef;
-  @ViewChild('addProblemEl') addProblemEl: ElementRef;
-  @ViewChild('assignNoteEl') assignNoteEl: ElementRef;
-  assignFocusEdit = [0,0];
-
 
  
   constructor(
@@ -81,10 +81,6 @@ export class AssignmentComponent implements OnInit {
       if (this.studentId && this.user.role == 'teacher') this.getStudentName()
       
     })    
-  }
-
-  back(){
-    this.location.back();
   }
   getStudentName(){
     this.assignSvc.getStudentName(this.groupId).subscribe(res =>{

@@ -14,6 +14,7 @@ export class AssignmentModel implements Assignment{
     problems?: Problem[];
     attachments?: Attachment[];
     userAnswer?: UserAnswer;   
+    show?: boolean;
 
     constructor(group_id: number){
         this.group_id = group_id;
@@ -26,6 +27,7 @@ export class AssignmentModel implements Assignment{
         this.problems = [];
         this.attachments = [];
         this.userAnswer = null;
+        this.show = false;
     }
 
 }

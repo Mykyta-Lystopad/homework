@@ -3,7 +3,6 @@
 <div class="container">
   <div class="wrap">
     <div class="d-flex justify-content-between flex-row">
-      <button class="btn btn-success" (click)="back()">back...</button>
       <div *ngIf="!assign.student_id">
         <div *ngIf="!showEditAssignment">
           <div *ngIf="user.role == 'teacher'" class="d-flex justify-content-end">
@@ -11,8 +10,6 @@
           </div>
         </div> 
       </div>
-
-
     </div>
     <span *ngIf="user.role == 'teacher'"> {{studentName}} </span>
 
