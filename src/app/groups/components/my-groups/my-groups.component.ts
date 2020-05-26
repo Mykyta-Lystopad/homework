@@ -14,6 +14,7 @@ import {environment} from "../../../../environments/environment";
 export class MyGroupsComponent implements OnInit {
 
   groups$: Observable<Group[]>
+  countGroup$: Observable<any>
   activeTab = 'student';
   idGroup: number;
   role: string;
@@ -30,16 +31,15 @@ export class MyGroupsComponent implements OnInit {
     this.role = this.storage.getItem(environment.KEY_ROLE)
     this.groups$ = this.groupService.group
     this.groupService.load(this.role)
-    setTimeout(_=>{
-      this.idGroup = this.groupService.getGroupId()
-      if ( this.idGroup) {
+    this.countGroup$ = this.groupService.idGroup
+    this.countGroup$.subscribe(response => {
+      this.idGroup = response
+      if (this.idGroup) {
         this.role === 'teacher' ? this.router.navigate(['groups', this.idGroup]) :
           this.router.navigate(['groups', this.idGroup, 'allAssignments', this.idGroup]);
       }
-    }, 1000)
-
+    })
   }
-
 
   showUsers(id: number) {
     this.idGroup = id;

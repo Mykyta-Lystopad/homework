@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Group} from "../models/group.model";
-import {BehaviorSubject} from "rxjs";
+import {BehaviorSubject, Subject} from "rxjs";
 import {ApiService} from "./api.service";
 import {map} from "rxjs/operators";
 
@@ -10,12 +10,16 @@ export class GroupsService {
   private groups: Group[] = []
   private groups$: BehaviorSubject<Group[]> = new BehaviorSubject([]);
   private firstGroup: number
+  private idGroup$ = new Subject();
 
   constructor(private apiService: ApiService) {
   }
 
   get group() {
     return this.groups$.asObservable();
+  }
+  get idGroup(){
+    return this.idGroup$.asObservable()
   }
 
 
@@ -28,11 +32,9 @@ export class GroupsService {
       this.groups = response;
       this.groups$.next(this.groups);
       if (this.groups.length) {
-        this.firstGroup = this.groups[0].id
-        console.log(this.firstGroup)
+        this.idGroup$.next(this.groups[0].id)
       }
     })
-
   }
 
 
