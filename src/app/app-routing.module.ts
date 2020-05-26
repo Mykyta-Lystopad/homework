@@ -6,12 +6,6 @@ import {EditGroupComponent} from "./groups/components/edit-group/edit-group.comp
 
 const routes: Routes = [
   {
-    path: 'editGroups', component: CreateGroupComponent
-  },
-  {
-    path: 'editGroups/:id', component: EditGroupComponent
-  },
-  {
     path: 'groups', loadChildren: () => import('./groups/groups.module').then(m => m.GroupsModule)
   },
   {
