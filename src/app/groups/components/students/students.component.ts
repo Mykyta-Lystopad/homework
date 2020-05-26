@@ -28,8 +28,5 @@ export class StudentsComponent implements OnInit {
           this.showSpinner = false
         });
     });
-
-
   }
-
 }

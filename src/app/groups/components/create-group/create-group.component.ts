@@ -12,6 +12,8 @@ export class CreateGroupComponent implements OnInit {
 
   groups$: Observable<Group[]>
   role: string;
+  activeAccordion: boolean;
+  title = ''
 
   constructor(
     private groupService: GroupsService) {
@@ -19,6 +21,7 @@ export class CreateGroupComponent implements OnInit {
 
   ngOnInit(): void {
     this.groups$ = this.groupService.group
+    this.activeAccordion = false
   }
 
   delete(id: number) {
@@ -27,5 +30,11 @@ export class CreateGroupComponent implements OnInit {
 
   edit(id: number) {
 
+  }
+
+  addGroup() {
+    this.groupService.add(this.title, 1)
+    this.title = ''
+    this.activeAccordion = false
   }
 }

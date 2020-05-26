@@ -48,13 +48,17 @@ export class GroupsService {
 
   add(title: string, subject_id: number) {
     this.apiService.post('api/groups', {
-      title: title,
+      title,
       subject_id
     })
       .subscribe((res) => {
         this.groups.push(res.data);
         this.groups$.next(this.groups);
       });
+  }
+
+  changeGroup(id: number, title: string){
+    this.apiService.put(`api/groups/${id}`, {title})
   }
 
   getGroupId() {

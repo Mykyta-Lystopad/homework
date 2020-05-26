@@ -1,1 +1,34 @@
-<p>edit-group works!</p>
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-9 card">
+      <h5 class="card-header">Изменение</h5>
+      <div class="card-body">
+        <div class="card card-body mt-1">
+          <div class="input-group input-group-sm mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="inputGroup-sizing-sm">Title group</span>
+            </div>
+            <input type="text"
+                   class="form-control"
+                   aria-label="Small"
+                   [(ngModel)]="title"
+                   aria-describedby="inputGroup-sizing-sm">
+          </div>
+          <select class="form-control form-control-sm">
+            <option>Subject select</option>
+            <option>Subject select</option>
+            <option>Subject select</option>
+            <option>Subject select</option>
+          </select>
+          <button
+            type="button"
+            (click)="changeTitle()"
+            class="col-2 mt-2 btn btn-success">Изменить
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+

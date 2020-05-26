@@ -32,13 +32,11 @@ export class MyGroupsComponent implements OnInit {
     this.groupService.load(this.role)
     setTimeout(_=>{
       this.idGroup = this.groupService.getGroupId()
-      console.log('fweff'+ this.idGroup)
       if ( this.idGroup) {
         this.role === 'teacher' ? this.router.navigate(['groups', this.idGroup]) :
           this.router.navigate(['groups', this.idGroup, 'allAssignments', this.idGroup]);
       }
     }, 1000)
-
 
   }
 
