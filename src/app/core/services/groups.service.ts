@@ -3,6 +3,7 @@ import {Group} from "../models/group.model";
 import {BehaviorSubject, Subject} from "rxjs";
 import {ApiService} from "./api.service";
 import {map} from "rxjs/operators";
+import {AlertService} from "./alert.service";
 
 @Injectable()
 export class GroupsService {
@@ -11,7 +12,8 @@ export class GroupsService {
   private groups$: BehaviorSubject<Group[]> = new BehaviorSubject([]);
   private idGroup$ = new Subject();
 
-  constructor(private apiService: ApiService) {
+  constructor(private apiService: ApiService,
+              private alertService: AlertService) {
   }
 
   get group() {
@@ -42,7 +44,8 @@ export class GroupsService {
   }
 
   remove(id: number) {
-    this.apiService.delete(`api/groups/${id}`).subscribe()
+    this.apiService.delete(`api/groups/${id}`)
+      .subscribe(_=>this.alertService.success("Группа удалена"))
     for (let i = 0; i < this.groups.length; i++) {
       if (this.groups[i].id === id) {
         this.groups.splice(i, 1);
@@ -61,6 +64,8 @@ export class GroupsService {
       .subscribe((res) => {
         this.groups.push(res.data);
         this.groups$.next(this.groups);
+        this.alertService.success("Группа добавлена")
+
       });
   }
 
@@ -73,6 +78,7 @@ export class GroupsService {
         }
       }
       this.groups$.next(this.groups);
+      this.alertService.success("Группа изменена")
     })
   }
 }
