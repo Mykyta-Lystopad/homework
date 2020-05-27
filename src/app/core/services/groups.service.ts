@@ -45,7 +45,7 @@ export class GroupsService {
 
   remove(id: number) {
     this.apiService.delete(`api/groups/${id}`)
-      .subscribe(_=>this.alertService.success("Группа удалена"))
+      .subscribe(_=>this.alertService.danger("Группа удалена"))
     for (let i = 0; i < this.groups.length; i++) {
       if (this.groups[i].id === id) {
         this.groups.splice(i, 1);
