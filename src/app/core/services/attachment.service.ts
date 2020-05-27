@@ -11,6 +11,7 @@ export class AttachmentService {
   }
 
   createAttachment(Attach: Attachment) {
+    console.log(JSON.stringify(Attach))
     return this.apiService.post('api/attachments', Attach);
   }
 

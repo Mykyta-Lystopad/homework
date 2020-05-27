@@ -1,5 +1,5 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {AlertService, AttachmentService} from '../../../../core/services';
+import {AlertService, ApiService, AttachmentService} from '../../../../core/services';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {User, UserResponseModel} from '../../../../core/models';
 import {Attachment} from '../../../../core/models/attachment.model';
@@ -30,7 +30,8 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
 
   constructor(
     private Alert: AlertService,
-    private attachService: AttachmentService
+    private attachService: AttachmentService,
+    private apiService: ApiService
   ) {
   }
 
@@ -40,7 +41,6 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
       comment: new FormControl(null, Validators.required),
       file_content: new FormControl(null, Validators.required)
     });
-
   }
 
   handleInputChange(e) {
@@ -52,12 +52,15 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
       return;
     }
     reader.onload = this._handleReaderLoaded.bind(this);
+    console.log(file)
     reader.readAsDataURL(file);
   }
 
   _handleReaderLoaded(e) {
     const reader = e.target;
+   // файл а bise64
     this.imageSrc = reader.result;
+
   }
 
   submit() {
@@ -71,7 +74,7 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
       file_content: this.imageSrc
     };
     this.attachService.createAttachment(Attachment).subscribe(res => {
-
+      console.log(JSON.stringify(res) + " Reader")
       this.attachments[this.attachments.length - 1].push(res.data);
 
       let ids = this.attachments[this.attachments.length - 1].map(attach => attach.id);
@@ -82,8 +85,7 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
       this.attachService.updateColection(this.assignID, col).subscribe(resr => {
         if (this.attachments[this.attachments.length - 1].length < 5) {
           this.attachments[this.attachments.length - 1].map(attach => attach.id);
-        }
-        else {
+        } else {
           this.attachments.push([]);
           this.attachments[this.attachments.length - 1].map(attach => attach.id);
         }
