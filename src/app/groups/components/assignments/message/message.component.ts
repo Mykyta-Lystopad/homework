@@ -1,6 +1,6 @@
 import {Message} from '../../../../core/models/message.model';
 
-import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 
 @Component({
   selector: 'app-message',
@@ -14,6 +14,7 @@ export class MessageComponent implements OnInit {
   @Output() deleteEmit = new EventEmitter;
   editedMessage = ''
   editShow = false
+  @ViewChild ('editMessageEl') editMessageEl : ElementRef
   constructor() { }
 
   ngOnInit(): void {
@@ -25,12 +26,23 @@ export class MessageComponent implements OnInit {
     }     
   }  
   changeEditShow(){
-    this.editShow = !this.editShow
-    this.editedMessage = this.message.message
+    if (this.message.user.id == this.currentUserId){
+      this.editShow = !this.editShow
+      this.editedMessage = this.message.message
+      setTimeout(()=>{ this.editMessageEl.nativeElement.focus()},0);
+    }    
   }
   editMessage(){
-    this.editEmit.emit({messageId: this.message.id, message: this.editedMessage})
+    if (this.editedMessage === '') {
+      this.deleteMessage()
+    } else {
+      if (this.message.message != this.editedMessage){
+        this.editEmit.emit({messageId: this.message.id, message: this.editedMessage})
+      }  
+      
+       
+    }
     this.editShow = false
-    this.editedMessage = '' 
+      this.editedMessage = '' 
   }
 }

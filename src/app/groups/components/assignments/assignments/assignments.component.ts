@@ -19,7 +19,6 @@ import { threadId } from 'worker_threads';
   styleUrls: ['./assignments.component.scss']
 })
 export class AssignmentsComponent implements OnInit {
-  // form: FormGroup;
   currentUser: User;
   assignments: Assignment[];
   group_id: number;
@@ -28,13 +27,11 @@ export class AssignmentsComponent implements OnInit {
   currentAssignment: Assignment = new AssignmentModel(this.group_id);
   createAssignFlag = false;
   
-
   constructor(
     private assignSvc: AssignmentService,
     private activeRoute: ActivatedRoute,
     private userSvc: UserService
-  ) {
-  }
+  ) {}
 
   ngOnInit(): void {
     this.activeRoute.params.subscribe(response => {
@@ -45,18 +42,10 @@ export class AssignmentsComponent implements OnInit {
     this.currentUser = this.userSvc.getCurrentUser();
     if (this.student_id) this.getStudentName()
     })
-
-    // this.form = new FormGroup({
-    //   title: new FormControl('', [Validators.required, Validators.minLength(6), Validators.maxLength(200)]),
-    //   note: new FormControl('', [Validators.maxLength(200)]),
-    //   newProblem: new FormGroup({})
-    // })
-
     this.assignSvc.getAssignments(this.group_id, this.student_id).subscribe(res =>{
       this.assignments = res;
     })
     
-   
   }
   getStudentName(){
     this.assignSvc.getStudentName(this.group_id).subscribe(res =>{
@@ -72,37 +61,21 @@ export class AssignmentsComponent implements OnInit {
 
   addProblem(){
     let prob: Problem = new ProblemModel(null)
-    // let someObj = {
-    //   title: 'text'
-    // }
-    // this.currentAssignment.problems.push(someObj)
     this.currentAssignment.problems.push(prob)
     console.log(this.currentAssignment);
-    
-    //this.currentAssignment.problems.push({id:1})
   }
   removeProblem(index: number){
     this.currentAssignment.problems.splice(index,1)
   }
 
-  createAssignment(assign:Assignment) {
-    
-    // console.log(this.currentAssignment);
-    // debugger
-    
-    // if (this.assignSvc.addAssign(this.currentAssignment))
-    //   this.currentAssignment.title = '';
-    // this.currentAssignment.description = '';
-    // this.createAssignFlag = false;
-    
-  }
-  hideCreateAssign(flag:boolean){
+    hideCreateAssign(flag:boolean){
     this.createAssignFlag = flag
   }
   showAssignDetail(i?:number){
     this.assignments.forEach(elem => {elem.show = false})
     if (i !== null){
       this.assignments[i].show = !this.assignments[i].show;
+      this.createAssignFlag = false;
     }
     
   }

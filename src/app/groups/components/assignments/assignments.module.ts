@@ -1,3 +1,8 @@
+
+//import { DatepickerModule, BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { NgxBootstrapSliderModule } from 'ngx-bootstrap-slider'
+//import { FormsModule } from '@angular/forms';
+import { DatePipe } from '@angular/common';
 import {SharedModule} from '../../../shared/shared.module';
 import {AssignmentsRoutingModule} from './assignments-routing.module';
 import {NgModule} from '@angular/core';
@@ -25,10 +30,14 @@ import { AttachmentsComponent } from './attachments/attachments.component';
   imports: [
     SharedModule,
     CommonModule,
-    AssignmentsRoutingModule
+    AssignmentsRoutingModule, 
+    NgxBootstrapSliderModule,
+    //FormsModule, 
+   // BsDatepickerModule.forRoot(),
+   // DatepickerModule.forRoot()
   ],
   providers: [
-
+    DatePipe
   ]
 })
 export class AssignmentsModule {

@@ -13,7 +13,7 @@
             <div *ngIf="problem.userSolution" class="d-flex justify-content-end tech-mark"> 
                 <div *ngIf="problem.userSolution.teacher_mark; else noMark"> {{problem.userSolution.teacher_mark}} </div>
                 <ng-template #noMark>
-                    no mark
+                    
                 </ng-template>                
             </div>                       
         </div>
@@ -39,16 +39,15 @@
                             {{problem.userSolution.teacher_mark}} 
                         </div>
                         <ng-template #noMark>
-                            no mark
+                            0
                         </ng-template>                    
                     </div>   
                     <ng-template #editMarkBlock>
                         <div class="d-flex align-items-end flex-column">
-                            <input class="edit-tech-mark" type="number" [(ngModel)]="currentMark" min="0" max="100">
-                            <div class="d-flex flex-row">
-                                <button class="badge badge-pill badge-success" (click)="saveMark()">Save</button>  
-                                <button class="badge badge-pill badge-warning " (click)="showEditMark()">Cancel</button>
+                            <div> 
+                                {{currentMark}} 
                             </div>
+                            <mv-slider #markSliderEl [(value)]="currentMark" [min]="1" [max]="12" [enabled]="true" (mouseup)="saveMark()"></mv-slider>
                         </div>                        
                     </ng-template>
                 </div>

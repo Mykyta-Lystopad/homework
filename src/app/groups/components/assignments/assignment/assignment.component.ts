@@ -1,7 +1,7 @@
+import { DatePipe } from '@angular/common';
 import { ProblemModel } from './../../../../core/models/problemModel';
 import { AttachmentService } from './../../../../core/services/attachment.service';
 import { Message } from './../../../../core/models/message.model';
-import { Location } from '@angular/common';
 import { Problem } from './../../../../core/models/problem.model';
 import {User} from '../../../../core/models';
 import {AssignmentModel} from '../../../../core/models/assignmentModel';
@@ -20,6 +20,7 @@ import {UserService} from "../../../../core/services";
 export class AssignmentComponent implements OnInit {
   showCreateProblem = false;
   showEditAssignment = false;
+  showEditDueDate = false;
   @Output() emitHideCreateAssign: EventEmitter<boolean> = new EventEmitter()
   @Input() assignCreationMode = false
   @Input() assignId: number;  
@@ -34,6 +35,7 @@ export class AssignmentComponent implements OnInit {
   @ViewChild('addProblemEl') addProblemEl: ElementRef;
   @ViewChild('assignNoteEl') assignNoteEl: ElementRef;
   assignFocusEdit = [0,0];
+  dueDatePickStr: string;
   message: Message = {
     id: null,
     message: '',
@@ -52,7 +54,7 @@ export class AssignmentComponent implements OnInit {
     route: ActivatedRoute,
     private assignSvc: AssignmentService,
     private userSvc: UserService,
-    private location: Location)
+    private datePipe: DatePipe)
   {
     this.assignId = +route.snapshot.params.id;
     this.currentProblem.assignment_id = this.assignId;
@@ -86,17 +88,23 @@ export class AssignmentComponent implements OnInit {
         if (this.studentId && this.user.role == 'teacher') this.getStudentName()
       })    
     } else {
-      this.assign.title = "Due Date must be in this place"
+      //this.assign.title = "Due Date must be in this place"
     }
     if (this.counter == 1 && this.assignCreationMode){
       this.createProblem()
     }
-  }
+  }  
   getStudentName(){
     this.assignSvc.getStudentName(this.groupId).subscribe(res =>{
       let index = res['data']['users'].findIndex(usr => usr['id'] == this.studentId);
       this.studentName =  `${res['data']['users'][index].first_name} ${res['data']['users'][index].last_name}`;
     })
+  }
+  dueDatePick(){
+    this.assign.due_date = this.dueDatePickStr
+    let str = this.datePipe.transform(this.dueDatePickStr , 'dd-MM-yyyy') + ': '
+    this.assign.title = str;
+   
   }
   ///////////////////////////////////////////////////// Assign ///////////////////////////////////////////
   createAssign(){
@@ -171,6 +179,25 @@ export class AssignmentComponent implements OnInit {
     }
     console.log('focus log',this.assignFocusEdit);
     
+  }
+  changeEditDueDate(){
+    if (this.user.role == "teacher" && !this.studentId){
+      this.showEditDueDate = !this.showEditDueDate
+    }
+    this.currentAssign.due_date = this.assign.due_date
+  }
+  editDueDatePick(){
+    
+    
+    this.showEditDueDate = false
+    this.currentAssign.title = this.assign.title
+    this.currentAssign.description = this.assign.description
+    console.log(this.currentAssign);
+    
+    this.assignSvc.editAssignment(this.currentAssign).subscribe(res =>{
+      this.assign.due_date = res.data.due_date  
+    })
+
   }
 
   //////////////////////////////////////////////////// Problem ///////////////////////////////////////////
@@ -257,7 +284,6 @@ export class AssignmentComponent implements OnInit {
   sendMessage(){
       this.message.assignment_id = this.assign.id;
       this.message.student_id = this.studentId;
-      this.message.attachments = null;
       this.assignSvc.createMessage(this.message).subscribe(res => {
       this.assign.userAnswer.messages.push(res['data'])
       this.message.message = ''

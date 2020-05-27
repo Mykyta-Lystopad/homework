@@ -1,26 +1,23 @@
 <div class="container">
   <div class="wrap">
-
-
-
-
     <div class="d-flex justify-content-between flex-row">
-      
       <h4 *ngIf="assignCreationMode">Create new Assignment</h4>
       <span *ngIf="user.role == 'teacher'"> {{studentName}} </span>
       
       <div *ngIf="!assign.student_id">
-        <div *ngIf="!showEditAssignment">
+        <div *ngIf="!showEditAssignment && !assignCreationMode">
           <div *ngIf="user.role == 'teacher'" class="d-flex justify-content-end">
             <span class="material-icons delete" (click)="assignDelete()">delete</span>
           </div>
         </div> 
       </div>
     </div>
-    <div *ngIf="assignCreationMode">
-      Due date <input class="list-group-item" [(ngModel)]="assign.due_date">
-    </div>
+
     
+    <div *ngIf="assignCreationMode">
+      Due date <input type="date" [(ngModel)]="dueDatePickStr" (change)='dueDatePick()' >
+    </div>
+
 
     
   
@@ -28,7 +25,6 @@
       <h4>{{ assign.title }}</h4> 
       <h6 *ngIf="assign.description">Note: {{ assign.description }}</h6>
     </div>  
-
   <!-------------------------------------------------- edit -->
     <ng-template #editAssign>
       <div class="card-text d-flex flex-column border border-warning">    
@@ -43,9 +39,7 @@
        
       </div> 
     </ng-template>
-    
 <!--------------------------------------------------------- problems -->
-       
     <hr>
     <div *ngIf="assign.problems">
       <div class="shadow p-3 mb-5 bg-light rounded">
@@ -64,8 +58,6 @@
         </div>
       </div>
     </div>
-    
-    
 <!---------------------------------- Add Problem --------------------------------->
     <div class="d-block" *ngIf="showCreateProblem">     
       <div class="card" >
@@ -78,13 +70,19 @@
         </div>
       </div>
     </div>   
-    <!-- ------------------------dates ----------------------------------------- -->
-    <ul class="list-group d-flex flex-row justify-content-end" *ngIf="!assignCreationMode">
-      <li class="list-group-item">Due date {{ assign.due_date | date:"dd/MM/yy" }} </li>
-    </ul>
+    <!-- ------------------------date ----------------------------------------- -->
+    <div class="d-flex flex-row justify-content-end" *ngIf="!assignCreationMode">
+      <div *ngIf="!showEditDueDate; else editDueDate " (click)="changeEditDueDate()">
+        <p >{{ assign.due_date | date:"dd-MM-yy" }} </p>
+      </div>
+      <ng-template #editDueDate>
+        <input type="date" [(ngModel)]="currentAssign.due_date" (change)='editDueDatePick()'>
+      </ng-template>
+      
+    </div>
 
+    
   <!------------------------------- Attaches in assignment --------------------------------->
-
     <div *ngIf="assign.attachments">
       <!-- <app-attachment *ngFor="let attach of assign.attachments" [attachment] = 'attach'></app-attachment> -->
       <app-attachments
@@ -104,8 +102,6 @@
       ></app-attachments>
     
     </div> 
-
-
     <!----------------------------- messages block -------------------------------------------->
     <div *ngIf="assign.userAnswer">
       <app-message *ngFor="let mess of assign.userAnswer.messages" 
@@ -127,8 +123,6 @@
       <button class="btn btn-success" (click)="createAssign()">Create new Assignment</button>
       <button class="btn btn-warning" (click)="assignDelete()">Cancel</button>
     </div>
-    
-   
   </div>
 </div>
 

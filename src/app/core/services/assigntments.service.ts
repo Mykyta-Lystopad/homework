@@ -87,6 +87,11 @@ export class AssignmentService {
   editAssignment(assin: Assignment){
     return this.apiSvc.put(`api/assignments/${assin.id}`,assin).pipe(tap(res => {
       this.alertSvc.success('Assignment changed successfsul')
+      let index = this.assignments.findIndex(elem => elem.id == assin.id)
+      this.assignments[index].title = res['data']['title']
+      this.assignments[index].description = res['data']['description']
+      this.assignments[index].due_date = res['data']['due_date']
+      this.subj.next(this.assignments)
     }, error => {
       console.log('error edit assign: ', error['data']);      
       this.alertSvc.danger(this.collectErrors(error['data']))
@@ -155,8 +160,6 @@ export class AssignmentService {
  editMessage(mess:object){
    let message = {message: mess['message']}
   return this.apiSvc.put(`api/messages/${mess['messageId']}`, message).pipe(tap(res => {
-    console.log(res['data']);
-    
     this.alertSvc.success('Message was updated')
   }, error => {
     this.alertSvc.danger(this.collectErrors(error['data']))

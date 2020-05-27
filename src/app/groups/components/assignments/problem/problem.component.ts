@@ -22,6 +22,9 @@ export class ProblemComponent implements OnInit {
   @Output() emitEdit: EventEmitter<Problem> = new EventEmitter(); 
   @Output() emitSolve: EventEmitter<{}> = new EventEmitter();
   @ViewChild('editProbEl') editProbEl: ElementRef;
+  @ViewChild('markSliderEl') markSliderEl: any;
+  
+  enableMarkSlider = false;
 
   private emptySolution:UserSolution = {
     id: null,
@@ -45,12 +48,19 @@ export class ProblemComponent implements OnInit {
     if (!this.problem.userSolution){
       this.problem.userSolution = this.emptySolution
     }    
+        
   }
 
   onSolve(){
-    if (!this.problem.userSolution.teacher_mark){
-      this.emitSolve.emit({problem_id: this.problem.id, completed: !this.problem.userSolution.completed})  
-    } else this.alertSvc.warning(`This problem already marked by teacher`)
+
+    if (!this.problem.userSolution.completed){
+      if (!this.problem.userSolution.teacher_mark){
+        this.emitSolve.emit({problem_id: this.problem.id, completed: !this.problem.userSolution.completed})  
+      } else this.alertSvc.warning(`This problem already marked by teacher`)
+    } else {
+      this.alertSvc.warning('This problem already solved')
+    }
+
   }
 
   onEdit(){
@@ -60,6 +70,7 @@ export class ProblemComponent implements OnInit {
     }     
     if (this.editedProblem.title === '') this.onDelete()
     this.editProblemChange();
+    this.markSliderEl.setValue(this.problem.userSolution.teacher_mark)
   }
 
   onDelete(){

@@ -30,11 +30,12 @@
             </div>  
             <ul class="d-flex flex-row">
               <li *ngFor="let prob of assign.problems"> {{prob.title}}; </li>
-            </ul>     
+            </ul>    
+        <div class="d-flex flex-wrap justify-content-end">
+          <div >{{ assign.due_date | date: "dd-MM-yyyy"}}</div>  
+        </div>     
         </div>
-        <div class="d-flex flex-wrap align-content-end">
-          <div >{{ assign.due_date }}</div>  
-        </div>
+        
       </div>  
       <ng-template #showAssignmentComponent>
         

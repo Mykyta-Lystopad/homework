@@ -2,6 +2,7 @@ import { UserAnswer } from './userAnsver.model';
 import { Attachment } from './attachment.model';
 import { Problem } from './problem.model';
 
+
 export interface Assignment {
     group_id?:number;
     student_id?:number;
@@ -12,6 +13,6 @@ export interface Assignment {
     attachments?: Attachment[];
     userAnswer?: UserAnswer;    
     created_at?: number;
-    due_date?: number;
+    due_date?: string;
     show?: boolean;
 }

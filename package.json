@@ -26,6 +26,7 @@
     "fabric": "^3.6.3",
     "material-icons": "^0.3.1",
     "ngx-bootstrap": "^5.6.1",
+    "ngx-bootstrap-slider": "^1.8.0",
     "ngx-image-drawing": "^1.2.4",
     "ngx-pagination": "^5.0.0",
     "ngx-ui-loader": "^9.1.1",

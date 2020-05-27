@@ -3,6 +3,7 @@ import { Attachment } from './attachment.model';
 import { Problem } from './problem.model';
 import { Assignment } from './assignment.model';
 
+
 export class AssignmentModel implements Assignment{
     group_id:number
     student_id?:number;
@@ -10,7 +11,7 @@ export class AssignmentModel implements Assignment{
     title:string;
     description?: string;
     created_at?: number;
-    due_date?: number;
+    due_date?: string;
     problems?: Problem[];
     attachments?: Attachment[];
     userAnswer?: UserAnswer;   
