@@ -9,7 +9,6 @@ export class GroupsService {
 
   private groups: Group[] = []
   private groups$: BehaviorSubject<Group[]> = new BehaviorSubject([]);
-  private firstGroup: number
   private idGroup$ = new Subject();
 
   constructor(private apiService: ApiService) {
@@ -18,12 +17,17 @@ export class GroupsService {
   get group() {
     return this.groups$.asObservable();
   }
-  get idGroup(){
+
+  get idGroup() {
     return this.idGroup$.asObservable()
   }
 
+  get allGroups() {
+    return this.groups
+  }
 
   load(role: string) {
+    console.log("LOAD")
     this.apiService.get(`api/profile/${role === 'teacher' ? 'my' : 'user'}Groups`)
       .pipe(map(response => {
         if (role === 'teacher') return response.data.collection;
@@ -37,15 +41,16 @@ export class GroupsService {
     })
   }
 
-
   remove(id: number) {
     this.apiService.delete(`api/groups/${id}`).subscribe()
     for (let i = 0; i < this.groups.length; i++) {
       if (this.groups[i].id === id) {
         this.groups.splice(i, 1);
+        break
       }
     }
     this.groups$.next(this.groups);
+
   }
 
   add(title: string, subject_id: number) {
@@ -59,11 +64,15 @@ export class GroupsService {
       });
   }
 
-  changeGroup(id: number, title: string){
-    this.apiService.put(`api/groups/${id}`, {title})
-  }
-
-  getGroupId() {
-    return this.firstGroup
+  changeGroup(id: number, title: string) {
+    this.apiService.put(`api/groups/${id}`, {title}).subscribe(response=>{
+      for (let i = 0; i < this.groups.length; i++) {
+        if (this.groups[i].id === +id) {
+          this.groups[i].title = title
+          break
+        }
+      }
+      this.groups$.next(this.groups);
+    })
   }
 }

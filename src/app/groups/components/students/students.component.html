@@ -3,36 +3,22 @@
     <div
       *ngIf="users.length; else loading"
     >
-      <ul class="c-tile-list">
-        <li class="c-tile-list__item"
-            style="width: 25%"
-            *ngFor="let user of users"
+
+      <div class="row mt-2">
+        <div class="col-3"
+             style="cursor:pointer;"
+             *ngFor="let user of users"
+             [routerLink]="['/groups',idGroup,'student',user.id]"
         >
-          <article class="c-article-tile t-sass">
-            <div class="c-article-tile__header">
-              <a class="c-article-tile__category text-dark">
-                {{user.role}}
-              </a>
-
+          <div class="card order-card bg-c-pink"  style="height: 100px; font-size: 12px;">
+            <div class="card-block">
+              <h6 class="m-b-20">{{user.first_name}} {{user.last_name}}</h6>
+              <h2 class="text-right"><i class="fa fa-cart-plus f-left"></i></h2>
+              <p class="m-b-0">{{user.email}}</p>
             </div>
-
-            <div class="c-article-tile__body">
-              <h2 class="c-article-tile__title">
-                <a class="text-dark" [routerLink]="['/groups',idGroup,'student',user.id]">
-                  {{user.first_name}} {{user.last_name}}</a>
-              </h2>
-            </div>
-
-            <footer class="c-article-tile__footer">
-        <span class="c-article-tile__author">
-          <a class="text-dark">{{user.email}}</a>
-        </span>
-
-            </footer>
-          </article>
-        </li>
-
-      </ul>
+          </div>
+        </div>
+      </div>
     </div>
 
     <ng-template #loading>

@@ -22,14 +22,11 @@ export class CreateGroupComponent implements OnInit {
   ngOnInit(): void {
     this.groups$ = this.groupService.group
     this.activeAccordion = false
+    console.log("Create")
   }
 
   delete(id: number) {
     this.groupService.remove(id)
-  }
-
-  edit(id: number) {
-
   }
 
   addGroup() {
