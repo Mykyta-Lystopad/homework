@@ -1,1 +1,68 @@
-<p>create-group works!</p>
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-9 card">
+      <h5 class="card-header">Настройки для групп</h5>
+      <div class="card-body">
+        <div class="row justify-content-center">
+          <ul class="list-group col-12 mt-2">
+            <li
+              class="list-group-item d-flex justify-content-between align-items-center"
+              *ngFor="let group of groups$|async"
+            >
+              <div class="row align-items-end">
+                <p>{{group.title}}</p>
+                <p class="ml-2 subject-title">{{group.subject}}</p>
+              </div>
+
+              <div>
+          <span
+            class="badge badge-img"
+            (click)="delete(group.id)">
+            <img src="./assets/img/delete.png" alt="Удалить">
+          </span>
+                <span
+                  class="badge badge-img"
+                  [routerLink]="group.id"
+                  [queryParams]="{title: group.title}">
+            <img src="./assets/img/edit.png" alt="Изменить">
+            </span>
+              </div>
+            </li>
+
+            <div class="row justify-content-center">
+              <div class="col-12 collapse" [ngClass]="{'show': activeAccordion}" id="collapseExample">
+                <div class="card card-body mt-1">
+                  <div class="input-group input-group-sm mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="inputGroup-sizing-sm">Title group</span>
+                    </div>
+                    <input type="text"
+                           class="form-control"
+                           aria-label="Small"
+                           [(ngModel)]="title"
+                           aria-describedby="inputGroup-sizing-sm">
+                  </div>
+                  <select class="form-control form-control-sm">
+                    <option>Subject select</option>
+                    <option>Subject select</option>
+                    <option>Subject select</option>
+                    <option>Subject select</option>
+                  </select>
+                  <button
+                    type="button"
+                    (click)="addGroup()"
+                    class="col-2 mt-2 btn btn-success">Добавить
+                  </button>
+                </div>
+
+              </div>
+              <img class="mt-2 mb-3" (click)="activeAccordion = !activeAccordion"
+                   [src]="activeAccordion===true ? './assets/img/close-acc.png':'./assets/img/add.png'" alt>
+            </div>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

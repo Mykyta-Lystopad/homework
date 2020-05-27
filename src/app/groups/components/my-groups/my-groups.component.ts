@@ -1,7 +1,7 @@
-import {Component, OnInit} from '@angular/core';
-import {BehaviorSubject} from 'rxjs';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Observable} from 'rxjs';
 import {Group} from '../../../core/models/group.model';
-import {ApiService, RoleService, UserService} from '../../../core/services';
+import {GroupsService, RoleService} from '../../../core/services';
 import {Router} from "@angular/router";
 
 import {environment} from "../../../../environments/environment";
@@ -11,65 +11,58 @@ import {environment} from "../../../../environments/environment";
   templateUrl: './my-groups.component.html',
   styleUrls: ['./my-groups.component.scss']
 })
-export class MyGroupsComponent implements OnInit {
+export class MyGroupsComponent implements OnInit, OnDestroy {
 
-  groups$: BehaviorSubject<Group[]> = new BehaviorSubject([]);
-  group: Group[];
-  title = '';
-  activeTab = false;
+  groups$: Observable<Group[]>
+  countGroup$: Observable<any>
+  activeTab = 'student';
   idGroup: number;
-  showTitleBlock = false;
   role: string;
-  showEditBlock = false;
   storage: any = window.localStorage;
+  colorArray = ['bg-c-blue', 'bg-c-green', 'bg-c-yellow', 'bg-c-pink']
+  private targetId = 0
 
 
   constructor(
-    private  apiService: ApiService,
     private router: Router,
-    private userService: UserService,
-    private roleService: RoleService
+    private roleService: RoleService,
+    public groupService: GroupsService
   ) {
   }
 
   ngOnInit(): void {
     this.role = this.storage.getItem(environment.KEY_ROLE)
-    this.roleService.getUserGroups(this.role).subscribe(response=>{
-      this.groups$.next(response);
-      this.group = response;
-      if (this.group) {
-        this.idGroup = this.group[0].id;
-        this.role === 'teacher'? this.router.navigate(['groups', this.idGroup]):
-          this.router.navigate(['groups', this.idGroup,'allAssignments', this.idGroup]);
+    this.groups$ = this.groupService.group
+    this.groupService.load(this.role)
+    this.countGroup$ = this.groupService.idGroup
+    this.countGroup$.subscribe(response => {
+
+      this.idGroup = response
+      if (this.idGroup) {
+        this.role === 'teacher' ? this.router.navigate(['groups', this.idGroup]) :
+          this.router.navigate(['groups', this.idGroup, 'allAssignments', this.idGroup]);
       }
     })
 
   }
 
-  addGroup() {
-    this.apiService.post('api/groups', {
-      title: this.title,
-      subject_id: 1
-    })
-      .subscribe((res) => {
-        this.title = '';
-        this.showTitleBlock = false;
-        this.group.unshift(res.data);
-        this.groups$.next(this.group);
-      });
-  }
-
-  deleteGroup(id: number) {
-    this.apiService.delete(`api/groups/${id.toString()}`)
-      .subscribe(() => {
-        this.group = this.group.filter(group => group.id !== id);
-        this.groups$.next(this.group);
-      });
-  }
-
   showUsers(id: number) {
     this.idGroup = id;
-    this.activeTab=false
+    this.activeTab = 'student'
     this.router.navigate(['groups', this.idGroup]);
-  }  
+  }
+
+  ngOnDestroy(): void {
+
+  }
+
+
+  getColor(idx: number) {
+    this.targetId++
+    if (this.targetId > 3) {
+      this.targetId = 0
+    }
+    console.log(this.targetId)
+    return this.colorArray[this.targetId]
+  }
 }

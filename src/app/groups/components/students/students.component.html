@@ -3,19 +3,23 @@
     <div
       *ngIf="users.length; else loading"
     >
-      <div *ngFor="let user of users" class="list-group">
-        <a
-          [routerLink]="['/groups',idGroup,'student', user.id]"
-          class="list-group-item list-group-item-action">
-          <div class="d-flex w-100 justify-content-between">
-            <h5 class="mb-1">{{user.first_name}} {{user.last_name}}</h5>
-            <small>{{user.role}}</small>
+
+      <div class="row mt-2">
+        <div class="col-3"
+             style="cursor:pointer;"
+             *ngFor="let user of users"
+             [routerLink]="['/groups',idGroup,'student',user.id]"
+        >
+          <div class="card order-card bg-c-pink"  style="height: 100px; font-size: 12px;">
+            <div class="card-block">
+              <h6 class="m-b-20">{{user.first_name}} {{user.last_name}}</h6>
+              <h2 class="text-right"><i class="fa fa-cart-plus f-left"></i></h2>
+              <p class="m-b-0">{{user.email}}</p>
+            </div>
           </div>
-          <p class="mb-1">{{user.email}}</p>
-        </a>
+        </div>
       </div>
     </div>
-
 
     <ng-template #loading>
       <div class="text-center">

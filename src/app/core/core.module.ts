@@ -15,6 +15,7 @@ import {
   TagsService,
   UserService,
   RoleService,
+  GroupsService
 } from './services';
 
 
@@ -36,7 +37,8 @@ import {
     AlertService,
     NamesService,
     RoleService,
-    AttachmentService
+    AttachmentService,
+    GroupsService
   ],
   declarations: []
 })
