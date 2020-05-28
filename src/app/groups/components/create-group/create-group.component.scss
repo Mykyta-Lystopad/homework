@@ -1,10 +1,18 @@
-.badge-img img{
+.badge-img img {
   cursor: pointer;
 }
-img{
+
+img {
   width: 22px;
 }
 
-.subject-title{
+.subject-title {
   font-size: 12px;
 }
+
+.card-hover:hover {
+  background: rgba(181, 181, 181, 1);
+  cursor: pointer;
+  color: #fff;
+}
+

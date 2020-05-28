@@ -4,8 +4,7 @@
       <button class="btn btn-outline-light" id="dropdownBasic1" ngbDropdownToggle>{{curentUser.first_name}}</button>
       <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
         <button ngbDropdownItem [routerLink]="'profile'"  >Профиль</button>
-        <button ngbDropdownItem [routerLink]="'groups'" >Группы</button>
-        <button ngbDropdownItem [routerLink]="'groups/edit'" >Изменить группу</button>
+        <button ngbDropdownItem [routerLink]="'groups/edit'" >Управления группами</button>
         <button ngbDropdownItem>Мои сообщения</button>
         <button ngbDropdownItem>Дети</button>
         <button ngbDropdownItem>Родители</button>
@@ -14,3 +13,4 @@
       </div>
     </div>
   </div>
+</div>

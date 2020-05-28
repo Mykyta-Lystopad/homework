@@ -4,15 +4,8 @@
       <h5 class="card-header">Изменение</h5>
       <div class="card-body">
         <div class="card card-body mt-1">
-          <div class="input-group input-group-sm mb-3">
-            <div class="input-group-prepend">
-              <span class="input-group-text" id="inputGroup-sizing-sm">Title group</span>
-            </div>
-            <input type="text"
-                   class="form-control"
-                   aria-label="Small"
-                   [(ngModel)]="title"
-                   aria-describedby="inputGroup-sizing-sm">
+          <div class="input-group mb-3">
+            <input type="text" [(ngModel)]="title" class="form-control" aria-label="Recipient's username" aria-describedby="button-addon2">
           </div>
           <select class="form-control form-control-sm">
             <option>Subject select</option>
