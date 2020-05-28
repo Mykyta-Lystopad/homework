@@ -6,10 +6,11 @@ import { CreateGroupComponent } from './components/create-group/create-group.com
 import { MyGroupsComponent } from './components/my-groups/my-groups.component';
 import { StudentsComponent } from './components/students/students.component';
 import { EditGroupComponent } from './components/edit-group/edit-group.component';
+import { NewGroupComponent } from './components/new-group/new-group.component';
 
 
 @NgModule({
-  declarations: [LayoutGroupComponent, CreateGroupComponent, MyGroupsComponent, StudentsComponent, EditGroupComponent],
+  declarations: [LayoutGroupComponent, CreateGroupComponent, MyGroupsComponent, StudentsComponent, EditGroupComponent, NewGroupComponent],
   imports: [
     SharedModule,
     GroupsRoutingModule

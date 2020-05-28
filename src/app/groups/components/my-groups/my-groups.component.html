@@ -10,7 +10,7 @@
       *ngIf="groupService.allGroups.length"
     >
       <div class="row mt-2">
-        <div class="col"
+        <div class="col-4 rounded-circle"
              style="cursor:pointer;"
              (click)="showUsers(group.id)"
              *ngFor="let group of groupService.allGroups; let idx = index"

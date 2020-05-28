@@ -1,31 +1,27 @@
 <div class="container">
   <div class="row justify-content-center">
     <div class="col-9 card">
-      <h5 class="card-header">Управления группами</h5>
+      <div class="row card-header justify-content-between align-items-center">
+        <h5>Управления группами</h5>
+        <img [routerLink]="['newGroup']" class="mt-2 mb-3"
+             src='./assets/img/add.png' alt>
+      </div>
+
       <div class="card-body">
         <div class="row justify-content-center">
           <ul class="list-group col-12 mt-2">
             <li
               class="list-group-item d-flex justify-content-between card-hover"
-              [routerLink]="[group.id]"
+              [routerLink]="[group.id]" [queryParams]="{title: group.title}"
               *ngFor="let group of groups$|async"
             >
               <div class="row align-items-center">
-                <p class="ml-3">{{group.title}}</p>
+                <p class="ml-2">{{group.title}}</p>
                 <p class="ml-2 subject-title">{{group.subject}}</p>
               </div>
-              <div>
-       <!--   <span
-            class="badge badge-img"
-            (click)="delete(group.id)">
-            <img src="./assets/img/delete.png" alt="Удалить">
-          </span>-->
-
+              <div class="edit-block">
               </div>
             </li>
-
-              <img class="mt-2 mb-3"  (click)="activeAccordion = !activeAccordion"
-                   [src]="activeAccordion===true ? './assets/img/close-acc.png':'./assets/img/add.png'" alt>
           </ul>
         </div>
 
