@@ -5,34 +5,47 @@
       <div class="card-body">
         <div class="card card-body mt-1">
 
-            <form [formGroup]="form" (ngSubmit)="submit()">
+          <form [formGroup]="form" (ngSubmit)="submit()">
+            <div class="form-group">
 
-              <label for="orders">Order</label>
-              <select formControlName="orders" id="orders">
-                <option>
+                <label for="title">Название группы:</label>
+                <input formControlName="title"
+                       type="text"
+                       id="title"
+                       [(ngModel)]="title"
+                       class="form-control"
+                       placeholder="Введите название группы"
+                >
 
-                </option>
+              <div *ngIf="this.form.controls.title.touched && this.form.controls.title.invalid"
+                   class="alert alert-danger mt-1">
+                <div *ngIf="this.form.controls.title.errors.required">Вы не ввели название группы.</div>
+              </div>
+              <label for="select">Предмет:</label>
+              <select formControlName="select" id="select"
+                      (change)="idSubject = $event.target.value;"
+                      class="form-control">
+                <option value="">Выберите предмет</option>
+                <option value="{{subject.id}}" *ngFor="let subject of subjects">{{subject.title}}</option>
               </select>
+              <div *ngIf="this.form.controls.select.touched && this.form.controls.select.invalid"
+                   class="alert alert-danger mt-1">
+                <div *ngIf="this.form.controls.select.errors.required">Вы не выбрали предмет для группы.</div>
+              </div>
+            </div>
 
-              <br><br>
-              <button>submit</button>
-            </form>
-
-          <select class="form-control form-control-sm" (change)="idSubject = $event.target.value;">
-            <option value="">Выберите группу</option>
-            <option value="{{subject.id}}" *ngFor="let subject of subjects">{{subject.title}}</option>
-          </select>
-          <div class="row mt-3 ml-1">
-            <button
-              type="button"
-              (click)="addGroup()"
-              class="col-2 btn btn-success">Добавить
-            </button>
-            <button
-              type="button"
-              (click)="location.back()"
-              class="btn col-2 ml-2 btn-danger">Отмениить</button>
-          </div>
+            <div class="row mt-3 ml-1">
+              <button
+                type="submit"
+                [disabled]="!form.valid"
+                class="col-2 btn btn-success">Добавить
+              </button>
+              <button
+                type="button"
+                (click)="location.back()"
+                class="btn col-2 ml-2 btn-danger">Отмениить</button>
+            </div>
+          </form>
 
         </div>
       </div>

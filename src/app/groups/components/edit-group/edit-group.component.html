@@ -1,10 +1,19 @@
 <div class="container">
   <div class="row justify-content-center">
     <div class="col-9 card">
-      <h5 class="card-header">Изменение</h5>
+      <div class="row card-header justify-content-between align-items-center">
+        <h5>Управления группами</h5>
+        <img class="mt-2 mb-3" style="cursor: pointer;outline: none" (click)="delete()"
+             src='./assets/img/delete.png' alt>
+      </div>
       <div class="card-body">
         <div class="card card-body mt-1">
+          <div class="row justify-content-center">
+            <p>{{group.model_code}}</p>
+          </div>
+
           <div class="input-group mb-3">
+
             <input type="text" [(ngModel)]="title" class="form-control" aria-label="Recipient's username" aria-describedby="button-addon2">
           </div>
           <div class="row mt-3 ml-1">

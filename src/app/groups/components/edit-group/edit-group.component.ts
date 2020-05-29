@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {GroupsService} from "../../../core/services";
 import {ActivatedRoute} from "@angular/router";
 import {Location} from "@angular/common";
+import {Group} from "../../../core/models/group.model";
 
 @Component({
   selector: 'app-edit-group',
@@ -11,8 +12,9 @@ import {Location} from "@angular/common";
 export class EditGroupComponent implements OnInit {
   title = '';
   idGroup: number
+  group: Group
 
-  constructor(private groupsService: GroupsService,
+  constructor(private groupService: GroupsService,
               private activeRoute: ActivatedRoute,
               public location: Location) {
   }
@@ -22,10 +24,16 @@ export class EditGroupComponent implements OnInit {
     this.activeRoute.queryParams.subscribe((queryParam: any) => {
       this.title = queryParam['title']
     })
+    this.group = this.groupService.getGroup(this.idGroup)
   }
 
   changeTitle() {
-    this.groupsService.changeGroup(this.idGroup, this.title)
+    this.groupService.changeGroup(this.idGroup, this.title)
+    this.location.back()
+  }
+
+  delete() {
+    this.groupService.remove(this.idGroup)
     this.location.back()
   }
 }
