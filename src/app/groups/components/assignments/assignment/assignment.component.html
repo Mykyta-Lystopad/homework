@@ -7,7 +7,7 @@
         <h4>{{ assign.title }}</h4>       
       </div> 
       <ng-template #editAssignTitle>
-        <input type="text" #assignTitleEl  [(ngModel)]="currentAssign.title" (blur)="assignmentEdit('title')">
+        <input type="text" #assignTitleEl  [(ngModel)]="currentAssign.title" (keydown.enter)="showEditAssignmentTitle = false" (blur)="assignmentEdit('title')">
       </ng-template>
     
       <div *ngIf="!assign.student_id">
@@ -30,7 +30,7 @@
         </ng-template>           
       </div> 
       <ng-template #editAssignDescription>
-        <input type="text" #assignNoteEl  [(ngModel)]="currentAssign.description" (blur)="assignmentEdit('description')">
+        <input type="text" #assignNoteEl  [(ngModel)]="currentAssign.description" (keydown.enter)="showEditAssignmentDescription = false" (blur)="assignmentEdit('description')">
       </ng-template>
     </div>
     
@@ -53,7 +53,7 @@
             <div *ngIf="!showCreateProblem" class="placeholder" (click)="toShowCreateProblem()">Add problem</div>
           </div>
         </div>
-        <input type="text" *ngIf="showCreateProblem" #addProblemEl class="col-12" [(ngModel)]="currentProblem.title" (blur)=createProblem()>
+        <input type="text" *ngIf="showCreateProblem" #addProblemEl class="col-12" [(ngModel)]="currentProblem.title"  (keydown.enter)="showCreateProblem = false" (blur)=createProblem()>
       </div>
       <hr>
     </div>
@@ -101,11 +101,7 @@
       ></app-attachments>
     
     </div> 
-    <!-- ---------------------------Create buttons ----------------------------------->
-    <div *ngIf="assignCreationMode" class="d-flex justify-content-around">
-      <button class="btn btn-success" (click)="createAssign()">Create new Assignment</button>
-      <button class="btn btn-warning" (click)="assignDelete()">Cancel</button>
-    </div>
+    
     <!----------------------------- messages block -------------------------------------------->
     <div *ngIf="assign.student_id">
       <h6>Messages</h6>
@@ -134,7 +130,11 @@
           (keydown.enter) = "showNewMessage = false">      
       </div> 
     </div>
-    
+    <!-- ---------------------------Create buttons ----------------------------------->
+    <div *ngIf="assignCreationMode" class="d-flex justify-content-around">
+      <button class="btn btn-success" (click)="createAssign()">Create new Assignment</button>
+      <button class="btn btn-warning" (click)="assignDelete()">Cancel</button>
+    </div> 
 
     
   </div>

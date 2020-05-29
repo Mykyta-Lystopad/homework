@@ -65,7 +65,7 @@
             <ng-template #editDeleteBlock>
                 <div *ngIf="!editProblemFlag; else editTitle">
                     <div class="d-flex justify-content-between">
-                        <div  (click)="editProblemChange()">
+                        <div  (click)="editProblemChange(true)">
                             {{ problem.title }}
                         </div>
                         <div *ngIf="!studentId && !editProblemFlag">
@@ -77,7 +77,10 @@
             <!-------------------------------------------- edit ------------------------------------------->
                 <ng-template #editTitle>    
                     <div class="d-flex flex-column">
-                        <input type="text" #editProbEl class="col-12" [(ngModel)]="editedProblem.title" (blur)="onEdit()">                
+                        <input type="text" #editProbEl class="col-12" 
+                        [(ngModel)]="editedProblem.title" 
+                        (keydown.enter)="editProblemFlag = false" 
+                        (blur)="onEdit()">                
                     </div>  
                 </ng-template>
             </ng-template> 

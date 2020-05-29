@@ -71,7 +71,7 @@ export class ProblemComponent implements OnInit {
       this.emitEdit.emit(this.editedProblem)   
     }     
     if (this.editedProblem.title === '') this.onDelete()
-    this.editProblemChange();
+    this.editProblemChange(false);
     
   }
 
@@ -81,9 +81,9 @@ export class ProblemComponent implements OnInit {
     }
   }
 
-  editProblemChange(){
+  editProblemChange(flag:boolean){
     if (this.user.role == 'teacher' && this.studentId == undefined){
-      this.editProblemFlag = !this.editProblemFlag
+      this.editProblemFlag = flag
       this.editedProblem.title = this.problem.title      
       setTimeout(()=>{ this.editProbEl.nativeElement.focus()},0);   
     }    
