@@ -1,25 +1,21 @@
-<div class="card">
-    <div class="card-body">
+
       <div class="d-flex  align-items-center" [class.justify-content-end] = "message.user.id == currentUserId">
-        <span class="mb-2 text-muted">{{message.created_at | date}} ({{message.user.first_name}} {{message.user.last_name}})</span>
-        <div *ngIf="message.user.id == currentUserId">
-          <span class="material-icons edit" (click)="changeEditShow()">edit</span>
-          <span class="material-icons delete" (click)="deleteMessage()">delete</span>
-        </div>        
+          <p class="card-text" *ngIf="!editShow; else editBlock" (click)="changeEditShow()">
+          {{message.message}}
+        </p>
       </div>
-      <hr>
-      <p class="card-text" *ngIf="!editShow; else editBlock" (click)="changeEditShow()">
-        {{message.message}}
-      </p>
+     
+      
       <ng-template #editBlock>
         <div class="input-group">
-            <input type="text" #editMessageEl class="form-control" [(ngModel)]="editedMessage" (blur)="editMessage()">
+            <input type="text" #editMessageEl class="form-control" 
+            [(ngModel)]="editedMessage" 
+            (blur)="editMessage()" 
+            (keydown.enter)="editShow = false">
         </div>
       </ng-template>
-      
+       <hr>
      
-    </div>
-  </div>
 
 
 

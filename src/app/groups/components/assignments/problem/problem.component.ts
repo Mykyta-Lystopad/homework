@@ -5,7 +5,6 @@ import { Problem } from './../../../../core/models/problem.model';
 import { User } from '../../../../core/models';
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 
-
 @Component({
   selector: 'app-problem',
   templateUrl: './problem.component.html',
@@ -22,7 +21,7 @@ export class ProblemComponent implements OnInit {
   @Output() emitEdit: EventEmitter<Problem> = new EventEmitter(); 
   @Output() emitSolve: EventEmitter<{}> = new EventEmitter();
   @ViewChild('editProbEl') editProbEl: ElementRef;
-  @ViewChild('markSliderEl') markSliderEl: any;
+  @ViewChild('markSliderEl') markSliderEl: ElementRef;
   
   enableMarkSlider = false;
 
@@ -48,19 +47,22 @@ export class ProblemComponent implements OnInit {
     if (!this.problem.userSolution){
       this.problem.userSolution = this.emptySolution
     }    
-        
+    
+    
+  }
+  ngAfterViewInit(){
+    if (this.markSliderEl && this.problem.userSolution.teacher_mark){
+      this.currentMark = this.problem.userSolution.teacher_mark
+    }
+    else{
+      this.currentMark = 12
+    }
   }
 
   onSolve(){
-
-    if (!this.problem.userSolution.completed){
       if (!this.problem.userSolution.teacher_mark){
         this.emitSolve.emit({problem_id: this.problem.id, completed: !this.problem.userSolution.completed})  
       } else this.alertSvc.warning(`This problem already marked by teacher`)
-    } else {
-      this.alertSvc.warning('This problem already solved')
-    }
-
   }
 
   onEdit(){
@@ -69,8 +71,8 @@ export class ProblemComponent implements OnInit {
       this.emitEdit.emit(this.editedProblem)   
     }     
     if (this.editedProblem.title === '') this.onDelete()
-    this.editProblemChange();
-    this.markSliderEl.setValue(this.problem.userSolution.teacher_mark)
+    this.editProblemChange(false);
+    
   }
 
   onDelete(){
@@ -79,9 +81,9 @@ export class ProblemComponent implements OnInit {
     }
   }
 
-  editProblemChange(){
+  editProblemChange(flag:boolean){
     if (this.user.role == 'teacher' && this.studentId == undefined){
-      this.editProblemFlag = !this.editProblemFlag
+      this.editProblemFlag = flag
       this.editedProblem.title = this.problem.title      
       setTimeout(()=>{ this.editProbEl.nativeElement.focus()},0);   
     }    
@@ -97,8 +99,6 @@ export class ProblemComponent implements OnInit {
     this.assignSvc.changeMark(this.problem.userSolution.id, {"teacher_mark": this.currentMark}).subscribe(res => {
       this.problem.userSolution.teacher_mark = +res['data']['teacher_mark']
     })
-
-    this.currentMark = null
     this.editMark = false
   }
 

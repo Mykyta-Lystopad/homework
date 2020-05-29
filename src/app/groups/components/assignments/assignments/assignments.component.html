@@ -1,10 +1,10 @@
 
 <div class="container">
    
-<div *ngIf="currentUser.role == 'teacher' && !student_id; else studentNameBlock"  class="card">
-  <button type="button" class="btn btn-primary" *ngIf="!createAssignFlag" (click)="showNewAssignBlock()">
-    Create new assignment
-  </button>
+<div *ngIf="currentUser.role == 'teacher' && !student_id; else studentNameBlock">
+  <div class="d-flex justify-content-center placeholder" *ngIf="!createAssignFlag" (click)="showNewAssignBlock()">
+    <h4>Create new assignment</h4>
+  </div>
 </div>
 <ng-template #studentNameBlock>
   {{studentName}}
@@ -24,9 +24,9 @@
     <!-- <div class="card"[routerLink]="['assignments', assign.id]" routerLinkActive="router-link-active"> -->
       <div *ngIf="!assignments[i].show; else showAssignmentComponent" (click)="showAssignDetail(i)">
         <div class="card-body" >
-          <h4 class="card-title">{{ assign.title }}</h4>
+          <h6 class="card-title">{{ assign.title }}</h6>
             <div>
-              <div *ngIf="assign.description" class="col-12"> Note: {{ assign.description }}</div>          
+              <div *ngIf="assign.description" class="col-12">{{ assign.description }}</div>          
             </div>  
             <ul class="d-flex flex-row">
               <li *ngFor="let prob of assign.problems"> {{prob.title}}; </li>

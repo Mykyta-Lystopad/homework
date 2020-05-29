@@ -30,11 +30,10 @@
             "styles": [
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "src/styles.scss",
-              "node_modules/material-icons/iconfont/material-icons.css",
-              "node_modules/bootstrap-slider/dist/css/bootstrap-slider.min.css"
+              "node_modules/material-icons/iconfont/material-icons.css"
             ],
             "scripts": [
-              "node_modules/bootstrap-slider/dist/bootstrap-slider.min.js"
+
             ]
           },
           "configurations": {
