@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import {GroupsService} from "../../../core/services";
+import {Component, OnInit} from '@angular/core';
+import {ApiService, GroupsService} from "../../../core/services";
 import {ActivatedRoute} from "@angular/router";
 import {Location} from "@angular/common";
+import {SubjectModel} from "../../../core/models";
+import {FormGroup} from "@angular/forms";
 
 @Component({
   selector: 'app-new-group',
@@ -9,15 +11,29 @@ import {Location} from "@angular/common";
   styleUrls: ['./new-group.component.scss']
 })
 export class NewGroupComponent implements OnInit {
-  title: any;
+  title = '';
+  subjects: SubjectModel[] = []
+  idSubject: number
+  form: FormGroup;
 
-  constructor(private groupsService: GroupsService,
-              public location: Location) { }
-
-  ngOnInit(): void {
+  constructor(private groupService: GroupsService,
+              private apiService: ApiService,
+              public location: Location) {
   }
 
-  changeTitle() {
+  ngOnInit(): void {
+    this.form = new FormGroup({})
+    this.apiService.get('api/subjects').subscribe(response => {
+      this.subjects = response.data
+    })
+  }
+
+  addGroup() {
+    this.groupService.add(this.title, this.idSubject)
+    this.title = ''
+  }
+
+  submit() {
 
   }
 }

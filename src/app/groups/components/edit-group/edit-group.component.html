@@ -7,18 +7,18 @@
           <div class="input-group mb-3">
             <input type="text" [(ngModel)]="title" class="form-control" aria-label="Recipient's username" aria-describedby="button-addon2">
           </div>
-          <select class="form-control form-control-sm">
-            <option>Subject select</option>
-            <option>Subject select</option>
-            <option>Subject select</option>
-            <option>Subject select</option>
-          </select>
-          <button
-            type="button"
-            (click)="changeTitle()"
-            class="col-2 mt-2 btn btn-success">Изменить
-          </button>
-          <button type="button"(click)="location.back()" class="btn btn-danger">Отмениить</button>
+          <div class="row mt-3 ml-1">
+            <button
+              type="button"
+              (click)="changeTitle()"
+              class="col-2 btn btn-success">Изменить
+            </button>
+            <button
+              type="button"
+              (click)="location.back()"
+              class="btn col-2 ml-2 btn-danger"
+            >Отмениить</button>
+          </div>
         </div>
 
       </div>

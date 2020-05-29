@@ -15,10 +15,10 @@ const routes: Routes = [
         path: 'edit', component: CreateGroupComponent
       },
       {
-        path: 'edit/:id', component: EditGroupComponent
+        path:'edit/newGroup', component: NewGroupComponent
       },
       {
-        path:'edit/newGroup', component: NewGroupComponent
+        path: 'edit/:id', component: EditGroupComponent
       },
       {
         path: '', component: MyGroupsComponent, children: [
