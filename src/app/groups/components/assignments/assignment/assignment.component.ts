@@ -19,14 +19,15 @@ import {UserService} from "../../../../core/services";
 })
 export class AssignmentComponent implements OnInit {
   showCreateProblem = false;
-  showEditAssignment = false;
+  showEditAssignmentTitle = false;
+  showEditAssignmentDescription = false;
   showEditDueDate = false;
+  showNewMessage = false;
   @Output() emitHideCreateAssign: EventEmitter<boolean> = new EventEmitter()
   @Input() assignCreationMode = false
   @Input() assignId: number;  
   studentId: number;
   groupId: number;
-  studentName = '';  
   user: User;
   assign: Assignment = new AssignmentModel(this.assignId);
   currentAssign: Assignment = new AssignmentModel(this.assignId);  
@@ -34,8 +35,8 @@ export class AssignmentComponent implements OnInit {
   @ViewChild('assignTitleEl') assignTitleEl: ElementRef;
   @ViewChild('addProblemEl') addProblemEl: ElementRef;
   @ViewChild('assignNoteEl') assignNoteEl: ElementRef;
-  assignFocusEdit = [0,0];
-  dueDatePickStr: string;
+  @ViewChild('editDueDateEl') editDueDateEl: ElementRef;
+  @ViewChild('newMessageEl') newMessageEl: ElementRef;
   message: Message = {
     id: null,
     message: '',
@@ -85,27 +86,22 @@ export class AssignmentComponent implements OnInit {
         }
         this.assign.student_id = this.studentId
         this.currentAssign.id = this.assign.id
-        if (this.studentId && this.user.role == 'teacher') this.getStudentName()
+        //if (this.studentId && this.user.role == 'teacher') this.getStudentName()
       })    
     } else {
-      //this.assign.title = "Due Date must be in this place"
+      this.assign.title = "Assignment title (click here to edit)"
     }
     if (this.counter == 1 && this.assignCreationMode){
       this.createProblem()
     }
   }  
-  getStudentName(){
-    this.assignSvc.getStudentName(this.groupId).subscribe(res =>{
-      let index = res['data']['users'].findIndex(usr => usr['id'] == this.studentId);
-      this.studentName =  `${res['data']['users'][index].first_name} ${res['data']['users'][index].last_name}`;
-    })
-  }
-  dueDatePick(){
-    this.assign.due_date = this.dueDatePickStr
-    let str = this.datePipe.transform(this.dueDatePickStr , 'dd-MM-yyyy') + ': '
-    this.assign.title = str;
-   
-  }
+  // getStudentName(){
+  //   this.assignSvc.getStudentName(this.groupId).subscribe(res =>{
+  //     let index = res['data']['users'].findIndex(usr => usr['id'] == this.studentId);
+  //     this.studentName =  `${res['data']['users'][index].first_name} ${res['data']['users'][index].last_name}`;
+  //   })
+  // }
+
   ///////////////////////////////////////////////////// Assign ///////////////////////////////////////////
   createAssign(){
     this.assign.problems.forEach(element => {
@@ -130,74 +126,75 @@ export class AssignmentComponent implements OnInit {
     }
 
   }
-  showEditAssign(){
+  showEditAssign(source: string){
     if (this.user.role == 'teacher' && !this.studentId){
-      this.showEditAssignment = !this.showEditAssignment
-      setTimeout(()=>{this.assignTitleEl.nativeElement.focus()},0)
-      this.currentAssign.title = this.assign.title
-      this.currentAssign.description = this.assign.description    
+      if (source == 'title'){
+        this.showEditAssignmentTitle = !this.showEditAssignmentTitle
+        setTimeout(()=>{this.assignTitleEl.nativeElement.focus()},0)
+        this.currentAssign.title = this.assign.title
+      }else{
+        this.showEditAssignmentDescription = !this.showEditAssignmentDescription
+        setTimeout(()=>{this.assignNoteEl.nativeElement.focus()},0)
+        this.currentAssign.description = this.assign.description  
+      } 
     }    
   }
-  assignmentEdit(blurIndex:number){
+  assignmentEdit(source:string){
 
-    if (!this.assignCreationMode){
-      console.log(this.assignFocusEdit);
-      this.assignFocusEdit[blurIndex] = 0;   
-      console.log(this.assignFocusEdit);
-      if (!this.currentAssign.title && !this.currentAssign.description) {
-        this.assignDelete()
-      }else{
-        if (this.currentAssign.title !== this.assign.title || this.currentAssign.description !== this.assign.description){
-          if (this.assignFocusEdit[0]+this.assignFocusEdit[1] === 0){
-
-      ////////////////////// задача не решается Nateive елементами //////////////////////////
+    if (source == 'title'){ //title
+      if (!this.assignCreationMode){
+        if (this.currentAssign.title){
+          if (this.currentAssign.title != this.assign.title) 
+          {
             this.assignSvc.editAssignment(this.currentAssign).subscribe(res =>{
-              this.assign.title = res.data.title
-              this.assign.description = res.data.description        
+            this.assign.title = res.data.title
             })
           }
-          this.showEditAssignment = false;   
-        } 
+            this.assign.description = this.currentAssign.description
+        } else {
+          this.assignDelete()
+        }
+      }else{
+        this.assign.title = this.currentAssign.title
       }
-    } else {
-         //create new assignment    
-      this.assign.title = this.currentAssign.title
-      this.assign.description = this.currentAssign.description   
-      }   
-  }
-  assignFocusEditChange(index:number){
-    
-    switch (index) {
-      case 0:
-        this.assignFocusEdit[0] = 1;
-        this.assignFocusEdit[1] = 0;
-        break;
-      case 1:
-        this.assignFocusEdit[0] = 0;
-        this.assignFocusEdit[1] = 1;
-        break;
+      this.showEditAssignmentTitle = false
+    } else { //description
+      if (!this.assignCreationMode){
+        if (this.currentAssign.description != this.assign.description){
+          this.currentAssign.title = this.assign.title
+          this.assignSvc.editAssignment(this.currentAssign).subscribe(res =>{
+          this.assign.title = res.data.title
+          this.assign.description = res.data.description
+          })
+        }
+         
+      }else{
+        this.assign.description = this.currentAssign.description
+      }
+    this.showEditAssignmentDescription = false     
     }
-    console.log('focus log',this.assignFocusEdit);
-    
   }
+
   changeEditDueDate(){
     if (this.user.role == "teacher" && !this.studentId){
-      this.showEditDueDate = !this.showEditDueDate
+      this.showEditDueDate = true
     }
     this.currentAssign.due_date = this.assign.due_date
+    setTimeout(()=>{this.editDueDateEl.nativeElement.focus()},0)
   }
-  editDueDatePick(){
-    
-    
-    this.showEditDueDate = false
-    this.currentAssign.title = this.assign.title
-    this.currentAssign.description = this.assign.description
-    console.log(this.currentAssign);
-    
-    this.assignSvc.editAssignment(this.currentAssign).subscribe(res =>{
-      this.assign.due_date = res.data.due_date  
-    })
-
+  dueDatePick(){
+    if (this.assignCreationMode){
+      this.assign.due_date = this.currentAssign.due_date
+      let str = this.datePipe.transform(this.currentAssign.due_date , 'dd-MM-yyyy')
+      if (!this.assign.title) this.assign.title = str;
+    } else {      
+      this.currentAssign.title = this.assign.title
+      this.currentAssign.description = this.assign.description
+      this.assignSvc.editAssignment(this.currentAssign).subscribe(res =>{
+        this.assign.due_date = res.data.due_date  
+      })
+    }
+    this.showEditDueDate = false 
   }
 
   //////////////////////////////////////////////////// Problem ///////////////////////////////////////////
@@ -214,8 +211,7 @@ export class AssignmentComponent implements OnInit {
           }
         })
       }    
-      this.toShowCreateProblem();
-      this.currentProblem.title = ''
+
     } else {      
       if (this.counter == 1){
         // first initialization, add first problem
@@ -230,12 +226,11 @@ export class AssignmentComponent implements OnInit {
         problem.title = this.currentProblem.title
         problem.id = this.counter
         this.assign.problems.push(problem)
-        this.toShowCreateProblem();
-        this.currentProblem.title = ''
         this.counter++
-      }    
+      } 
     }
-    
+      this.showCreateProblem = false;
+      this.currentProblem.title = ''
     
   }
   probDel(probId: number){
@@ -282,13 +277,20 @@ export class AssignmentComponent implements OnInit {
 
   ////////////////////////////////////////////////////////////// Messages ///////////////////////////////////
   sendMessage(){
+    if (this.message.message){
       this.message.assignment_id = this.assign.id;
       this.message.student_id = this.studentId;
       this.assignSvc.createMessage(this.message).subscribe(res => {
       this.assign.userAnswer.messages.push(res['data'])
       this.message.message = ''
-    })
+      })
+    }
+    this.showNewMessage = false;
   } 
+  toShowEditMessage(){
+    this.showNewMessage = true
+    setTimeout(()=>{this.newMessageEl.nativeElement.focus()},0)
+  }
   editMessage(mess:object){
     
     this.assignSvc.editMessage(mess).subscribe(res => {

@@ -1,5 +1,5 @@
 .wrap{
-    background-color: rgb(232, 238, 235);
+    // background-color: rgb(232, 238, 235);
     border: 1px silver solid;
     border-radius: 5px;
     padding: 2rem;
@@ -8,4 +8,6 @@
 .badge{
     cursor: pointer;
 }
-
+input{
+    width: 100%;
+}

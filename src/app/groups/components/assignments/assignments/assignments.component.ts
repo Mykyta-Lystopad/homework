@@ -1,4 +1,3 @@
-import { environment } from './../../../../../environments/environment.prod';
 import { Problem } from './../../../../core/models/problem.model';
 import {User} from './../../../../core/models/user.model';
 import {UserService} from './../../../../core/services/user.service';
@@ -10,7 +9,7 @@ import {AssignmentModel} from "../../../../core/models/assignmentModel";
 import {ActivatedRoute} from "@angular/router";
 import { formatDate } from '@angular/common';
 import { ProblemModel } from 'src/app/core/models/problemModel';
-import { threadId } from 'worker_threads';
+
 
 
 @Component({
@@ -68,7 +67,7 @@ export class AssignmentsComponent implements OnInit {
     this.currentAssignment.problems.splice(index,1)
   }
 
-    hideCreateAssign(flag:boolean){
+  hideCreateAssign(flag:boolean){
     this.createAssignFlag = flag
   }
   showAssignDetail(i?:number){

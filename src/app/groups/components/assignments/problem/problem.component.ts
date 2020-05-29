@@ -16,7 +16,7 @@ export class ProblemComponent implements OnInit {
   @Input() problem: Problem;
   @Input() user: User;
   @Input() studentId: number;
-  editMark = false;
+  //editMark = false;
   currentMark: number;
   @Output() emitDel: EventEmitter<{}> = new EventEmitter();
   @Output() emitEdit: EventEmitter<Problem> = new EventEmitter(); 
@@ -48,19 +48,24 @@ export class ProblemComponent implements OnInit {
     if (!this.problem.userSolution){
       this.problem.userSolution = this.emptySolution
     }    
-        
+  }
+  ngAfterViewInit(){
+    console.log('asdasdasddsc');
+    debugger
+    
+    // if (this.problem.userSolution.completed){
+    //   if (this.problem.userSolution.teacher_mark){
+    //     this.markSliderEl.setValue(this.problem.userSolution.teacher_mark)  
+    //   } else {
+    //     this.markSliderEl.setValue(12)
+    //   }
+    // }
   }
 
   onSolve(){
-
-    if (!this.problem.userSolution.completed){
       if (!this.problem.userSolution.teacher_mark){
         this.emitSolve.emit({problem_id: this.problem.id, completed: !this.problem.userSolution.completed})  
       } else this.alertSvc.warning(`This problem already marked by teacher`)
-    } else {
-      this.alertSvc.warning('This problem already solved')
-    }
-
   }
 
   onEdit(){
@@ -70,7 +75,10 @@ export class ProblemComponent implements OnInit {
     }     
     if (this.editedProblem.title === '') this.onDelete()
     this.editProblemChange();
-    this.markSliderEl.setValue(this.problem.userSolution.teacher_mark)
+    
+  }
+  setSliderValue(){
+    
   }
 
   onDelete(){
@@ -86,20 +94,20 @@ export class ProblemComponent implements OnInit {
       setTimeout(()=>{ this.editProbEl.nativeElement.focus()},0);   
     }    
   }
-  showEditMark(){
-    if (this.problem.userSolution.completed){
-      this.currentMark = this.problem.userSolution.teacher_mark
-    this.editMark = !this.editMark
-    } else this.alertSvc.warning(`You can't mark uncompleted problem`) 
+  // showEditMark(){
+  //   if (this.problem.userSolution.completed){
+  //     this.currentMark = this.problem.userSolution.teacher_mark
+  //   this.editMark = !this.editMark
+  //   } else this.alertSvc.warning(`You can't mark uncompleted problem`) 
  
-    }
+  //   }
   saveMark(){
     this.assignSvc.changeMark(this.problem.userSolution.id, {"teacher_mark": this.currentMark}).subscribe(res => {
       this.problem.userSolution.teacher_mark = +res['data']['teacher_mark']
     })
 
     this.currentMark = null
-    this.editMark = false
+    // this.editMark = false
   }
 
 }

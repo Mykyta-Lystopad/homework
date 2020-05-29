@@ -39,10 +39,8 @@ export class MessageComponent implements OnInit {
       if (this.message.message != this.editedMessage){
         this.editEmit.emit({messageId: this.message.id, message: this.editedMessage})
       }  
-      
-       
     }
     this.editShow = false
-      this.editedMessage = '' 
+    this.editedMessage = '' 
   }
 }

@@ -2,9 +2,9 @@
     <div *ngIf="problem" class="d-flex flex-row justify-content-between">
         <div class="d-flex flex-row ">
             <div (click)="onSolve()">
-                <span class="material-icons checked" *ngIf="problem.userSolution.completed; else notCopmleted">check_circle</span>
+                <span class="material-icons checked" *ngIf="problem.userSolution.completed; else notCopmleted">check_box</span>
                 <ng-template #notCopmleted>
-                    <span class="material-icons ">radio_button_unchecked</span>
+                    <span class="material-icons ">check_box_outline_blank</span>
                 </ng-template>
             </div>
             <div>{{ problem.title }}</div>     
@@ -26,31 +26,36 @@
             <div *ngIf='studentId; else editDeleteBlock' class="d-flex flex-row justify-content-between" >
                 <div class="d-flex flex-row">   
                     <div>
-                        <span class="material-icons checked" *ngIf="problem.userSolution.completed; else notCopmleted">check_circle</span>
+                        <span class="material-icons checked" *ngIf="problem.userSolution.completed; else notCopmleted">check_box</span>
                         <ng-template #notCopmleted>
-                            <span class="material-icons ">radio_button_unchecked</span>
+                            <span class="material-icons ">check_box_outline_blank</span>
                         </ng-template>
                     </div>
                     <div>{{ problem.title }}</div>
                 </div> 
-                <div *ngIf="problem.userSolution"> 
-                    <div *ngIf="!editMark; else editMarkBlock" class="tech-mark" (click)="showEditMark()">
+                <div *ngIf="problem.userSolution" class=""> 
+                    <div *ngIf="problem.userSolution.completed" class="d-flex flex-row tech-mark">
+                        <mv-slider 
+                            #markSliderEl 
+                            [(value)]="currentMark" 
+                            [min]="1" 
+                            [max]="12" 
+                            data-slider-ticks="[1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ,11, 12]"
+                            data-slider-ticks-labels='[1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ,11, 12]'
+                            [enabled]="true" 
+                            (mouseup)="saveMark()">
+                        </mv-slider>
                         <div *ngIf="problem.userSolution.teacher_mark; else noMark"> 
                             {{problem.userSolution.teacher_mark}} 
                         </div>
                         <ng-template #noMark>
-                            0
+                            no mark
                         </ng-template>                    
                     </div>   
-                    <ng-template #editMarkBlock>
-                        <div class="d-flex align-items-end flex-column">
-                            <div> 
-                                {{currentMark}} 
-                            </div>
-                            <mv-slider #markSliderEl [(value)]="currentMark" [min]="1" [max]="12" [enabled]="true" (mouseup)="saveMark()"></mv-slider>
-                        </div>                        
-                    </ng-template>
                 </div>
+
+
+
             </div>
             <ng-template #editDeleteBlock>
                 <div *ngIf="!editProblemFlag; else editTitle">
