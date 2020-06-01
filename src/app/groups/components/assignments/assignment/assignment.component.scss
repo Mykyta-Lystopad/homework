@@ -1,8 +1,14 @@
+.container{
+    &:hover{
+        background-color:rgba($color: silver, $alpha: 0.2);
+    }
+}
 .wrap{
     // background-color: rgb(232, 238, 235);
-    border: 1px silver solid;
-    border-radius: 5px;
-    padding: 2rem;
+
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    
 } 
 
 .badge{

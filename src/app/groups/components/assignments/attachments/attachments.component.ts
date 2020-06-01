@@ -24,9 +24,10 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
   public colors = {
     ['black']: 'red'
   };
-
+  
   @Input() attachments;
   @Input() assignID;
+  @Input() displayMode: boolean;
 
   constructor(
     private Alert: AlertService,

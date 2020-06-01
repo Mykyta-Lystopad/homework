@@ -1,14 +1,9 @@
-// .card-body{
-//   &:hover{
-//     background-color: rgb(214, 240, 214);
-//   }
-//   background-color: rgb(233, 245, 233);
 
-// }
-.card{
-  margin: 1rem;
-  border-radius: 8px;
-  cursor: pointer;
+
+.assign{
+ &:hover{
+   background-color: rgba($color:white, $alpha: 0.7);
+ }
 }
 ul{
   list-style: none;

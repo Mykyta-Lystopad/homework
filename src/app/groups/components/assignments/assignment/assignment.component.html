@@ -1,7 +1,29 @@
 <div class="container">
   <div class="wrap">
-    <h4 *ngIf="assignCreationMode">Create new Assignment</h4>
+    <h4 *ngIf="assignCreationMode"></h4>
     <div class="d-flex justify-content-between flex-row">
+ <!-- ------------------------date ----------------------------------------- -->
+ <div class="d-flex flex-row justify-content-end">
+      
+  <div *ngIf="!showEditDueDate" (click)="changeEditDueDate()">
+    <div *ngIf="assignCreationMode">
+        <div *ngIf="currentAssign.due_date; else noDueDate">
+          <p >{{ currentAssign.due_date | date:"dd-MM-yy" }} </p>
+        </div>
+    </div>
+    <div *ngIf="!assignCreationMode">
+      <div *ngIf="assign.due_date; else noDueDate">
+        <p >{{ assign.due_date | date:"dd-MM-yy" }} </p>
+      </div>
+    </div>
+    <ng-template #noDueDate>
+      <p class="placeholder" *ngIf="!assign.student_id">Due Date</p>
+    </ng-template>
+  </div>
+  <div *ngIf="showEditDueDate">
+    <input type="date" #editDueDateEl [(ngModel)]="currentAssign.due_date" (change)='dueDatePick()' (blur)='showEditDueDate = false' >
+  </div>
+</div>
 
       <div *ngIf="!showEditAssignmentTitle; else editAssignTitle" (click)="showEditAssign('title')">
         <h4>{{ assign.title }}</h4>       
@@ -57,29 +79,7 @@
       </div>
       <hr>
     </div>
-    <!-- ------------------------date ----------------------------------------- -->
-    <div class="d-flex flex-row justify-content-end">
-      
-      <div *ngIf="!showEditDueDate" (click)="changeEditDueDate()">
-        <div *ngIf="assignCreationMode">
-            <div *ngIf="currentAssign.due_date; else noDueDate">
-              <p >{{ currentAssign.due_date | date:"dd-MM-yy" }} </p>
-            </div>
-        </div>
-        <div *ngIf="!assignCreationMode">
-          <div *ngIf="assign.due_date; else noDueDate">
-            <p >{{ assign.due_date | date:"dd-MM-yy" }} </p>
-          </div>
-        </div>
-        <ng-template #noDueDate>
-          <p class="placeholder" *ngIf="!assign.student_id">Due Date</p>
-        </ng-template>
-      </div>
-      <div *ngIf="showEditDueDate">
-        <input type="date" #editDueDateEl [(ngModel)]="currentAssign.due_date" (change)='dueDatePick()' (blur)='showEditDueDate = false' >
-      </div>
-    </div>
-
+   
     
   <!------------------------------- Attaches in assignment --------------------------------->
     <div *ngIf="assign.attachments">
@@ -87,6 +87,7 @@
       <app-attachments
         [attachments] = 'assign.attachments'
         [assignID] = 'assign.id'
+        [displayMode] = 'false'
       ></app-attachments>
     </div>
 
@@ -98,6 +99,7 @@
       <app-attachments
         [attachments] = 'assign.userAnswer.attachments'
         [assignID] = 'assign.id'
+        [displayMode] = 'true'
       ></app-attachments>
     
     </div> 
@@ -132,7 +134,7 @@
     </div>
     <!-- ---------------------------Create buttons ----------------------------------->
     <div *ngIf="assignCreationMode" class="d-flex justify-content-around">
-      <button class="btn btn-success" (click)="createAssign()">Create new Assignment</button>
+      <button class="btn btn-success" (click)="createAssign()">Save</button>
       <button class="btn btn-warning" (click)="assignDelete()">Cancel</button>
     </div> 
  
