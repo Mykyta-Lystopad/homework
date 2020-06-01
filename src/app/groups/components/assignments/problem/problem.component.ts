@@ -55,7 +55,7 @@ export class ProblemComponent implements OnInit {
       this.currentMark = this.problem.userSolution.teacher_mark
     }
     else{
-      this.currentMark = 12
+      this.currentMark = 0
     }
   }
 

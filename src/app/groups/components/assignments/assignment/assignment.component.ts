@@ -89,7 +89,7 @@ export class AssignmentComponent implements OnInit {
         //if (this.studentId && this.user.role == 'teacher') this.getStudentName()
       })    
     } else {
-      this.assign.title = "Assignment title (click here to edit)"
+      this.assign.title = ""
     }
     if (this.counter == 1 && this.assignCreationMode){
       this.createProblem()
@@ -185,7 +185,7 @@ export class AssignmentComponent implements OnInit {
   dueDatePick(){
     if (this.assignCreationMode){
       this.assign.due_date = this.currentAssign.due_date
-      let str = this.datePipe.transform(this.currentAssign.due_date , 'dd-MM-yyyy')
+      let str = this.datePipe.transform(this.currentAssign.due_date , 'dd.MM.yyyy')
       if (!this.assign.title) this.assign.title = str;
     } else {      
       this.currentAssign.title = this.assign.title
@@ -209,23 +209,15 @@ export class AssignmentComponent implements OnInit {
           if (res.success === true){
             this.assign.problems.push(res['data'])
           }
-        })
+        }) 
       }    
-
+ 
     } else {      
-      if (this.counter == 1){
-        // first initialization, add first problem
-        let problem:Problem = new ProblemModel(this.assign.id)
-        problem.title = 'Click here to edit this task/problem'
-        problem.id = this.counter
-        this.assign.problems.push(problem)
-        this.counter++
-      }
       if (this.currentProblem.title){        
         let problem:Problem = new ProblemModel(this.assign.id)
         problem.title = this.currentProblem.title
         problem.id = this.counter
-        this.assign.problems.push(problem)
+        setTimeout(()=>{this.assign.problems.push(problem) },0); 
         this.counter++
       } 
     }

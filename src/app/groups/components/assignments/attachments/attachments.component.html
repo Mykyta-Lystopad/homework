@@ -1,6 +1,6 @@
 <div class="container-fluid">
   <div *ngIf="!displayMode">
-    <button class="btn btn-primary" (click)="openCreateModal = !openCreateModal">Добавить</button>
+    <span class="material-icons" (click)="openCreateModal = !openCreateModal">attach_file</span>
 
     <form [formGroup]="form" (ngSubmit)="submit()" *ngIf="openCreateModal">
       <div class="form-group align-items-center">

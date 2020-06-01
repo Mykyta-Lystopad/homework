@@ -1,50 +1,55 @@
 <div class="container">
   <div class="wrap">
-    <h4 *ngIf="assignCreationMode"></h4>
+ <!-- ------------------------date ----------------------------------------- -->    
     <div class="d-flex justify-content-between flex-row">
- <!-- ------------------------date ----------------------------------------- -->
- <div class="d-flex flex-row justify-content-end">
-      
-  <div *ngIf="!showEditDueDate" (click)="changeEditDueDate()">
-    <div *ngIf="assignCreationMode">
-        <div *ngIf="currentAssign.due_date; else noDueDate">
-          <p >{{ currentAssign.due_date | date:"dd-MM-yy" }} </p>
-        </div>
-    </div>
-    <div *ngIf="!assignCreationMode">
-      <div *ngIf="assign.due_date; else noDueDate">
-        <p >{{ assign.due_date | date:"dd-MM-yy" }} </p>
-      </div>
-    </div>
-    <ng-template #noDueDate>
-      <p class="placeholder" *ngIf="!assign.student_id">Due Date</p>
-    </ng-template>
-  </div>
-  <div *ngIf="showEditDueDate">
-    <input type="date" #editDueDateEl [(ngModel)]="currentAssign.due_date" (change)='dueDatePick()' (blur)='showEditDueDate = false' >
-  </div>
-</div>
 
-      <div *ngIf="!showEditAssignmentTitle; else editAssignTitle" (click)="showEditAssign('title')">
-        <h4>{{ assign.title }}</h4>       
-      </div> 
-      <ng-template #editAssignTitle>
-        <input type="text" #assignTitleEl  [(ngModel)]="currentAssign.title" (keydown.enter)="showEditAssignmentTitle = false" (blur)="assignmentEdit('title')">
-      </ng-template>
-    
-      <div *ngIf="!assign.student_id">
-        <div *ngIf="!assignCreationMode">
-          <div *ngIf="user.role == 'teacher'" class="d-flex justify-content-end">
-            <span class="material-icons delete" (click)="assignDelete()">delete</span>
+        <div *ngIf="!showEditDueDate" (click)="changeEditDueDate()">
+          <div *ngIf="assignCreationMode">
+              <div *ngIf="currentAssign.due_date; else noDueDate">
+                <p >{{ currentAssign.due_date | date:"dd.MM.yy" }} </p>
+              </div>
           </div>
-        </div> 
-      </div>
+          <div *ngIf="!assignCreationMode">
+            <div *ngIf="assign.due_date; else noDueDate">
+              <p >{{ assign.due_date | date:"dd.MM.yy" }} </p>
+            </div>
+          </div>
+          <ng-template #noDueDate>
+            <p class="placeholder" *ngIf="!assign.student_id">Due Date</p>
+          </ng-template>
+        </div>
+        <div *ngIf="showEditDueDate">
+          <input class="input" type="date" #editDueDateEl [(ngModel)]="currentAssign.due_date" (change)='dueDatePick()' (blur)='showEditDueDate = false' >
+        </div>
+        <div *ngIf="!assign.student_id">
+          <div *ngIf="!assignCreationMode">
+            <div *ngIf="user.role == 'teacher'" class="d-flex justify-content-end">
+              <span class="material-icons delete" (click)="assignDelete()">delete</span>
+            </div>
+          </div> 
+        </div>
+
     </div>
-<!-- title -->
+  <!-- title -->
+      <div *ngIf="!showEditAssignmentTitle; else editAssignTitle" (click)="showEditAssign('title')">
+        <h5>{{ assign.title }}</h5>    
+          <div *ngIf="!assign.title">
+            <h5 class="placeholder">Add assignment title here</h5>       
+          </div> 
+      </div> 
+      
+      <ng-template #editAssignTitle>
+        <div>
+          <input class="input" type="text" #assignTitleEl  [(ngModel)]="currentAssign.title" (keydown.enter)="showEditAssignmentTitle = false" (blur)="assignmentEdit('title')">
+        </div>
+             </ng-template>
+    
+      
+
     
       
 <!-- note -->
-    <div class="col-12">
+    <div>
       <div *ngIf="!showEditAssignmentDescription; else editAssignDescription" (click)="showEditAssign('description')">
         <h6 *ngIf="assign.description; else descriptionPlaceholder">{{ assign.description }}</h6>  
         <ng-template #descriptionPlaceholder>
@@ -52,7 +57,7 @@
         </ng-template>           
       </div> 
       <ng-template #editAssignDescription>
-        <input type="text" #assignNoteEl  [(ngModel)]="currentAssign.description" (keydown.enter)="showEditAssignmentDescription = false" (blur)="assignmentEdit('description')">
+        <input class="input" type="text" #assignNoteEl  [(ngModel)]="currentAssign.description" (keydown.enter)="showEditAssignmentDescription = false" (blur)="assignmentEdit('description')">
       </ng-template>
     </div>
     
@@ -75,7 +80,7 @@
             <div *ngIf="!showCreateProblem" class="placeholder" (click)="toShowCreateProblem()">Add problem</div>
           </div>
         </div>
-        <input type="text" *ngIf="showCreateProblem" #addProblemEl class="col-12" [(ngModel)]="currentProblem.title"  (keydown.enter)="showCreateProblem = false" (blur)=createProblem()>
+        <input class="input" type="text" *ngIf="showCreateProblem" #addProblemEl [(ngModel)]="currentProblem.title"  (keydown.enter)="showCreateProblem = false" (blur)=createProblem()>
       </div>
       <hr>
     </div>
@@ -106,8 +111,9 @@
     
     <!----------------------------- messages block -------------------------------------------->
     <div *ngIf="assign.student_id">
-      <h6>Messages</h6>
       <hr>
+      <h6>Messages</h6>
+      
       <div *ngIf="assign.userAnswer">
         <app-message *ngFor="let mess of assign.userAnswer.messages" 
         [message]='mess' 
@@ -117,15 +123,15 @@
         ></app-message>
       </div>
 
-      <div class="input-group" *ngIf="studentId">
-        <div *ngIf="!showNewMessage" class="input-group-append">
+      <div *ngIf="studentId">
+        <div *ngIf="!showNewMessage">
           <p class="placeholder" (click)="toShowEditMessage()">Add new message</p>
         </div>
 
         <input *ngIf="showNewMessage" 
+          class="input"
           #newMessageEl 
           type="text" 
-          class="form-control" 
           [(ngModel)]="message.message" 
           placeholder="message..." 
           (blur) = "sendMessage()"

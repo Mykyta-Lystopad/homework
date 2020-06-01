@@ -97,3 +97,11 @@ body{
   color: silver;
   cursor: pointer;
 }
+input {
+  background-color: white;
+  width: 100%;
+  border:none
+  &:focus{
+      outline: none;
+  }
+}

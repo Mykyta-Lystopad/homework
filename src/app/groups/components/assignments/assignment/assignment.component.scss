@@ -14,6 +14,10 @@
 .badge{
     cursor: pointer;
 }
-input{
+div .input{
     width: 100%;
+    border:none;
+    &:focus{
+        outline: none;
+    }
 }
