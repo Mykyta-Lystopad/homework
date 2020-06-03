@@ -80,6 +80,8 @@ export class AssignmentComponent implements OnInit {
     if (!this.assignCreationMode){
       this.assignSvc.getAssign(this.assignId, this.studentId).subscribe(res => {      
         this.assign = res['data']
+        console.log('attaches', this.assign.attachments);
+        
         this.attachments = this.attachmentService.createDoubleArray(res['data'].attachments, 5);
         if (isNaN(this.studentId)){
           this.studentId = undefined
@@ -94,6 +96,7 @@ export class AssignmentComponent implements OnInit {
     if (this.counter == 1 && this.assignCreationMode){
       this.createProblem()
     }
+    
   }  
   // getStudentName(){
   //   this.assignSvc.getStudentName(this.groupId).subscribe(res =>{
@@ -107,7 +110,6 @@ export class AssignmentComponent implements OnInit {
     this.assign.problems.forEach(element => {
       element.id = undefined
     });
-    console.log(this.assign);
     this.assignSvc.addAssign(this.assign).subscribe(res => {
       this.assign.title = ''
       this.assign.description = ''

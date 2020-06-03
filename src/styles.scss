@@ -105,3 +105,10 @@ input {
       outline: none;
   }
 }
+div .input{
+  width: 100%;
+  border:none;
+  &:focus{
+      outline: none;
+  }
+}

@@ -2,7 +2,7 @@
   height: 300px;
   width: 500px;
 }
-/deep/ .carousel-item.active {
+.carousel-item.active {
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
@@ -15,11 +15,11 @@
   background: #a1adb5;
 }
 
-/deep/ .carousel-item{
+.carousel-item{
 
 }
 
-/deep/ .carousel-indicators {
+.carousel-indicators {
   margin: 0;
   margin-top: 40px;
 }

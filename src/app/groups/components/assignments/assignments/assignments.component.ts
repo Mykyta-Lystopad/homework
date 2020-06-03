@@ -61,7 +61,6 @@ export class AssignmentsComponent implements OnInit {
   addProblem(){
     let prob: Problem = new ProblemModel(null)
     this.currentAssignment.problems.push(prob)
-    console.log(this.currentAssignment);
   }
   removeProblem(index: number){
     this.currentAssignment.problems.splice(index,1)

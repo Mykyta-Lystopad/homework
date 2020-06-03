@@ -29,7 +29,7 @@ export class GroupsService {
   }
 
   load(role: string) {
-    console.log("LOAD")
+
     this.apiService.get(`api/profile/${role === 'teacher' ? 'my' : 'user'}Groups`)
       .pipe(map(response => {
         if (role === 'teacher') return response.data.collection;

@@ -80,6 +80,7 @@
                 <ng-template #editTitle>    
                     <div class="d-flex flex-column">
                         <input type="text" #editProbEl 
+                        class="input"
                         [(ngModel)]="editedProblem.title" 
                         (keydown.enter)="editProblemFlag = false" 
                         (blur)="onEdit()">                

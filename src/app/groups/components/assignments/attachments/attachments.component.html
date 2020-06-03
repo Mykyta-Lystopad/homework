@@ -2,8 +2,8 @@
   <div *ngIf="!displayMode">
     <span class="material-icons" (click)="openCreateModal = !openCreateModal">attach_file</span>
 
-    <form [formGroup]="form" (ngSubmit)="submit()" *ngIf="openCreateModal">
-      <div class="form-group align-items-center">
+    <form [formGroup]="form" (ngSubmit)="submit()" *ngIf="openCreateModal" >
+      <div class="form-group d-flex flex-row justify-content-between">
         <div class="col-sm-3 my-1 "
             [ngClass]="{invalid: form.get('comment').touched && form.get('comment').invalid}"
         >
@@ -12,16 +12,13 @@
                 placeholder="comment">
           <div
             *ngIf="form.get('comment').touched && form.get('comment').invalid"
-            class="alert alert-warning" role="alert"
-          > 
-            <small *ngIf="form.get('comment').errors.required">
-              Вы не ввели <span class="alert-link">comment</span>
-            </small>
+            class="alert alert-warning" role="alert"> 
+            <small *ngIf="form.get('comment').errors.required">Вы не ввели <span class="alert-link">comment</span></small>
           </div>
         </div>
 
-        <div class="col-sm-3 my-1 ">
-          <img [src]="imageSrc" style="max-width:300px;max-height:300px"/>
+        <div class="col-sm-3 my-1 align-self-center">
+          <img [src]="imageSrc" style="max-width:300px; max-height:300px"/>
           <input
             formControlName="file_content"
             type="file" [accept]="acceptConfig"

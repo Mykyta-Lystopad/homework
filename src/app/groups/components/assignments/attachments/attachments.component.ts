@@ -1,15 +1,17 @@
+import { Attachment } from './../../../../core/models/attachment.model';
+import { AttachmentModel } from './../../../../core/models/attachmentModel';
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {AlertService, ApiService, AttachmentService} from '../../../../core/services';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {User, UserResponseModel} from '../../../../core/models';
-import {Attachment} from '../../../../core/models/attachment.model';
+
 
 @Component({
   selector: 'app-attachments',
   templateUrl: './attachments.component.html',
   styleUrls: ['./attachments.component.css']
 })
-export class AttachmentsComponent implements OnInit, OnDestroy {
+export class AttachmentsComponent implements OnInit {
   public form: FormGroup;
   public openCreateModal: boolean = false;
   public imageSrc: string = '';
@@ -24,9 +26,12 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
   public colors = {
     ['black']: 'red'
   };
-  
-  @Input() attachments;
-  @Input() assignID;
+  private currentAttachment = new AttachmentModel()
+  private objForSend = {
+    attachments: []
+  } 
+  @Input() attachments: Attachment[];
+  @Input() assignID: number;
   @Input() displayMode: boolean;
 
   constructor(
@@ -42,6 +47,12 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
       comment: new FormControl(null, Validators.required),
       file_content: new FormControl(null, Validators.required)
     });
+
+    console.log(this.attachments);
+    console.log(this.assignID);
+    debugger
+
+    
   }
 
   handleInputChange(e) {
@@ -68,29 +79,35 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
     if (this.form.invalid) {
       return;
     }
+    debugger
+    this.currentAttachment.comment = this.form.value.comment
+    this.currentAttachment.file_name = this.form.value.file_content.substr(12)
+    this.currentAttachment.file_content = this.imageSrc
+    // const Attachment: Attachment = {
+    //   comment: ,
+    //   file_name: ,
+    //   file_content: 
+    // };
+    this.attachments.forEach(item=>{this.objForSend.attachments.push(item.id)})
+    this.attachService.createAttachment(this.currentAttachment).subscribe(res => {
+      //console.log(JSON.stringify(res) + " Reader")
+      console.log(res['data']['id'])
+      this.currentAttachment.id = res['data']['id']
+      this.objForSend.attachments.push(res['data']['id'])
 
-    const Attachment: Attachment = {
-      comment: this.form.value.comment,
-      file_name: this.form.value.file_content.substr(12),
-      file_content: this.imageSrc
-    };
-    this.attachService.createAttachment(Attachment).subscribe(res => {
-      console.log(JSON.stringify(res) + " Reader")
-      this.attachments[this.attachments.length - 1].push(res.data);
+      //this.attachments[this.attachments.length - 1].push(res.data);
+      //this.objForSend.attachments = this.attachments[this.attachments.length - 1].map(attach => attach.id);
 
-      let ids = this.attachments[this.attachments.length - 1].map(attach => attach.id);
+      this.attachService.updateColection(this.assignID, this.objForSend).subscribe(resr => {
 
-      const col = {
-        attachments: ids
-      };
-      this.attachService.updateColection(this.assignID, col).subscribe(resr => {
-        if (this.attachments[this.attachments.length - 1].length < 5) {
-          this.attachments[this.attachments.length - 1].map(attach => attach.id);
-        } else {
-          this.attachments.push([]);
-          this.attachments[this.attachments.length - 1].map(attach => attach.id);
-        }
-
+        this.attachments.push(this.currentAttachment)
+        // if (this.attachments[this.attachments.length - 1].length < 5) {
+        //   this.attachments[this.attachments.length - 1].map(attach => attach.id);
+        // } else {
+        //   this.attachments.push([]);
+        //   this.attachments[this.attachments.length - 1].map(attach => attach.id);
+        // }
+        
       });
     });
 
@@ -98,9 +115,9 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
   }
 
 
-  ngOnDestroy() {
-    this.openCreateModal = false;
-  }
+  // ngOnDestroy() {
+  //   this.openCreateModal = false;
+  // }
 
   openEditor(attach: Attachment) {
     this.modalEditor = true;

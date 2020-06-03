@@ -70,7 +70,6 @@ export class AssignmentService {
       this.assignments.unshift(res['data']);
       this.subj.next(this.assignments);
     }, error => {
-      console.log('error edit assign: ', error['data']);      
       this.alertSvc.danger(this.collectErrors(error['data']))
     }))
   }
@@ -93,7 +92,6 @@ export class AssignmentService {
       this.assignments[index].due_date = res['data']['due_date']
       this.subj.next(this.assignments)
     }, error => {
-      console.log('error edit assign: ', error['data']);      
       this.alertSvc.danger(this.collectErrors(error['data']))
     }))
   }
