@@ -47,12 +47,6 @@ export class AttachmentsComponent implements OnInit {
       comment: new FormControl(null, Validators.required),
       file_content: new FormControl(null, Validators.required)
     });
-
-    console.log(this.attachments);
-    console.log(this.assignID);
-    debugger
-
-    
   }
 
   handleInputChange(e) {

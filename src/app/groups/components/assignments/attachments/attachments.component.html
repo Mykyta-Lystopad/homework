@@ -44,8 +44,11 @@
   </image-drawing>
   </div>
   
-
-
+  <ngb-carousel *ngIf="attachments.length">
+    <div *ngFor="let image of attachments">
+      <img class src={{image.file_link}} alt="">
+    </div>
+  </ngb-carousel>
 
 
   <ngb-carousel *ngIf="attachments.length">

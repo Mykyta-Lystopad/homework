@@ -1,4 +1,4 @@
-import { Attachment } from '../../../../../core/models/attachment.model';
+import { Attachment } from '../../../../core/models/attachment.model';
 import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
 
 @Component({
@@ -12,6 +12,8 @@ export class AttachmentComponent implements OnInit {
   constructor() {}
 
   ngOnInit() {
+    console.log(this.attachment);
+    
   }
 
   openEditor() {

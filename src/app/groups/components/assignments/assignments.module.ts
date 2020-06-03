@@ -10,7 +10,7 @@ import {AssignmentComponent} from './assignment/assignment.component';
 import {AssignmentsComponent} from './assignments/assignments.component';
 import {ProblemComponent} from './problem/problem.component';
 import {MessageComponent} from './message/message.component';
-import {AttachmentComponent} from './components/attachment/attachment.component';
+import {AttachmentComponent} from './attachment/attachment.component';
 import {SolutionComponent} from './solution/solution.component';
 import {LayoutAssignmentsComponent} from "./layout-assignments/layout-assignments.component";
 import {CommonModule} from "@angular/common";
