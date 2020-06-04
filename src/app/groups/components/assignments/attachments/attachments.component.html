@@ -1,21 +1,13 @@
 <div class="container-fluid">
   <div *ngIf="!displayMode">
-  <image-drawing *ngIf="modalEditor"
-    [src]="imageUrl"
-    [outputMimeType]="'image*'"
-    [colors]="colors"
-    enableRemoveImage = true
-    outputQuality="0.8"
-    (save)="save($event)"
-    (cancel)="cancel()">
-  </image-drawing>
+  
   </div>  
   <div class="d-flex flex-wrap" >
     <div *ngFor="let image of attachments" class="col-3 ">
       <img class="img-fluid sketch"
         src={{image.file_link}} 
         alt={{image.file_name}} 
-        (click)="openEditor(image)">
+        (click)="showModal(image)">
       <div class="round d-flex align-items-center justify-content-center" (click)="deleteAttach(image.id)">
         <span class=" material-icons" >delete</span>
       </div>
@@ -26,6 +18,55 @@
         class="file-upload"
         type="file" [accept]="acceptConfig"
         (change)="handleInputChange($event)"/>
+    </div>
+  </div>
+</div>
+
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" (click)="showModalImage = true"data-target="#exampleModalCentered">
+  Launch centered demo modal
+</button>
+
+<!-- Modal -->
+<div *ngIf="showModalImage" id="modalCotainer" class = "modal-cotainer" (click)="closeModal($event)">
+  <div class="modal-dialog-centered" role="document">
+    <div class="modal-content" >
+      <div class="modal-header">
+        <h6 class="modal-title">{{currentAttachment.file_name}}</h6>
+        <button type="button" class="close" aria-label="Close" (click)="showModalImage = false">
+          <span aria-hidden="true" >&times;</span>
+        </button>
+      </div>
+      
+       
+      <div class="modal-body">
+
+        <image-drawing *ngIf="modalEditor"
+          [src]="imageUrl"
+          [outputMimeType]="'image*'"
+          [colors]="colors"
+          enableRemoveImage = true
+          outputQuality="0.8"
+          (save)="save($event)"
+          (cancel)="cancel()">
+        </image-drawing>
+        <div class="navigate-blocks">
+            <div class="navigate" (click)="listImages(false)" [style.visibility]="!index ? 'hidden' : 'visible'">
+              <span class="material-icons large-icon">keyboard_arrow_left</span>
+            </div>
+            <div class="navigate" (click)="listImages(true)" [style.visibility]="calculateArraySize() ? 'hidden' : 'visible'">
+              <span class="material-icons large-icon">keyboard_arrow_right</span>
+            </div>        
+          </div>
+        <div *ngIf="!modalEditor">
+          
+          <img src={{currentAttachment.file_link}}> 
+        </div>
+       
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="openEditor(currentAttachment)">Editor</button>
+      </div>
     </div>
   </div>
 </div>

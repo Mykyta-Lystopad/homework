@@ -2,6 +2,7 @@ import { Attachment } from './../../../../core/models/attachment.model';
 import { AttachmentModel } from './../../../../core/models/attachmentModel';
 import {Component, Input, OnInit} from '@angular/core';
 import {AlertService, ApiService, AttachmentService} from '../../../../core/services';
+import { AnyARecord } from 'dns';
 @Component({
   selector: 'app-attachments',
   templateUrl: './attachments.component.html',
@@ -9,6 +10,7 @@ import {AlertService, ApiService, AttachmentService} from '../../../../core/serv
 })
 export class AttachmentsComponent implements OnInit {
   public openCreateModal: boolean = false;
+  showModalImage: boolean = false;
   public imageSrc: string = '';
   public imageUrl: string = '';
   public modalEditor: boolean = false;
@@ -21,7 +23,7 @@ export class AttachmentsComponent implements OnInit {
   public colors = {
     ['black']: 'red'
   };
-  private currentAttachment = new AttachmentModel()
+  currentAttachment = new AttachmentModel()
   private objForSend = {
     attachments: []
   } 
@@ -29,6 +31,11 @@ export class AttachmentsComponent implements OnInit {
   @Input() assignID: number;
   @Input() displayMode: boolean;
   @Input() role: string;
+  index: number;
+
+
+
+
 
   constructor(
     private Alert: AlertService,
@@ -110,5 +117,26 @@ export class AttachmentsComponent implements OnInit {
   }
   cancel() {
     this.modalEditor = false;
+  }
+  showModal(image:Attachment){
+    this.index = this.attachments.findIndex(item => item.id == image.id)
+    this.currentAttachment.id = this.attachments[this.index].id
+    this.currentAttachment.file_name = this.attachments[this.index].file_name
+    this.currentAttachment.file_link = this.attachments[this.index].file_link
+    this.showModalImage = true
+  }
+  closeModal(event:any){
+    if (event.toElement.className == "modal-cotainer") this.showModalImage = false
+  }
+  listImages(next:boolean){
+    next ? this.index++ : this.index--;    
+    //this.index = this.attachments.findIndex(item => item.id == this.currentAttachment.id)
+
+    this.currentAttachment.file_name = this.attachments[this.index].file_name
+    this.currentAttachment.file_link = this.attachments[this.index].file_link
+  } 
+  calculateArraySize(){
+    if (this.index == this.attachments.length-1) return true
+    else return false
   }
 }

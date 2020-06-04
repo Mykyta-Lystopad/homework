@@ -2,27 +2,6 @@
   height: 300px;
   width: 500px;
 }
-/* .carousel-item.active {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  margin: 0;
-  align-items: center;
-  justify-content: space-evenly;
-  width: 100%;
-  min-height: 150px;
-  padding: 0 10px;
-  background: #a1adb5;
-}
-
-.carousel-item{
-
-}
-
-.carousel-indicators {
-  margin: 0;
-  margin-top: 40px;
-} */
 .sketch{
   margin-bottom: 0.5em;
   padding: 0px;
@@ -42,16 +21,59 @@
 .file-upload{
   height: 100%;
   width: 100%;
-     position: absolute;
-     top: 0; right: 0;
-
-     /* font-size: 200px; */
-     opacity: 0;
-     filter: alpha(opacity=0);
-     cursor: pointer;
+  position: absolute;
+  top: 0; right: 0;
+  opacity: 0;
+  filter: alpha(opacity=0);
+  cursor: pointer;
 }
 .rectangle{
   height: 6em;
   border: silver solid 3px;
   background-color: white;
+}
+.modal-dialog-centered{
+  max-width: 90%;
+  max-height: 90%;
+
+}
+.modal-content{
+  border-radius: 10px;
+}
+.modal-cotainer{
+  background-color: rgba(0,0,0, 0.5);
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  height: 100%;
+  width: 100%;
+  z-index: 100;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.navigate-blocks{
+  width: calc(100% - 32px);
+  height: calc(100% - 32px);
+  position: absolute;
+  z-index: 110;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.navigate{
+  font-size: large;
+  height: 100%;
+  width: 4em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.navigate:hover{
+  background-color: rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+}
+.large-icon{
+  font-size: 40px;
+  color: rgba(255, 255, 255, 1);
 }
