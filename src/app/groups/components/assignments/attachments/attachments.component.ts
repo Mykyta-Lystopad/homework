@@ -1,4 +1,3 @@
-import { User } from './../../../../core/models/user.model';
 import { Attachment } from './../../../../core/models/attachment.model';
 import { AttachmentModel } from './../../../../core/models/attachmentModel';
 import {Component, Input, OnInit} from '@angular/core';
@@ -29,7 +28,7 @@ export class AttachmentsComponent implements OnInit {
   @Input() attachments: Attachment[];
   @Input() assignID: number;
   @Input() displayMode: boolean;
-  @Input() user: User;
+  @Input() role: string;
 
   constructor(
     private Alert: AlertService,
