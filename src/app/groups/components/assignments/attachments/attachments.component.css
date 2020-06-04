@@ -2,7 +2,7 @@
   height: 300px;
   width: 500px;
 }
-.carousel-item.active {
+/* .carousel-item.active {
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
@@ -22,4 +22,36 @@
 .carousel-indicators {
   margin: 0;
   margin-top: 40px;
+} */
+.sketch{
+  margin-bottom: 0.5em;
+  padding: 0px;
+}
+.round{
+  border: silver solid 1px;
+  border-radius: 15px;
+  width: 30px;
+  height: 30px;
+  background-color: rgba(192,192,192, 0.5);
+  position: absolute;
+  z-index: 1;
+  bottom: 0px;
+  right: 0px;
+}
+
+.file-upload{
+  height: 100%;
+  width: 100%;
+     position: absolute;
+     top: 0; right: 0;
+
+     /* font-size: 200px; */
+     opacity: 0;
+     filter: alpha(opacity=0);
+     cursor: pointer;
+}
+.rectangle{
+  height: 6em;
+  border: silver solid 3px;
+  background-color: white;
 }

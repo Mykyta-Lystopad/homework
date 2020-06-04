@@ -12,8 +12,7 @@ export class AttachmentComponent implements OnInit {
   constructor() {}
 
   ngOnInit() {
-    console.log(this.attachment);
-    
+
   }
 
   openEditor() {

@@ -12,8 +12,8 @@
      
       
       <ng-template #editBlock>
-        <div class="input-group">
-            <input type="text" #editMessageEl class="form-control" 
+        <div>
+            <input type="text" #editMessageEl class="input" 
             [(ngModel)]="editedMessage" 
             (blur)="editMessage()" 
             (keydown.enter)="editShow = false">

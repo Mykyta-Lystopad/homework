@@ -1,68 +1,31 @@
 <div class="container-fluid">
   <div *ngIf="!displayMode">
-    <span class="material-icons" (click)="openCreateModal = !openCreateModal">attach_file</span>
-
-    <form [formGroup]="form" (ngSubmit)="submit()" *ngIf="openCreateModal" >
-      <div class="form-group d-flex flex-row justify-content-between">
-        <div class="col-sm-3 my-1 "
-            [ngClass]="{invalid: form.get('comment').touched && form.get('comment').invalid}"
-        >
-          <label class="sr-only" for="inlineFormInputComment">Name</label>
-          <input type="text" class="form-control" formControlName="comment" id="inlineFormInputComment"
-                placeholder="comment">
-          <div
-            *ngIf="form.get('comment').touched && form.get('comment').invalid"
-            class="alert alert-warning" role="alert"> 
-            <small *ngIf="form.get('comment').errors.required">Вы не ввели <span class="alert-link">comment</span></small>
-          </div>
-        </div>
-
-        <div class="col-sm-3 my-1 align-self-center">
-          <img [src]="imageSrc" style="max-width:300px; max-height:300px"/>
-          <input
-            formControlName="file_content"
-            type="file" [accept]="acceptConfig"
-            (change)="handleInputChange($event)"/>
-        </div>
-
-        <div class="col-auto my-1">
-          <button type="submit" class="btn btn-primary" [disabled]="form.invalid">сохранить</button>
-        </div>
-
-
-      </div>
-    </form>
-
-    <image-drawing *ngIf="modalEditor"
-                 [src]="imageUrl"
-                 [outputMimeType]="'image*'"
-                 [colors]="colors"
-                 enableRemoveImage = true
-                 outputQuality="0.8"
-                 (save)="save($event)"
-                 (cancel)="cancel()">
+  <image-drawing *ngIf="modalEditor"
+    [src]="imageUrl"
+    [outputMimeType]="'image*'"
+    [colors]="colors"
+    enableRemoveImage = true
+    outputQuality="0.8"
+    (save)="save($event)"
+    (cancel)="cancel()">
   </image-drawing>
-  </div>
-  
-  <ngb-carousel *ngIf="attachments.length">
-    <div *ngFor="let image of attachments">
-      <img class src={{image.file_link}} alt="">
+  </div>  
+  <div class="d-flex flex-wrap" >
+    <div *ngFor="let image of attachments" class="col-3 ">
+      <img class="img-fluid sketch"
+        src={{image.file_link}} 
+        alt={{image.file_name}} 
+        (click)="openEditor(image)">
+      <div class="round d-flex align-items-center justify-content-center" (click)="deleteAttach(image.id)">
+        <span class=" material-icons" >delete</span>
+      </div>
     </div>
-  </ngb-carousel>
-
-
-  <ngb-carousel *ngIf="attachments.length">
-    <ng-template  ngbSlide *ngFor="let ArrayAttach of attachments">
-      <app-attachment
-        *ngFor="let attach of ArrayAttach"
-        [attachment]="attach"
-        (editor)="openEditor($event)"
-      ></app-attachment>
-    </ng-template>
-  </ngb-carousel>
-
-
-
-  
-
+    <div class="col-3 rectangle d-flex align-items-center justify-content-center">
+      <span class="material-icons">add_circle</span> 
+      <input
+        class="file-upload"
+        type="file" [accept]="acceptConfig"
+        (change)="handleInputChange($event)"/>
+    </div>
+  </div>
 </div>
