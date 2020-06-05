@@ -3,6 +3,7 @@ import { AttachmentModel } from './../../../../core/models/attachmentModel';
 import {Component, Input, OnInit} from '@angular/core';
 import {AlertService, ApiService, AttachmentService} from '../../../../core/services';
 import { AnyARecord } from 'dns';
+import { async } from '@angular/core/testing';
 @Component({
   selector: 'app-attachments',
   templateUrl: './attachments.component.html',
@@ -96,13 +97,26 @@ export class AttachmentsComponent implements OnInit {
   }
 
   save($event: Blob) {
-    var reader = new FileReader();
-    var base64data:any
+    let reader = new FileReader();
+    let base64data:any
     reader.readAsDataURL($event); 
-    reader.onloadend = function() {
+    let that = this; 
+    reader.onloadend =  () => {
       base64data = reader.result;
-    }    
-    this.currentAttachment.file_content = base64data;
+      that.currentAttachment.file_content = base64data;
+      console.log(that.currentAttachment.file_content);      
+      that.updateAttach()
+    }
+  }
+  updateAttach(){
+    this.attachService.updeteAttachment(this.currentAttachment).subscribe(res => {
+      //setTimeout(_ => ,0)
+      this.modalEditor = false
+      //console.log(res);
+      
+    })
+    
+    
   }
   deleteAttach(id:number){
     if (!confirm('Do you really want delete image?')) return;
@@ -126,7 +140,7 @@ export class AttachmentsComponent implements OnInit {
     this.showModalImage = true
   }
   closeModal(event:any){
-    if (event.toElement.className == "modal-cotainer") this.showModalImage = false
+    if (event.toElement.className == "modal-cotainer" || event.toElement.className =="modal-dialog-centered") this.showModalImage = false
   }
   listImages(next:boolean){
     next ? this.index++ : this.index--;    
@@ -135,7 +149,8 @@ export class AttachmentsComponent implements OnInit {
     this.currentAttachment.file_name = this.attachments[this.index].file_name
     this.currentAttachment.file_link = this.attachments[this.index].file_link
   } 
-  calculateArraySize(){
+  calculateArraySize(flag?:string) {
+    if (flag == 'number') return this.attachments.length
     if (this.index == this.attachments.length-1) return true
     else return false
   }

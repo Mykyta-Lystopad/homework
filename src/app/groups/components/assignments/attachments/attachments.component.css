@@ -14,15 +14,16 @@
   background-color: rgba(192,192,192, 0.5);
   position: absolute;
   z-index: 1;
-  bottom: 0px;
-  right: 0px;
+  bottom: 8px;
+  right: 15px;
 }
 
 .file-upload{
   height: 100%;
   width: 100%;
   position: absolute;
-  top: 0; right: 0;
+  top: 0; 
+  right: 0;
   opacity: 0;
   filter: alpha(opacity=0);
   cursor: pointer;
@@ -31,10 +32,13 @@
   height: 6em;
   border: silver solid 3px;
   background-color: white;
+  width: calc(100% - 30px);
 }
 .modal-dialog-centered{
-  max-width: 90%;
-  max-height: 90%;
+  /* max-width: 90%;
+  max-height: 90%; */
+  width: 100%;
+
 
 }
 .modal-content{
@@ -68,6 +72,16 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  
+}
+.navigate div{
+  background-color: rgba(0,0,0, 0.2);
+  border-radius: 20px;
+  width: 40px;
+  height: 40px;
+}
+.navigate div:hover{
+  background-color: rgba(0,0,0, 0.3);
 }
 .navigate:hover{
   background-color: rgba(255, 255, 255, 0.1);
@@ -76,4 +90,7 @@
 .large-icon{
   font-size: 40px;
   color: rgba(255, 255, 255, 1);
+}
+.modal-footer{
+  z-index: 220;
 }
