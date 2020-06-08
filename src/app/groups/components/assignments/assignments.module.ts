@@ -11,6 +11,7 @@ import {SolutionComponent} from './solution/solution.component';
 import {LayoutAssignmentsComponent} from "./layout-assignments/layout-assignments.component";
 import {CommonModule} from "@angular/common";
 import { AttachmentsComponent } from './attachments/attachments.component';
+import { ImageDrawingComponent } from './image-drawing/image-drawing.component';
 
 
 @NgModule({
@@ -22,12 +23,16 @@ import { AttachmentsComponent } from './attachments/attachments.component';
     ProblemComponent,
     AttachmentComponent,
     SolutionComponent,
-    AttachmentsComponent
+    AttachmentsComponent,
+    ImageDrawingComponent
   ],
   imports: [
     SharedModule,
     CommonModule,
     AssignmentsRoutingModule, 
+  ],
+  exports: [ 
+    ImageDrawingComponent,
   ],
   providers: [
     DatePipe

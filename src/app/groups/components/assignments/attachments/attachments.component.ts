@@ -1,6 +1,6 @@
 import { Attachment } from './../../../../core/models/attachment.model';
 import { AttachmentModel } from './../../../../core/models/attachmentModel';
-import {Component, Input, OnInit} from '@angular/core';
+import { Component, Input, OnInit, ViewChild, ElementRef } from '@angular/core';
 import {AlertService, ApiService, AttachmentService} from '../../../../core/services';
 import { AnyARecord } from 'dns';
 import { async } from '@angular/core/testing';
@@ -33,9 +33,6 @@ export class AttachmentsComponent implements OnInit {
   @Input() displayMode: boolean;
   @Input() role: string;
   index: number;
-
-
-
 
 
   constructor(
@@ -87,6 +84,10 @@ export class AttachmentsComponent implements OnInit {
   }
 
   openEditor(attach: Attachment) {
+
+    
+
+    ////////////////////////////////////////
     this.modalEditor = true;
     this.imageUrl = attach.file_link;
     this.currentAttachment.id = attach.id

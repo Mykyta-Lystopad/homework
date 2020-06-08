@@ -51,6 +51,16 @@
           (save)="save($event)"
           (cancel)="cancel()">
         </image-drawing>
+        <!-- <div  *ngIf="modalEditor">
+          <app-attachment
+          [attachment] = 'currentAttachment'
+          ></app-attachment>
+        </div> -->
+
+        
+
+
+
         <div class="navigate-blocks" *ngIf="!modalEditor">
             <div class="navigate" (click)="listImages(false)" [style.visibility]="!index ? 'hidden' : 'visible'">
               <div>

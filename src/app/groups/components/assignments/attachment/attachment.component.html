@@ -1,8 +1,9 @@
+<canvas #canvas
+(mousedown) = mouseDown($event)
+(mouseup) = mouseUp()
+(mousemove) = mouseMove($event)>
 
-<!-- <div class="block-img" (click)="openEditor()">
-    <img src={{attachment.file_link}} alt="{{attachment.file_name}}">
-
-</div> -->
-<div class="col-3" (click)="openEditor()">
-  <img class="img-fluid" src={{attachment.file_link}} alt={{attachment.file_name}} >
+</canvas>
+<div style="display:none;">
+  <img #source src={{attachment.file_link}}>
 </div>
