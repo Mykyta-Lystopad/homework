@@ -28,10 +28,4 @@ export class CreateGroupComponent implements OnInit {
   delete(id: number) {
     this.groupService.remove(id)
   }
-
-  addGroup() {
-    this.groupService.add(this.title, 1)
-    this.title = ''
-    this.activeAccordion = false
-  }
 }

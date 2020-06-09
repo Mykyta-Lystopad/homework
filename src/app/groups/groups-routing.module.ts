@@ -5,6 +5,7 @@ import {StudentsComponent} from "./components/students/students.component";
 import {MyGroupsComponent} from "./components/my-groups/my-groups.component";
 import {CreateGroupComponent} from "./components/create-group/create-group.component";
 import {EditGroupComponent} from "./components/edit-group/edit-group.component";
+import {NewGroupComponent} from "./components/new-group/new-group.component";
 
 
 const routes: Routes = [
@@ -12,6 +13,9 @@ const routes: Routes = [
     path: '', component: LayoutGroupComponent, children: [
       {
         path: 'edit', component: CreateGroupComponent
+      },
+      {
+        path:'edit/newGroup', component: NewGroupComponent
       },
       {
         path: 'edit/:id', component: EditGroupComponent

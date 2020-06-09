@@ -45,9 +45,9 @@ export class GroupsService {
 
   remove(id: number) {
     this.apiService.delete(`api/groups/${id}`)
-      .subscribe(_=>this.alertService.danger("Группа удалена"))
+      .subscribe(_ => this.alertService.danger("Группа удалена"))
     for (let i = 0; i < this.groups.length; i++) {
-      if (this.groups[i].id === id) {
+      if (this.groups[i].id == id) {
         this.groups.splice(i, 1);
         break
       }
@@ -70,9 +70,9 @@ export class GroupsService {
   }
 
   changeGroup(id: number, title: string) {
-    this.apiService.put(`api/groups/${id}`, {title}).subscribe(response=>{
+    this.apiService.put(`api/groups/${id}`, {title}).subscribe(response => {
       for (let i = 0; i < this.groups.length; i++) {
-        if (this.groups[i].id === +id) {
+        if (this.groups[i].id == +id) {
           this.groups[i].title = title
           break
         }
@@ -80,5 +80,12 @@ export class GroupsService {
       this.groups$.next(this.groups);
       this.alertService.success("Группа изменена")
     })
+  }
+
+  getGroup(id: number) {
+    let group: Group
+    group = this.groups.find(g=>g.id==id
+    )
+    return group
   }
 }

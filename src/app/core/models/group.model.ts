@@ -4,7 +4,4 @@ export class Group {
   qr_code_link?: string;
   subject: string;
   title: string;
-
-
-
 }
