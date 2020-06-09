@@ -412,7 +412,7 @@ export class ImageDrawingComponent implements OnInit, OnChanges {
                    /// imgEl.setAttribute('crossOrigin', 'anonymous');
                 }), {
                     crossOrigin: 'anonymous',
-                    originX: 'left',
+                    originX: 'left', 
                     originY: 'top'
                 });
             });

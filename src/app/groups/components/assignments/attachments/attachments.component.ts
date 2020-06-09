@@ -15,6 +15,7 @@ export class AttachmentsComponent implements OnInit {
   public imageSrc: string = '';
   public imageUrl: string = '';
   public modalEditor: boolean = false;
+  wait = false
   public acceptConfig: string[] = [
     'image/png',
     'image/jpeg',
@@ -67,16 +68,15 @@ export class AttachmentsComponent implements OnInit {
     this.submit()
   }
 
-  submit() {
+  submit() {    
     this.attachments.forEach(item=>{this.objForSend.attachments.push(item.id)})
     this.attachService.createAttachment(this.currentAttachment).subscribe(res => {
-      console.log(res['data']['id'])
+      //console.log(res['data']['id'])
       this.currentAttachment.id = res['data']['id']
       this.objForSend.attachments.push(res['data']['id'])
       this.attachService.updateColection(this.assignID, this.objForSend).subscribe(resr => {
-        debugger
         this.attachments = resr['data']['attachments']
-        console.log(this.attachments);         
+        //console.log(this.attachments);         
        });
     });
 
@@ -85,9 +85,6 @@ export class AttachmentsComponent implements OnInit {
 
   openEditor(attach: Attachment) {
 
-    
-
-    ////////////////////////////////////////
     this.modalEditor = true;
     this.imageUrl = attach.file_link;
     this.currentAttachment.id = attach.id
@@ -98,6 +95,7 @@ export class AttachmentsComponent implements OnInit {
   }
 
   save($event: Blob) {
+    this.wait = true
     let reader = new FileReader();
     let base64data:any
     reader.readAsDataURL($event); 
@@ -105,20 +103,15 @@ export class AttachmentsComponent implements OnInit {
     reader.onloadend =  () => {
       base64data = reader.result;
       that.currentAttachment.file_content = base64data;
-      console.log(that.currentAttachment.file_content);      
-      that.updateAttach()
+      //console.log(that.currentAttachment.file_content);      
+      this.attachService.updeteAttachment(this.currentAttachment).subscribe(res => {
+        this.modalEditor = false
+        this.wait = false
+      })
     }
   }
-  updateAttach(){
-    this.attachService.updeteAttachment(this.currentAttachment).subscribe(res => {
-      //setTimeout(_ => ,0)
-      this.modalEditor = false
-      //console.log(res);
-      
-    })
-    
-    
-  }
+  
+
   deleteAttach(id:number){
     if (!confirm('Do you really want delete image?')) return;
     this.attachments.forEach(item=>{this.objForSend.attachments.push(item.id)})    
