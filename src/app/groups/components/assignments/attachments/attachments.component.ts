@@ -54,7 +54,6 @@ export class AttachmentsComponent implements OnInit {
       return;
     }
     reader.onload = this._handleReaderLoaded.bind(this);
-    console.log(file)
     this.currentAttachment.file_name = file.name   
     reader.readAsDataURL(file);
   }
@@ -71,12 +70,10 @@ export class AttachmentsComponent implements OnInit {
   submit() {    
     this.attachments.forEach(item=>{this.objForSend.attachments.push(item.id)})
     this.attachService.createAttachment(this.currentAttachment).subscribe(res => {
-      //console.log(res['data']['id'])
       this.currentAttachment.id = res['data']['id']
       this.objForSend.attachments.push(res['data']['id'])
       this.attachService.updateColection(this.assignID, this.objForSend).subscribe(resr => {
         this.attachments = resr['data']['attachments']
-        //console.log(this.attachments);         
        });
     });
 
@@ -103,8 +100,10 @@ export class AttachmentsComponent implements OnInit {
     reader.onloadend =  () => {
       base64data = reader.result;
       that.currentAttachment.file_content = base64data;
-      //console.log(that.currentAttachment.file_content);      
       this.attachService.updeteAttachment(this.currentAttachment).subscribe(res => {
+        let index = that.attachments.findIndex(item => item.id == that.currentAttachment.id)
+        that.attachments[index].file_link = res['data']['file_link']
+        that.currentAttachment.file_link = res['data']['file_link']
         this.modalEditor = false
         this.wait = false
       })
@@ -138,8 +137,6 @@ export class AttachmentsComponent implements OnInit {
   }
   listImages(next:boolean){
     next ? this.index++ : this.index--;    
-    //this.index = this.attachments.findIndex(item => item.id == this.currentAttachment.id)
-
     this.currentAttachment.file_name = this.attachments[this.index].file_name
     this.currentAttachment.file_link = this.attachments[this.index].file_link
   } 
