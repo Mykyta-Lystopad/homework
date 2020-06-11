@@ -38,7 +38,7 @@ export class ImageDrawingComponent implements OnInit, OnChanges {
     @Input() public errorTemplate?: TemplateRef<any>;
 
     @Input() public outputMimeType = 'image/jpeg';
-    @Input() public outputQuality = 0.5;
+    @Input() public outputQuality = 0.8;
 
     @Input() public borderCss: string = 'none';
 

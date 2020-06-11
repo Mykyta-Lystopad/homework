@@ -5,10 +5,14 @@
     align-items: center;
 
     .toolbar {
+
         display: flex;
         justify-content: space-between;
         align-items: center;
         flex-wrap: wrap;
+        position: fixed;
+        left: 10px;
+        top: 140px;
     }
 
     .tools {
@@ -18,7 +22,9 @@
         margin: 5px;
         background: #fff;
         border-radius: 6px;
+
        // box-shadow: 0 3px 10px rgba(0, 0, 0, .4);
+       
     }
 
     .row {
@@ -33,6 +39,7 @@
     }
 
     .btn {
+        margin: 6px;
         cursor: pointer;
         padding:0px;
         &.selected {

@@ -3,21 +3,21 @@
   
   </div>  
 
-  <div class="d-flex flex-wrap" >
+  <div class="row " >
 
     <div *ngFor="let image of attachments" class="col-sm-6 col-md-3 col-lg-3">
       <img class="img-fluid sketch"
         src={{image.file_link}} 
         alt={{image.file_name}} 
         (click)="showModal(image)">
-      <div class="round d-flex align-items-center justify-content-center" (click)="deleteAttach(image.id)">
+      <div *ngIf="!displayMode" class="round d-flex align-items-center justify-content-center" (click)="deleteAttach(image.id)" >
         <span class="delete-icon material-icons" >delete</span>
       </div>
     </div>
 
-    <div class="col-sm-6 col-md-3 col-lg-3 rectangle ">
+    <div *ngIf="!displayMode" class="col-sm-6 col-md-3 col-lg-3 rectangle" >
       <div class="d-flex align-items-center justify-content-center border">
-        <span class="material-icons">add_circle</span> 
+        <span class="material-icons add-circle">add_circle</span> 
         <input
         class="file-upload"
         type="file" [accept]="acceptConfig"
@@ -35,17 +35,27 @@
     <div class="modal-content" >
       <div class="modal-header">
         <h6 class="modal-title">{{currentAttachment.file_name}}</h6>
-        <span class="material-icons edit"
+        <!-- <div *ngIf="!displayMode && (role == 'teacher')">
+          <span 
+        class="material-icons edit"
         (click)="openEditor(currentAttachment)"
         *ngIf="true"
         >edit</span>
-        <button type="button" class="close" aria-label="Close" (click)="showModalImage = false">
+        </div> -->
+        
+        <button type="button" class="close" aria-label="Close" (click)="closeBtn()">
           <span aria-hidden="true" >&times;</span>
         </button>
       </div>
       
        
-      <div class="modal-body">
+      <div class="modal-body" [ngClass]="{'scroll': modalEditor}">
+
+        <div *ngIf="!displayMode && (role == 'teacher')" 
+        class ="edit-btn" 
+        (click)="openEditor(currentAttachment)">
+          <span class="material-icons edit">edit</span>
+        </div>
 
         <image-drawing *ngIf="modalEditor"
           [src]="imageUrl"
@@ -78,7 +88,7 @@
               </div>              
             </div>        
           </div>
-        <div *ngIf="!modalEditor" class="d-flex justify-content-center">
+        <div *ngIf="!modalEditor" class="d-flex justify-content-center image">
           
           <img  src={{currentAttachment.file_link}} class="image"> 
           

@@ -13,9 +13,9 @@
 <div [ngStyle]="{ border: borderCss }">
     <canvas id="canvas" ></canvas>
 </div>
-<div class="toolbar" *ngIf="!isLoading">
+<div class="toolbar d-flex flex-column align-items-start" *ngIf="!isLoading">
     <div class="tools">
-        <div class="row">
+        <div class="d-flex flex-column align-items-center">
             <!-- <i class="material-icons btn" [class.selected]="currentTool == 'brush'" (click)="selectTool('brush')"
                [title]="getTooltipTranslated('tools.brush')">brush</i> -->
             <span *ngFor="let drawingSizeName of drawingSizesName" class="size btn"
@@ -40,7 +40,13 @@
                [title]="getTooltipTranslated('undo')">undo</i>
             <i class="material-icons btn" [class.disabled]="!canRedo" (click)="redo()"
                [title]="getTooltipTranslated('redo')">redo</i>
-            <i class="material-icons btn" (click)="clearCanvas()" [title]="getTooltipTranslated('clear')">delete</i>
+            <i class="material-icons btn" (click)="clearCanvas()" 
+               [title]="getTooltipTranslated('clear')">block</i>
+               <hr>
+            <i class="material-icons btn" (click)="saveImage()"
+               [title]="getTooltipTranslated('saveBtn')">save</i>
+            <i class="material-icons btn" (click)="cancelAction()"
+               [title]="getTooltipTranslated('cancelBtn')">cancel</i>
         </div>
         <!-- <div class="row">
             <div *ngFor="let colorName of colorsName" [class.selected]="currentColor == colorName" class="color"
@@ -50,12 +56,13 @@
             </div>
         </div> -->
     </div>
-    <div class="buttons">
+    <!-- <div class="d-flex flex-column">
+
         <a href="#" class="button btn-primary"
            (click)="saveImage(); $event.preventDefault()">{{ getTextTranslated('saveBtn') }}</a>
         <a href="#" class="button btn-light" *ngIf="showCancelButton"
            (click)="cancelAction(); $event.preventDefault()">{{ getTextTranslated('cancelBtn') }}</a>
-    </div>
+    </div> -->
     <!-- Any additional toolbar buttons to be projected by the consuming app -->
     <ng-content></ng-content>
 </div>

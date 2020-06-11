@@ -31,8 +31,9 @@ export class AttachmentsComponent implements OnInit {
   } 
   @Input() attachments: Attachment[];
   @Input() assignID: number;
-  @Input() displayMode: boolean;
+  @Input() userAnswer: boolean;
   @Input() role: string;
+  displayMode: boolean;
   index: number;
 
 
@@ -43,6 +44,25 @@ export class AttachmentsComponent implements OnInit {
   ) {
   }
   ngOnInit() {
+
+    switch (this.role) {
+      case 'teacher':
+        if(this.userAnswer == true){
+          this.displayMode = true
+        }
+        break;
+      case 'student':
+        if(this.userAnswer == true){
+          this.displayMode = false
+        } else {
+          this.displayMode = true
+        }
+        break;      
+     
+      default:
+        break;
+    }
+
   }
   handleInputChange(e:any) {
     console.log(e.target.value);
@@ -81,14 +101,18 @@ export class AttachmentsComponent implements OnInit {
   }
 
   openEditor(attach: Attachment) {
-
-    this.modalEditor = true;
-    this.imageUrl = attach.file_link;
-    this.currentAttachment.id = attach.id
-    this.currentAttachment.comment = attach.comment
-    this.currentAttachment.file_name = attach.file_name
-    this.currentAttachment.file_content = attach.file_content
-    this.currentAttachment.file_link = attach.file_link    
+    if (!this.modalEditor){
+      this.modalEditor = true;
+      this.imageUrl = attach.file_link;
+      this.currentAttachment.id = attach.id
+      this.currentAttachment.comment = attach.comment
+      this.currentAttachment.file_name = attach.file_name
+      this.currentAttachment.file_content = attach.file_content
+      this.currentAttachment.file_link = attach.file_link   
+    } else {
+      this.modalEditor = false
+    }
+     
   }
 
   save($event: Blob) {
@@ -133,16 +157,25 @@ export class AttachmentsComponent implements OnInit {
     this.showModalImage = true
   }
   closeModal(event:any){
-    if (event.toElement.className == "modal-cotainer" || event.toElement.className =="modal-dialog-centered") this.showModalImage = false
+    if (event.toElement.className == "modal-cotainer" || event.toElement.className =="modal-dialog-centered") this.closeBtn()
   }
   listImages(next:boolean){
-    next ? this.index++ : this.index--;    
+    next ? this.index++ : this.index--; 
+    this.currentAttachment.id = this.attachments[this.index].id
     this.currentAttachment.file_name = this.attachments[this.index].file_name
     this.currentAttachment.file_link = this.attachments[this.index].file_link
+    //console.log(this.currentAttachment.id);
+    
+    
   } 
   calculateArraySize(flag?:string) {
     if (flag == 'number') return this.attachments.length
     if (this.index == this.attachments.length-1) return true
     else return false
   }
+  closeBtn(){
+    this.showModalImage = false
+    this.modalEditor = false
+  }
+
 }

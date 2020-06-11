@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import {Message} from '../../../../core/models/message.model';
 
 import { Component, Input, OnInit, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
@@ -15,7 +16,7 @@ export class MessageComponent implements OnInit {
   editedMessage = ''
   editShow = false
   @ViewChild ('editMessageEl') editMessageEl : ElementRef
-  constructor() { }
+  constructor(private datePipe: DatePipe) { }
 
   ngOnInit(): void {
    
@@ -42,5 +43,19 @@ export class MessageComponent implements OnInit {
     }
     this.editShow = false
     this.editedMessage = '' 
+  }
+  getDate(){
+    const today = new Date().getTime()
+    const createDate = new Date (this.message.created_at).getTime()
+    const diffTime = Math.abs(today - createDate) ;
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) - 1; 
+
+    const date = this.datePipe.transform(this.message.created_at , 'dd.MM.yyyy')
+    switch (diffDays) {
+      case 0: return 'today'
+      case 1: return 'yesterday'
+      default: return date
+        break;
+    }
   }
 }
