@@ -60,7 +60,7 @@ export class ImageDrawingComponent implements OnInit, OnChanges {
 
     @Output() public save: EventEmitter<Blob> = new EventEmitter<Blob>();
     @Output() public cancel: EventEmitter<void> = new EventEmitter<void>();
-    
+    @Output() public sizeOfCanvasObjects: EventEmitter<number> = new EventEmitter<number>();
 
     public currentTool = 'brush';
     public currentSize = 'medium';
@@ -76,6 +76,7 @@ export class ImageDrawingComponent implements OnInit, OnChanges {
 
     private canvas: fabric.Canvas;
     private stack: fabric.Object[] = [];
+
 
     public colorsName: string[] = [];
     public drawingSizesName: string[] = [];
@@ -329,7 +330,7 @@ export class ImageDrawingComponent implements OnInit, OnChanges {
         let upperCanvas: any = document.getElementsByClassName('upper-canvas')[0]
         let ctx = upperCanvas.getContext("2d")
         ctx.clearRect(0,0,ctx.canvas.clientWidth, ctx.canvas.clientHeight)
-        
+        this.sizeOfCanvasObjects.emit(this.canvas.getObjects().length)
     }
 
     public importPhotoFromFile(event: Event | any) {

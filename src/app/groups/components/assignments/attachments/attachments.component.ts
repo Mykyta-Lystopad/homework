@@ -1,28 +1,28 @@
 import { Attachment } from './../../../../core/models/attachment.model';
 import { AttachmentModel } from './../../../../core/models/attachmentModel';
-import { Component, Input, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, Input, OnInit} from '@angular/core';
 import {AlertService, ApiService, AttachmentService} from '../../../../core/services';
-import { AnyARecord } from 'dns';
-import { async } from '@angular/core/testing';
+
 @Component({
   selector: 'app-attachments',
   templateUrl: './attachments.component.html',
   styleUrls: ['./attachments.component.css']
 })
 export class AttachmentsComponent implements OnInit {
-  public openCreateModal: boolean = false;
+  openCreateModal: boolean = false;
   showModalImage: boolean = false;
-  public imageSrc: string = '';
-  public imageUrl: string = '';
-  public modalEditor: boolean = false;
+  imageSrc: string = '';
+  imageUrl: string = '';
+  modalEditor: boolean = false;
+  zoom: boolean = false;
   wait = false
-  public acceptConfig: string[] = [
+  acceptConfig: string[] = [
     'image/png',
     'image/jpeg',
     '.doc',
     '.docx'
   ];
-  public colors = {
+  colors = {
     ['black']: 'red'
   };
   currentAttachment = new AttachmentModel()
@@ -35,12 +35,12 @@ export class AttachmentsComponent implements OnInit {
   @Input() role: string;
   displayMode: boolean;
   index: number;
+  canvaObjectsSize: number = null
 
 
   constructor(
     private Alert: AlertService,
     private attachService: AttachmentService,
-    private apiService: ApiService
   ) {
   }
   ngOnInit() {
@@ -101,6 +101,7 @@ export class AttachmentsComponent implements OnInit {
   }
 
   openEditor(attach: Attachment) {
+    this.zoom = false
     if (!this.modalEditor){
       this.modalEditor = true;
       this.imageUrl = attach.file_link;
@@ -110,12 +111,13 @@ export class AttachmentsComponent implements OnInit {
       this.currentAttachment.file_content = attach.file_content
       this.currentAttachment.file_link = attach.file_link   
     } else {
-      this.modalEditor = false
+      this.cancel()
     }
      
   }
 
   save($event: Blob) {
+    this.canvaObjectsSize = null
     this.wait = true
     let reader = new FileReader();
     let base64data:any
@@ -146,9 +148,7 @@ export class AttachmentsComponent implements OnInit {
     });
 
   }
-  cancel() {
-    this.modalEditor = false;
-  }
+  
   showModal(image:Attachment){
     this.index = this.attachments.findIndex(item => item.id == image.id)
     this.currentAttachment.id = this.attachments[this.index].id
@@ -164,9 +164,6 @@ export class AttachmentsComponent implements OnInit {
     this.currentAttachment.id = this.attachments[this.index].id
     this.currentAttachment.file_name = this.attachments[this.index].file_name
     this.currentAttachment.file_link = this.attachments[this.index].file_link
-    //console.log(this.currentAttachment.id);
-    
-    
   } 
   calculateArraySize(flag?:string) {
     if (flag == 'number') return this.attachments.length
@@ -174,8 +171,27 @@ export class AttachmentsComponent implements OnInit {
     else return false
   }
   closeBtn(){
-    this.showModalImage = false
+    
+    if(this.cancel()){
+      this.modalEditor = false
+      this.zoom = false
+    }
+    
+  }
+  cancel() {
+    let exit = true;
+    if (this.canvaObjectsSize){
+      if (!confirm("Warning, you don't save changes!!! Your changes will be lost. Exit anyway?")) return false
+    } 
     this.modalEditor = false
+    return true
+  }
+  zoomChange(){
+    this.zoom = !this.zoom
+  }
+  canvaObjects(size){
+    this.canvaObjectsSize = size
+    console.log(this.canvaObjectsSize);    
   }
 
 }

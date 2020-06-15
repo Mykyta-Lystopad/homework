@@ -49,13 +49,22 @@
       </div>
       
        
-      <div class="modal-body" [ngClass]="{'scroll': modalEditor}">
+      <div class="modal-body" [ngClass]="{'scroll': modalEditor || zoom}">
 
-        <div *ngIf="!displayMode && (role == 'teacher')" 
-        class ="edit-btn" 
-        (click)="openEditor(currentAttachment)">
-          <span class="material-icons edit">edit</span>
+        <div class="buttons-bar">
+          <div *ngIf="!displayMode && (role == 'teacher')" 
+          class ="edit-btn" 
+          (click)="openEditor(currentAttachment)">
+            <span class="material-icons" [ngClass]="{'edit': modalEditor}">edit</span>
+          </div>
+          <div  *ngIf="!modalEditor"
+          class ="edit-btn" 
+          (click)="zoomChange()">
+            <span class="material-icons" *ngIf="!zoom">zoom_in</span>
+            <span class="material-icons edit" *ngIf="zoom">zoom_out</span>
+          </div>
         </div>
+        
 
         <image-drawing *ngIf="modalEditor"
           [src]="imageUrl"
@@ -63,6 +72,7 @@
           [colors]="colors"
           enableRemoveImage = true
           outputQuality="0.8"
+          (sizeOfCanvasObjects) = "canvaObjects($event)"
           (save)="save($event)"
           (cancel)="cancel()">
         </image-drawing>
@@ -76,7 +86,7 @@
 
 
 
-        <div class="navigate-blocks" *ngIf="!modalEditor">
+        <div class="navigate-blocks" *ngIf="!modalEditor && !zoom">
             <div class="navigate" (click)="listImages(false)" [style.visibility]="!index ? 'hidden' : 'visible'">
               <div>
                 <span class="material-icons large-icon">keyboard_arrow_left</span>
@@ -88,9 +98,9 @@
               </div>              
             </div>        
           </div>
-        <div *ngIf="!modalEditor" class="d-flex justify-content-center image">
+        <div *ngIf="!modalEditor" class="d-flex justify-content-center" [ngClass]="{'image': !zoom}">
           
-          <img  src={{currentAttachment.file_link}} class="image"> 
+          <img  src={{currentAttachment.file_link}} [ngClass]="{'image': !zoom}"> 
           
         </div>
         <!-- <div class="modal-footer d-flex justify-content-center">

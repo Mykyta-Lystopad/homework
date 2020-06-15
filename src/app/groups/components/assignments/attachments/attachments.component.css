@@ -150,10 +150,11 @@
 .add-circle{
   font-size: 40px;
 }
+.buttons-bar{
+    position: fixed;
+    z-index: 300;
+}
 .edit-btn{
-  position: fixed;
-  /* top: 1vh; */
-  z-index: 300;
   border: solid silver;
   border-radius: 5px;
   width: 40px;
