@@ -12,6 +12,7 @@ import {LayoutAssignmentsComponent} from "./layout-assignments/layout-assignment
 import {CommonModule} from "@angular/common";
 import { AttachmentsComponent } from './attachments/attachments.component';
 import { ImageDrawingComponent } from './image-drawing/image-drawing.component';
+import {NgxImageCompressService} from 'ngx-image-compress';
 
 
 @NgModule({
@@ -35,7 +36,8 @@ import { ImageDrawingComponent } from './image-drawing/image-drawing.component';
     ImageDrawingComponent,
   ],
   providers: [
-    DatePipe
+    DatePipe,
+    NgxImageCompressService
   ]
 })
 export class AssignmentsModule {

@@ -1,7 +1,9 @@
+import { NgxImageCompressService } from 'ngx-image-compress';
 import { Attachment } from './../../../../core/models/attachment.model';
 import { AttachmentModel } from './../../../../core/models/attachmentModel';
 import { Component, Input, OnInit} from '@angular/core';
-import {AlertService, ApiService, AttachmentService} from '../../../../core/services';
+import {AlertService, AttachmentService} from '../../../../core/services';
+
 
 @Component({
   selector: 'app-attachments',
@@ -41,6 +43,7 @@ export class AttachmentsComponent implements OnInit {
   constructor(
     private Alert: AlertService,
     private attachService: AttachmentService,
+    private imageCompress: NgxImageCompressService
   ) {
   }
   ngOnInit() {
@@ -67,24 +70,35 @@ export class AttachmentsComponent implements OnInit {
   handleInputChange(e:any) {
     console.log(e.target.value);
     const file = e.dataTransfer ? e.dataTransfer.files[0] : e.target.files[0];
-    const pattern = /image-*/;
+
+    // const pattern = /image-*/;
     const reader = new FileReader();
-    if (!file.type.match(pattern) && file.size > 2097152) {
-      this.Alert.warning('Можно загружать файлы форматов png,jpeg,doc,docx размер которых не перевышает 2mb');
-      return;
-    }
+    // if (!file.type.match(pattern) && file.size > 2097152) {
+    //   this.Alert.warning('Можно загружать файлы форматов png,jpeg,doc,docx размер которых не перевышает 2mb');
+    //   return;
+    // }
     reader.onload = this._handleReaderLoaded.bind(this);
     this.currentAttachment.file_name = file.name   
+
+
     reader.readAsDataURL(file);
   }
 
   _handleReaderLoaded(e) {
     const reader = e.target;
+    // console.log('width: ',e.width);
+    // console.log('height: ',e.height);
+    // debugger
    // файл а bise64
     this.imageSrc = reader.result;
-    this.currentAttachment.file_content = this.imageSrc
-    this.currentAttachment.comment = "some comment"
-    this.submit()
+    //console.log('before', this.imageSrc);
+
+    this.imageCompress.compressFile(this.imageSrc,-1, 50, 50).then( res => {
+      //console.log('after', res);
+      this.currentAttachment.file_content = res
+      this.currentAttachment.comment = "some comment"
+      this.submit()
+      })
   }
 
   submit() {    
@@ -173,13 +187,12 @@ export class AttachmentsComponent implements OnInit {
   closeBtn(){
     
     if(this.cancel()){
-      this.modalEditor = false
+      this.showModalImage = false
       this.zoom = false
     }
     
   }
   cancel() {
-    let exit = true;
     if (this.canvaObjectsSize){
       if (!confirm("Warning, you don't save changes!!! Your changes will be lost. Exit anyway?")) return false
     } 
