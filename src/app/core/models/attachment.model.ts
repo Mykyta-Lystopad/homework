@@ -3,5 +3,6 @@ export interface Attachment   {
      file_name: string;
      comment?: string;
      file_link?: string;
+     thumb_link?: string;
      file_content?: string;
 }

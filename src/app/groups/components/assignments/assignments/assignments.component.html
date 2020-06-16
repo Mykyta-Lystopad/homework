@@ -3,7 +3,7 @@
    
 <div *ngIf="currentUser.role == 'teacher' && !student_id; else studentNameBlock">
   <div class="d-flex justify-content-center placeholder" *ngIf="!createAssignFlag" (click)="showNewAssignBlock()">
-    <h4>Create new assignment</h4>
+    <h4>Створити нове завдання</h4>
   </div>
 </div>
 <ng-template #studentNameBlock>

@@ -156,6 +156,7 @@
 }
 .edit-btn{
   border: solid silver;
+  background-color: rgba(255, 255, 255, 1);
   border-radius: 5px;
   width: 40px;
   height: 40px;
@@ -163,4 +164,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.grab{
+  cursor: grab;
+}
+.grabbing{
+  cursor: grabbing;
 }

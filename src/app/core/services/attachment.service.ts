@@ -28,7 +28,7 @@ export class AttachmentService {
 
   createAttachment(Attach: Attachment) {
     return this.apiService.post('api/attachments', Attach).pipe(tap(res => {
-      this.alertSvc.success('Image added succesful')
+      this.alertSvc.success('Малюнок додано')
     }, error => {
       this.alertSvc.danger(this.collectErrors(error['data']))
     }))
@@ -36,7 +36,7 @@ export class AttachmentService {
 
   updateColection(assignmentId: number, attachmentsID) {
     return this.apiService.put(`api/assignments/${assignmentId}`, attachmentsID).pipe(tap(res => {
-      this.alertSvc.success('Collection updated succesful')
+      this.alertSvc.success('Набір малюнків обовлений')
     }, error => {
       this.alertSvc.danger(this.collectErrors(error['data']))
     }))
@@ -44,7 +44,7 @@ export class AttachmentService {
 
   updeteAttachment(attach: Attachment){
     return this.apiService.put(`api/attachments/${attach.id}`, attach).pipe(tap(res => {
-      this.alertSvc.success('Image update succesful')
+      this.alertSvc.success('Малюнок змінено')
     }, error => {
       this.alertSvc.danger(this.collectErrors(error['data']))
     }))

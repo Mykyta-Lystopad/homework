@@ -1,7 +1,7 @@
 import { NgxImageCompressService } from 'ngx-image-compress';
 import { Attachment } from './../../../../core/models/attachment.model';
 import { AttachmentModel } from './../../../../core/models/attachmentModel';
-import { Component, Input, OnInit} from '@angular/core';
+import { Component, Input, OnInit, ViewChild, ElementRef } from '@angular/core';
 import {AlertService, AttachmentService} from '../../../../core/services';
 
 
@@ -18,6 +18,10 @@ export class AttachmentsComponent implements OnInit {
   modalEditor: boolean = false;
   zoom: boolean = false;
   wait = false
+  scrolling = false
+  private resolution = 1280
+  scrollX = 0
+  scrollY = 0
   acceptConfig: string[] = [
     'image/png',
     'image/jpeg',
@@ -35,6 +39,7 @@ export class AttachmentsComponent implements OnInit {
   @Input() assignID: number;
   @Input() userAnswer: boolean;
   @Input() role: string;
+  @ViewChild('modalBody') modalBody : ElementRef 
   displayMode: boolean;
   index: number;
   canvaObjectsSize: number = null
@@ -70,35 +75,39 @@ export class AttachmentsComponent implements OnInit {
   handleInputChange(e:any) {
     console.log(e.target.value);
     const file = e.dataTransfer ? e.dataTransfer.files[0] : e.target.files[0];
-
+    let that = this
     // const pattern = /image-*/;
     const reader = new FileReader();
     // if (!file.type.match(pattern) && file.size > 2097152) {
     //   this.Alert.warning('Можно загружать файлы форматов png,jpeg,doc,docx размер которых не перевышает 2mb');
     //   return;
     // }
-    reader.onload = this._handleReaderLoaded.bind(this);
+    reader.onload = this._handleReaderLoaded.bind(this, that);
     this.currentAttachment.file_name = file.name   
-
-
     reader.readAsDataURL(file);
   }
 
-  _handleReaderLoaded(e) {
+  _handleReaderLoaded(that, e) {
     const reader = e.target;
-    // console.log('width: ',e.width);
-    // console.log('height: ',e.height);
-    // debugger
-   // файл а bise64
-    this.imageSrc = reader.result;
-    //console.log('before', this.imageSrc);
-
-    this.imageCompress.compressFile(this.imageSrc,-1, 50, 50).then( res => {
-      //console.log('after', res);
-      this.currentAttachment.file_content = res
-      this.currentAttachment.comment = "some comment"
-      this.submit()
-      })
+    let image = new Image()
+    let maxSideSize: number
+    let koef: number
+    let w = null
+    let h = null
+    let res = that['resolution']
+    image.src = e.target.result
+    image.onload = function() {
+      w =  this['width']
+      h = this['height']
+      w > h ? maxSideSize = w : maxSideSize = h
+      maxSideSize > res ? koef = res/maxSideSize*100 : koef = 100
+      that.imageSrc = reader.result;
+      that.imageCompress.compressFile(that.imageSrc,-1, koef, 50).then( res => {
+        that.currentAttachment.file_content = res
+        that.currentAttachment.comment = "some comment"
+        that.submit()
+        })
+    }  
   }
 
   submit() {    
@@ -139,6 +148,7 @@ export class AttachmentsComponent implements OnInit {
     let that = this; 
     reader.onloadend =  () => {
       base64data = reader.result;
+      debugger
       that.currentAttachment.file_content = base64data;
       this.attachService.updeteAttachment(this.currentAttachment).subscribe(res => {
         let index = that.attachments.findIndex(item => item.id == that.currentAttachment.id)
@@ -204,7 +214,22 @@ export class AttachmentsComponent implements OnInit {
   }
   canvaObjects(size){
     this.canvaObjectsSize = size
-    console.log(this.canvaObjectsSize);    
   }
 
+  scroll(event:any){
+    if(this.scrolling && this.zoom){
+      let deltaX = event.layerX - this.scrollX
+      let deltaY = event.layerY - this.scrollY
+      // deltaX > 0 ? this.modalBody.nativeElement.scrollLeft++ : this.modalBody.nativeElement.scrollLeft--
+      // deltaY > 0 ? this.modalBody.nativeElement.scrollTop++ : this.modalBody.nativeElement.scrollTop--
+
+      this.modalBody.nativeElement.scrollLeft = this.modalBody.nativeElement.scrollLeft - deltaX
+      this.modalBody.nativeElement.scrollTop = this.modalBody.nativeElement.scrollTop - deltaY
+      
+      console.log(deltaX, deltaY);
+    }
+    this.scrollX = event.layerX
+    this.scrollY = event.layerY
+
+  }
 }

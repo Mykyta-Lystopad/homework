@@ -6,6 +6,7 @@ export class AttachmentModel implements Attachment{
      file_name: string;
      comment?: string;
      file_link?: string;
+     thumb_link?: string
      file_content?: string;
  
      constructor(){
@@ -13,6 +14,7 @@ export class AttachmentModel implements Attachment{
           this.file_name = "";
           this.comment = "";
           this.file_link = "";
+          this.thumb_link = "";
           this.file_content = "";
      }
  

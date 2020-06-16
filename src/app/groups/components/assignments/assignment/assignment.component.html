@@ -15,7 +15,7 @@
             </div>
           </div>
           <ng-template #noDueDate>
-            <p class="placeholder" *ngIf="!assign.student_id">Due Date</p>
+            <p class="placeholder" *ngIf="!assign.student_id">Дата закінчення</p>
           </ng-template>
         </div>
         <div *ngIf="showEditDueDate">
@@ -34,7 +34,7 @@
       <div *ngIf="!showEditAssignmentTitle; else editAssignTitle" (click)="showEditAssign('title')">
         <h5>{{ assign.title }}</h5>    
           <div *ngIf="!assign.title">
-            <h5 class="placeholder">Add assignment title here</h5>       
+            <h5 class="placeholder">Додати назву завдання</h5>       
           </div> 
       </div> 
       
@@ -53,7 +53,7 @@
       <div *ngIf="!showEditAssignmentDescription; else editAssignDescription" (click)="showEditAssign('description')">
         <h6 *ngIf="assign.description; else descriptionPlaceholder">{{ assign.description }}</h6>  
         <ng-template #descriptionPlaceholder>
-          <h6 class="placeholder" *ngIf="!assign.student_id">You can add some note here</h6>
+          <h6 class="placeholder" *ngIf="!assign.student_id">Додати нотатки,якщо необхідно</h6>
         </ng-template>           
       </div> 
       <ng-template #editAssignDescription>
@@ -77,7 +77,7 @@
         ></app-problem>
         <div *ngIf="!assign.student_id">
           <div *ngIf="user.role == 'teacher'">
-            <div *ngIf="!showCreateProblem" class="placeholder" (click)="toShowCreateProblem()">Add problem</div>
+            <div *ngIf="!showCreateProblem" class="placeholder" (click)="toShowCreateProblem()">Додати завдання</div>
           </div>
         </div>
         <input class="input" type="text" *ngIf="showCreateProblem" #addProblemEl [(ngModel)]="currentProblem.title"  (keydown.enter)="showCreateProblem = false" (blur)=createProblem()>
@@ -99,7 +99,7 @@
 
     <!------------------------------- Attaches --------------------------------->
     <div *ngIf="assign.userAnswer && assign.student_id">
-      <h6>User answer</h6>
+      <h6>Відповідь учня/студента</h6>
       <!-- <app-attachment *ngFor="let attach of assign.userAnswer.attachments" [attachment] = 'attach'></app-attachment> -->
     
       <app-attachments
@@ -114,7 +114,7 @@
     <!----------------------------- messages block -------------------------------------------->
     <div *ngIf="assign.student_id">
       <hr>
-      <h6>Messages</h6>
+      <h6>Повідомлення</h6>
       
       <div *ngIf="assign.userAnswer">
         <app-message *ngFor="let mess of assign.userAnswer.messages" 
@@ -127,7 +127,7 @@
 
       <div *ngIf="studentId">
         <div *ngIf="!showNewMessage">
-          <p class="placeholder" (click)="toShowEditMessage()">Add new message</p>
+          <p class="placeholder" (click)="toShowEditMessage()">Додати нове повідомлення</p>
         </div>
 
         <input *ngIf="showNewMessage" 
@@ -142,8 +142,8 @@
     </div>
     <!-- ---------------------------Create buttons ----------------------------------->
     <div *ngIf="assignCreationMode" class="d-flex justify-content-around">
-      <button class="btn btn-success" (click)="createAssign()">Save</button>
-      <button class="btn btn-warning" (click)="assignDelete()">Cancel</button>
+      <button class="btn btn-success" (click)="createAssign()">Зберегти</button>
+      <button class="btn btn-warning" (click)="assignDelete()">Скасувати</button>
     </div> 
  
     

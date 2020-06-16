@@ -7,7 +7,7 @@
 
     <div *ngFor="let image of attachments" class="col-sm-6 col-md-3 col-lg-3">
       <img class="img-fluid sketch"
-        src={{image.file_link}} 
+        src={{image.thumb_link}} 
         alt={{image.file_name}} 
         (click)="showModal(image)">
       <div *ngIf="!displayMode" class="round d-flex align-items-center justify-content-center" (click)="deleteAttach(image.id)" >
@@ -30,7 +30,13 @@
 
 
 <!-- Modal -->
-<div *ngIf="showModalImage" id="modalCotainer" class = "modal-cotainer" (click)="closeModal($event)">
+<div *ngIf="showModalImage" 
+id="modalCotainer" 
+class = "modal-cotainer" 
+(mousedown)="closeModal($event)"
+(mouseup)="scrolling = false"
+[ngClass]="{'grabbing': scrolling}"
+>
   <div class="modal-dialog-centered" role="document">
     <div class="modal-content" >
       <div class="modal-header">
@@ -49,7 +55,13 @@
       </div>
       
        
-      <div class="modal-body" [ngClass]="{'scroll': modalEditor || zoom}">
+      <div #modalBody class="modal-body" 
+      [ngClass]="{'scroll': modalEditor || zoom, 
+                  'grab': zoom}"
+      (mousedown)="scrolling = true"
+      
+      (mousemove)="scroll($event)"
+      >
 
         <div class="buttons-bar">
           <div *ngIf="!displayMode && (role == 'teacher')" 
@@ -100,7 +112,7 @@
           </div>
         <div *ngIf="!modalEditor" class="d-flex justify-content-center" [ngClass]="{'image': !zoom}">
           
-          <img  src={{currentAttachment.file_link}} [ngClass]="{'image': !zoom}"> 
+          <img draggable="false"  src={{currentAttachment.file_link}} [ngClass]="{'image': !zoom}"> 
           
         </div>
         <!-- <div class="modal-footer d-flex justify-content-center">
