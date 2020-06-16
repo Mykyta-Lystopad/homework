@@ -35,7 +35,7 @@ id="modalCotainer"
 class = "modal-cotainer" 
 (mousedown)="closeModal($event)"
 (mouseup)="scrolling = false"
-[ngClass]="{'grabbing': scrolling}"
+
 >
   <div class="modal-dialog-centered" role="document">
     <div class="modal-content" >
@@ -57,9 +57,9 @@ class = "modal-cotainer"
        
       <div #modalBody class="modal-body" 
       [ngClass]="{'scroll': modalEditor || zoom, 
-                  'grab': zoom}"
+                  'grab': zoom,
+                  'grabbing': scrolling && zoom}"
       (mousedown)="scrolling = true"
-      
       (mousemove)="scroll($event)"
       >
 

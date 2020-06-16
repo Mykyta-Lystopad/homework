@@ -122,7 +122,7 @@ export class AssignmentComponent implements OnInit {
   
   assignDelete(){
     if (!this.assignCreationMode){
-      if (confirm(`Do you really want to delete ${this.assign.title} assignment?`))
+      if (confirm(`Ви справді бажаєте видалити ${this.assign.title} завдання?`))
         this.assignSvc.deleteAssignment(this.assignId).subscribe(res => {})
     } else {
       this.emitHideCreateAssign.emit(false)

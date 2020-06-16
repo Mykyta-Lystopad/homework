@@ -16,9 +16,9 @@ export class AttachmentsComponent implements OnInit {
   imageSrc: string = '';
   imageUrl: string = '';
   modalEditor: boolean = false;
-  zoom: boolean = false;
   wait = false
   scrolling = false
+  zoom = false;
   private resolution = 1280
   scrollX = 0
   scrollY = 0
@@ -220,16 +220,12 @@ export class AttachmentsComponent implements OnInit {
     if(this.scrolling && this.zoom){
       let deltaX = event.layerX - this.scrollX
       let deltaY = event.layerY - this.scrollY
-      // deltaX > 0 ? this.modalBody.nativeElement.scrollLeft++ : this.modalBody.nativeElement.scrollLeft--
-      // deltaY > 0 ? this.modalBody.nativeElement.scrollTop++ : this.modalBody.nativeElement.scrollTop--
-
       this.modalBody.nativeElement.scrollLeft = this.modalBody.nativeElement.scrollLeft - deltaX
       this.modalBody.nativeElement.scrollTop = this.modalBody.nativeElement.scrollTop - deltaY
-      
-      console.log(deltaX, deltaY);
     }
     this.scrollX = event.layerX
     this.scrollY = event.layerY
-
+    //console.log('zoom: ', this.zoom, 'scrolling: ', this.scrolling);
+    
   }
 }
