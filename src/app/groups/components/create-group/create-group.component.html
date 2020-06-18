@@ -3,23 +3,100 @@
     <div class="col-9 card">
       <div class="row card-header justify-content-between align-items-center">
         <h5>Управления группами</h5>
-        <img [routerLink]="['newGroup']" class="mt-2 mb-3" style="cursor: pointer;outline: none"
-             src='./assets/img/add.png' alt>
+        <!-- <img [routerLink]="['newGroup']" class="mt-2 mb-3" style="cursor: pointer;outline: none"
+             src='./assets/img/add.png' alt> -->
       </div>
 
       <div class="card-body">
+        <div *ngIf="!createGroupFlag">
+          <h6 class="placeholder" (click)="createGroupFlag = true" >Створити нову групу</h6>
+        </div>
+        <div *ngIf="createGroupFlag">
+          <div (click)="toShowEditTitle()">
+            <div *ngIf="(!currentGroup.title && !editTitle)" class="placeholder">Назва групи</div>
+            <div *ngIf="!editTitle">{{currentGroup.title}}</div>
+            <input #editTitleEl *ngIf="editTitle" type="text" [(ngModel)]="currentGroup.title" (blur)="saveGroup()" >
+          </div>
+          <div (click)="toShowEditSubject()">
+            <div *ngIf="(!currentGroup.subject  && !editTitle)" class="placeholder">Оберіть предмет</div>
+            <div *ngIf="!editSubject">{{getSubject(currentGroup.subject)}}</div>
+            <select #editSubjectEl *ngIf="editSubject" 
+            (change)="currentGroup.subject = $event.target.value;" 
+            (blur)="saveGroup()">
+              <option value="">Оберіть предмет</option>
+              <option value="{{subject.id}}" *ngFor="let subject of subjects">{{subject.title}}</option>
+            </select>
+          </div>
+
+          
+
+          <div class="row  d-flex justify-content-between">
+            <button type="button" class="col-2 btn btn-success">Зберегти</button>
+            <button type="button" class="btn col-2 ml-2 btn-warning" (click)="closeCreateGroup()">Скасувати</button>
+          </div>
+
+          <!-- <form [formGroup]="form" (ngSubmit)="submit()">
+            <div class="form-group">
+
+                <label for="title">Назва групи:</label>
+                <input formControlName="title"
+                       type="text"
+                       id="title"
+                       class="form-control"
+                       placeholder="Введите название группы"
+                >
+
+              <div *ngIf="form.controls.title.touched && form.controls.title.invalid"
+                   class="alert alert-danger mt-1">
+                <div *ngIf="form.controls.title.errors.required">Ви не ввели назву групи</div>
+                <div *ngIf="form.controls.title.errors">Назва має бути більше 3-х символів</div>
+              </div> 
+              <label for="select">Предмет:</label>
+              <select formControlName="select" id="select"
+                      (change)="currentSubjectId = $event.target.value;"
+                      class="form-control">
+                <option value="">Выберите предмет</option>
+                <option value="{{subject.id}}" *ngFor="let subject of subjects">{{subject.title}}</option>
+              </select>
+              <div *ngIf="form.controls.select.touched && form.controls.select.invalid"
+                   class="alert alert-danger mt-1">
+                <div *ngIf="form.controls.select.errors.required">Вы не выбрали предмет для группы.</div>
+              </div>
+            </div>
+
+            <div class="row mt-3 ml-1">
+              <button
+                type="submit"
+                [disabled]="!form.valid"
+                class="col-2 btn btn-success">Добавить
+              </button>
+              <button
+                type="button"
+                (click)="closeCreateGroup()"
+                class="btn col-2 ml-2 btn-danger">Отмениить</button>
+            </div>
+          </form> -->
+        </div>
+
+
+
+
         <div class="row justify-content-center">
           <ul class="list-group col-12 mt-2">
             <li
               class="list-group-item d-flex justify-content-between card-hover"
-              [routerLink]="[group.id]" [queryParams]="{title: group.title}"
+              (click)="toShowGroup(group.id)"
               *ngFor="let group of groups$|async"
             >
-              <div class="row align-items-center">
+              <!-- [routerLink]="[group.id]" [queryParams]="{title: group.title}" -->
+              <div *ngIf="group.show" class="col-12">
+                <app-edit-group 
+                  [group] = group
+                ></app-edit-group>
+              </div>
+              <div *ngIf="!group.show" class="row align-items-center" >
                 <p class="ml-2">{{group.title}}</p>
                 <p class="ml-2 subject-title">{{group.subject}}</p>
-              </div>
-              <div class="edit-block">
               </div>
             </li>
           </ul>

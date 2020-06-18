@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {Group} from "../models/group.model";
 import {BehaviorSubject, Subject} from "rxjs";
 import {ApiService} from "./api.service";
-import {map} from "rxjs/operators";
+import {map, tap} from "rxjs/operators";
 import {AlertService} from "./alert.service";
 
 @Injectable()
@@ -14,6 +14,17 @@ export class GroupsService {
 
   constructor(private apiService: ApiService,
               private alertService: AlertService) {
+  }
+  collectErrors(errorObj:object):string{
+    if (typeof(errorObj) == 'string'){
+      return errorObj
+    } else {
+    let errors = ''
+    for (const err in errorObj) {
+        errors =  errors + `${err} : ${errorObj[err]} ` + '\n'        
+      }
+    return errors;
+    }    
   }
 
   get group() {
@@ -69,23 +80,29 @@ export class GroupsService {
       });
   }
 
-  changeGroup(id: number, title: string) {
-    this.apiService.put(`api/groups/${id}`, {title}).subscribe(response => {
-      for (let i = 0; i < this.groups.length; i++) {
-        if (this.groups[i].id == +id) {
-          this.groups[i].title = title
-          break
-        }
-      }
+  changeGroup(obj:object) {
+    return this.apiService.put(`api/groups/${obj['id']}`, obj).pipe(tap(res => {
+      let index = this.groups.findIndex(elem => elem.id == obj['id'])
+      this.groups[index].title = res['data']['title']
+      this.groups[index].subject = res['data']['subject']
       this.groups$.next(this.groups);
-      this.alertService.success("Группа изменена")
-    })
+      this.alertService.success("Група оновлена")
+    }, error => {
+      this.alertService.danger(this.collectErrors(error['data']))
+      console.log(this.collectErrors(error['data']));
+      
+    }))
   }
 
   getGroup(id: number) {
-    let group: Group
-    group = this.groups.find(g=>g.id==id
-    )
-    return group
+    return this.apiService.get(`api/groups/${id}`).pipe(tap(res => {
+    }, error => {
+      this.alertService.danger(this.collectErrors(error['data']))
+    }))
   }
+
+  getSubjects(){
+    return this.apiService.get('api/subjects')
+  }
+  
 }

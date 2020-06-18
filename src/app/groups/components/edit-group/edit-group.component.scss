@@ -1,3 +1,25 @@
-img {
-  width: 26px;
+.container{
+  cursor: default;
+
+}
+.row{
+  margin: 0;
+}
+.input{
+  outline: none;
+  border: none;
+  width: 100%;
+}
+.circle{
+  width: 80px;
+  height: 80px;
+  border: silver 3px solid;
+  border-radius: 40px;
+  font-size: 25px;
+  font-weight: bold;
+  background-color: #dcdcdc;
+}
+.temp{
+  display:table;
+  margin:0 auto;
 }
