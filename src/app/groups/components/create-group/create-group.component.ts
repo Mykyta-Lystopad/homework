@@ -36,30 +36,23 @@ export class CreateGroupComponent implements OnInit {
   ngOnInit(): void {
     this.groups$ = this.groupService.group
     this.activeAccordion = false
-  
-    // this.form = new FormGroup({
-    //   title: new FormControl('', [Validators.required, Validators.minLength(3)]),
-    //   select: new FormControl('', Validators.required)
-    // })
     this.groupService.getSubjects().subscribe(response => {
       this.subjects = response.data
     })
   }
-  submit() {
-    this.currentTitle = this.form.controls['title'].value
-    this.groupService.add(this.currentTitle, this.currentSubjectId)
-    this.currentTitle = ''
-    this.currentSubjectId = 0
-    this.createGroupFlag = false
-  }
+  // submit() {
+  //   this.currentTitle = this.form.controls['title'].value
+  //   this.groupService.add(this.currentTitle, this.currentSubjectId)
+  //   this.currentTitle = ''
+  //   this.currentSubjectId = 0
+  //   this.createGroupFlag = false
+  // }
 
   delete(id: number) {
     this.groupService.remove(id)
   }
-  closeCreateGroup(){
-    this.createGroupFlag = false
-
-    this.currentSubjectId = 0
+  closeCreateGroup(flag: boolean){
+    this.createGroupFlag = flag
   }
   toShowGroup(groupId:number){
     this.groups$.source['value'].forEach(elem => elem.id == groupId ? elem.show = true : elem.show = false);
@@ -79,10 +72,5 @@ export class CreateGroupComponent implements OnInit {
       let num = +id
       return this.subjects.find(elem => elem.id == num).title
     }
-    
-  }
-  saveGroup(){
-    this.editTitle = false
-    this.editSubject = false
   }
 }

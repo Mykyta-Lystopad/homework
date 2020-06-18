@@ -11,30 +11,30 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
   styleUrls: ['./new-group.component.scss']
 })
 export class NewGroupComponent implements OnInit {
-  title = '';
-  subjects: SubjectModel[] = []
-  idSubject: number
-  form: FormGroup
+  // title = '';
+  // subjects: SubjectModel[] = []
+  // idSubject: number
+  // form: FormGroup
 
-  constructor(private groupService: GroupsService,
-              private apiService: ApiService,
-              public location: Location) {
-  }
+  // constructor(private groupService: GroupsService,
+  //             private apiService: ApiService,
+  //             public location: Location) {
+  // }
 
   ngOnInit(): void {
-    this.form = new FormGroup({
-      select: new FormControl('', Validators.required),
-      title: new FormControl('', Validators.required)
-    })
-    this.apiService.get('api/subjects').subscribe(response => {
-      this.subjects = response.data
-    })
+    // this.form = new FormGroup({
+    //   select: new FormControl('', Validators.required),
+    //   title: new FormControl('', Validators.required)
+    // })
+    // this.apiService.get('api/subjects').subscribe(response => {
+    //   this.subjects = response.data
+    // })
   }
 
-
-  submit() {
-    this.groupService.add(this.title, this.idSubject)
-    this.title = ''
-    this.location.back()
-  }
+ 
+  // submit() {
+  //   this.groupService.add(this.title, this.idSubject)
+  //   this.title = ''
+  //   this.location.back()
+  // }
 }

@@ -1,33 +1,41 @@
 <div class="container">
   <div class="row justify-content-between align-items-center">
+    <!-- title -->
+    <div *ngIf="(createMode && !group.title && !showEditTitle )" class="placeholder" (click)="toShowEditTitle()">Назва групи</div>
     <div *ngIf="!showEditTitle" (click)="toShowEditTitle()">{{group.title}}</div>
-    <input #editTitleEl *ngIf="showEditTitle" type="text" [(ngModel)]="currentGroup.title" (blur)="saveGroup()">
-    <div *ngIf="!showEditTitle && !showEditSubject">
+    <input #editTitleEl *ngIf="showEditTitle"       
+      type="text" 
+      class="input"
+      [(ngModel)]="currentGroup.title" 
+      (blur)="saveGroup()"
+      (keydown.enter)="showEditTitle = false">
+    
+
+    <div *ngIf="!showEditTitle && !showEditSubject && !createMode">
       <span  class="delete-icon material-icons" (click)="delete()">delete</span>
     </div>
-      </div>
+  </div>
+  <!-- Subject -->
   <div>
+    <div *ngIf="(createMode && !group.subject && !showEditSubject )" class="placeholder" (click)="toShowEditSubject()">Оберіть предмет</div>
     <div *ngIf="!showEditSubject" (click)="toShowEditSubject()">{{group.subject}}</div>
-    <select #editSubjectEl *ngIf="showEditSubject" 
+    <select #editSubjectEl *ngIf="showEditSubject"  class="input"
             (change)="subjChange($event)" 
             (blur)="saveGroup()">
       <option value="">Оберіть предмет</option>
       <option value="{{subject.id}}" *ngFor="let subject of subjects">{{subject.title}}</option>
     </select>
-  
-
-    <!-- <input #editSubjectEl 
-    *ngIf="showEditSubject" 
-    type="text" 
-    [(ngModel)]="currentGroup.subject" 
-    (blur)="saveGroup()"> -->
-
-    <!-- <input type="text" [(ngModel)]="group.subject"> -->
   </div>
-  <div class="row d-flex justify-content-center">
+  <!-- buttons -->
+  <div *ngIf="createMode" class="row  d-flex justify-content-between">
+    <button type="button" class="col-2 btn btn-success" (click)="createGroup()">Зберегти</button>
+    <button type="button" class="btn col-2 ml-2 btn-warning" (click)="closeCreateGroup()">Скасувати</button>
+  </div>
+  <!-- Group Code -->
+  <div *ngIf="group.model_code" class="row d-flex justify-content-center">
     Code: <h5> {{group.model_code}}</h5> 
   </div>
-  
+  <!-- users/students --> 
   <div *ngIf="group.users">
     <hr>
     <div class="d-flex flex-wrap">
@@ -43,16 +51,3 @@
   </div>
   
 </div>
-
-<!-- <div class="row mt-3 ml-1">
-        <button
-          type="button"
-          (click)="changeTitle()"
-          class="col-2 btn btn-success">Изменить
-        </button>
-        <button
-          type="button"
-          (click)="location.back()"
-          class="btn col-2 ml-2 btn-danger"
-        >Отмениить</button>
-      </div> -->

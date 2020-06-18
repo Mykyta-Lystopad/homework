@@ -1,3 +1,4 @@
+import { GroupModel } from './../models/groupModel';
 import {Injectable} from '@angular/core';
 import {Group} from "../models/group.model";
 import {BehaviorSubject, Subject} from "rxjs";
@@ -67,17 +68,32 @@ export class GroupsService {
 
   }
 
-  add(title: string, subject_id: number) {
-    this.apiService.post('api/groups', {
-      title,
-      subject_id
-    })
-      .subscribe((res) => {
-        this.groups.push(res.data);
-        this.groups$.next(this.groups);
-        this.alertService.success("Группа добавлена")
+  createGroup(obj:object) {
+    return this.apiService.post('api/groups',obj).pipe(tap(res => {
+      let group = new GroupModel()
+      group.id = res['data']['id']
+      group.title = res['data']['title']
+      group.subject = res['data']['subject']
+      group.model_code = res['data']['model_code']
+      group.qr_code_link = res['data']['qr_code_link']
+      this.groups.unshift(group)
+      this.groups$.next(this.groups);
+      this.alertService.success("Група створена")
+    }, error => {
+      this.alertService.danger(this.collectErrors(error['data']))
+      console.log(this.collectErrors(error['data']));
+    }))
 
-      });
+
+
+
+    
+      // .subscribe((res) => {
+      //   this.groups.push(res.data);
+      //   this.groups$.next(this.groups);
+      //   this.alertService.success("Группа добавлена")
+
+      // });
   }
 
   changeGroup(obj:object) {

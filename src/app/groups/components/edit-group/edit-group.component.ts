@@ -1,9 +1,8 @@
+import { AlertService } from './../../../core/services/alert.service';
 import { SubjectModel } from './../../../core/models/subject.model';
-
 import { GroupModel } from './../../../core/models/groupModel';
-import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef, Output, EventEmitter } from '@angular/core';
 import {GroupsService} from "../../../core/services";
-import {Location} from "@angular/common";
 import {Group} from "../../../core/models/group.model";
 
 @Component({
@@ -13,6 +12,8 @@ import {Group} from "../../../core/models/group.model";
 })
 export class EditGroupComponent implements OnInit {
   @Input() group: Group
+  @Input() createMode = false
+  @Output() closeCreateMode = new EventEmitter()
   currentGroup = new GroupModel() 
   subjects: SubjectModel[] = []
   @ViewChild('editTitleEl') editTitleEl: ElementRef
@@ -22,13 +23,17 @@ export class EditGroupComponent implements OnInit {
   
 
   constructor(private groupService: GroupsService,
-              public location: Location) {
+              private alertService: AlertService) {
   }
 
   ngOnInit(): void {
-    this.groupService.getGroup(this.group.id).subscribe(res => {
-      this.group = res['data']
-    })
+    if (this.createMode){
+      this.group = new GroupModel() 
+    } else {
+      this.groupService.getGroup(this.group.id).subscribe(res => {
+        this.group = res['data']
+      })
+    }
     this.groupService.getSubjects().subscribe(response => {
       this.subjects = response.data
     })
@@ -50,32 +55,66 @@ export class EditGroupComponent implements OnInit {
   toShowEditSubject(){
     this.copyData() 
     this.showEditSubject = true
-    setTimeout(()=>{this.editSubjectEl.nativeElement.focus()},0)
+    
+    setTimeout(()=>{
+      let index = this.subjects.findIndex(elem => elem.title == this.currentGroup.subject)
+      if (index>0)
+      this.editSubjectEl.nativeElement.options[this.subjects[index].id].selected = true
+      //this.editSubjectEl.nativeElement.autofocus = true
+      // this.editSubjectEl.nativeElement.show().focus()
+    },0)
   }
   saveGroup(){
-    let obj = {
-      id: this.currentGroup.id,
-      title: this.currentGroup.title,
-      subject_id: +this.currentGroup.subject
-    } 
-    if (!obj.subject_id){
-      let index = this.subjects.findIndex(elem => elem.title == this.currentGroup.subject)
-      obj.subject_id = this.subjects[index].id
+    if (!this.createMode){
+      let obj = {
+        id: this.currentGroup.id,
+        title: this.currentGroup.title,
+        subject_id: +this.currentGroup.subject
+      } 
+      if (!obj.subject_id){
+        let index = this.subjects.findIndex(elem => elem.title == this.currentGroup.subject)
+        obj.subject_id = this.subjects[index].id
+      }
+      this.showEditTitle = false 
+      this.showEditSubject = false
+      // if ////////////////////////////////////////////////
+      this.groupService.changeGroup(obj).subscribe(res => {
+        this.group.title = res['data']['title']
+        this.group.subject = res['data']['subject']
+      })
+    } else {
+      this.group.title = this.currentGroup.title
+      
+      console.log(this.group);
+      this.showEditTitle = false 
+      this.showEditSubject = false
     }
-
-
-    this.showEditTitle = false 
-    this.showEditSubject = false
-  
-
-    this.groupService.changeGroup(obj).subscribe(res => {
-      this.group.title = res['data']['title']
-      this.group.subject = res['data']['subject']
-    })
   }
   subjChange(event:any){
-    this.currentGroup.subject = event.target.value;
-    this.saveGroup()
+    if (!event.target.value) return
+    if (!this.createMode){
+      this.currentGroup.subject = event.target.value;
+      this.saveGroup()
+    }else{
+      this.group.subject = this.subjects[event.target.value].title
+      this.saveGroup()
+    }
+    
+  }
+  createGroup(){
+    if (this.group.title && this.group.subject){
+      let obj = {
+        title: this.group.title,
+        subject_id: null
+      } 
+      let index = this.subjects.findIndex(elem => elem.title == this.group.subject)
+      obj.subject_id = this.subjects[index].id
+      this.groupService.createGroup(obj).subscribe(res => {
+        this.closeCreateGroup()
+      })
+    } else {
+      this.alertService.warning('Для створення групи заповніть всі поля')
+    }    
   }
 
   delete() {
@@ -88,5 +127,9 @@ export class EditGroupComponent implements OnInit {
     str = user['first_name'].charAt(0) + user['last_name'].charAt(0)
     str.toUpperCase
     return str
+  } 
+
+  closeCreateGroup(){
+    this.closeCreateMode.emit(false)
   }
 }
