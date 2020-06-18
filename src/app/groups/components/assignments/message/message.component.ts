@@ -52,7 +52,7 @@ export class MessageComponent implements OnInit {
 
     const date = this.datePipe.transform(this.message.created_at , 'dd.MM.yyyy')
     switch (diffDays) {
-      case 0: return 'today'
+      case 0: return ''
       case 1: return 'yesterday'
       default: return date
         break;

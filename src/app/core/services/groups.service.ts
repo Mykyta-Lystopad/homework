@@ -5,6 +5,7 @@ import {BehaviorSubject, Subject} from "rxjs";
 import {ApiService} from "./api.service";
 import {map, tap} from "rxjs/operators";
 import {AlertService} from "./alert.service";
+import { debug } from 'console';
 
 @Injectable()
 export class GroupsService {
@@ -47,7 +48,7 @@ export class GroupsService {
         if (role === 'teacher') return response.data.collection;
         else return response.data;
       })).subscribe(response => {
-      this.groups = response;
+      this.groups = response; 
       this.groups$.next(this.groups);
       if (this.groups.length) {
         this.idGroup$.next(this.groups[0].id)
@@ -119,6 +120,19 @@ export class GroupsService {
 
   getSubjects(){
     return this.apiService.get('api/subjects')
+  }
+  bindGroup(code:string){
+    return this.apiService.get(`api/bindGroup/${code}`).pipe(tap(res => {
+      if (res['data'] == 'Wrong code.')
+      {
+        this.alertService.warning('Не вірний код')
+      } else{        
+        this.alertService.success('Групу додано')
+      }
+    }, error => {
+      this.alertService.danger(this.collectErrors(error['data']))
+    }))
+
   }
   
 }
