@@ -1,3 +1,4 @@
+import { Group } from './../../../core/models/group.model';
 import { UserService } from './../../../core/services/user.service';
 import { User } from './../../../core/models/user.model';
 import { GroupModel } from './../../../core/models/groupModel';
@@ -5,7 +6,6 @@ import { SubjectModel } from './../../../core/models/subject.model';
 import { FormGroup} from '@angular/forms';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import {Observable} from "rxjs";
-import {Group} from "../../../core/models/group.model";
 import {GroupsService} from "../../../core/services";
 
 
@@ -82,14 +82,11 @@ export class CreateGroupComponent implements OnInit {
   }
 
   bindGroup(){
-    
     this.groupService.bindGroup(this.groupCodeToBind).subscribe(res => {
-      if (res['data'] !== 'Wrong code.'){
-        
-      }
+      this.bindToGroup = false
     })
-
-    this.bindToGroup = false
-    
+  }
+  sizeOfGroup(group:Group){
+    debugger
   }
 }

@@ -84,17 +84,6 @@ export class GroupsService {
       this.alertService.danger(this.collectErrors(error['data']))
       console.log(this.collectErrors(error['data']));
     }))
-
-
-
-
-    
-      // .subscribe((res) => {
-      //   this.groups.push(res.data);
-      //   this.groups$.next(this.groups);
-      //   this.alertService.success("Группа добавлена")
-
-      // });
   }
 
   changeGroup(obj:object) {
@@ -121,18 +110,35 @@ export class GroupsService {
   getSubjects(){
     return this.apiService.get('api/subjects')
   }
-  bindGroup(code:string){
-    return this.apiService.get(`api/bindGroup/${code}`).pipe(tap(res => {
-      if (res['data'] == 'Wrong code.')
-      {
-        this.alertService.warning('Не вірний код')
-      } else{        
-        this.alertService.success('Групу додано')
-      }
+  addStudentByCode(groupId: number, studentCode: number){
+    return this.apiService.get(`api/groups/${groupId}/bindStudent/${studentCode}`).pipe(tap(res => {
+      this.alertService.success('Користувача до групи додано')
     }, error => {
       this.alertService.danger(this.collectErrors(error['data']))
     }))
-
+  }
+  bindGroup(code:string){
+    return this.apiService.get(`api/bindGroup/${code}`).pipe(tap(res => {
+      let newGroup = new GroupModel() 
+      newGroup.id = res['data'].id
+      newGroup.model_code = res['data'].model_code
+      newGroup.qr_code_link = res['data'].qr_code_link
+      newGroup.subject = res['data'].subject
+      newGroup.title = res['data'].title
+      newGroup.users = res['data'].users
+      this.groups.push(newGroup)
+      this.groups$.next(this.groups);
+      this.alertService.success('Групу додано')
+    }, error => {
+      this.alertService.danger(this.collectErrors(error['data']))
+    }))
+  }
+  removeStudent(groupId: number, studentId:number){
+    return this.apiService.delete(`api/groups/${groupId}/removeStudent/${studentId}`).pipe(tap(res => {
+      this.alertService.success('Користувача із групи видалено')
+    }, error => {
+      this.alertService.danger(this.collectErrors(error['data']))
+    }))
   }
   
 }

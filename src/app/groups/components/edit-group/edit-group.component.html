@@ -39,12 +39,23 @@
   <div *ngIf="group.users">
     <hr>
     <div class="d-flex flex-wrap">
-      <div  *ngFor="let item of group.users" class="col-sm-4 col-md-3 col-lg-2">
+      <div  *ngFor="let user of group.users" class="col-sm-4 col-md-3 col-lg-2">
         <div class="d-flex flex-column justify-content-center align-items-center">
-          <div class="circle d-flex flex-column justify-content-center align-items-center" > {{initials(item)}} </div>
-          <div>{{item.first_name}}</div>
-          <div>{{item.last_name}}</div>
-        </div>
+          <div class="circle d-flex flex-column justify-content-center align-items-center" > 
+              {{initials(user)}} 
+            
+            <span class="delete-icon material-icons in-avatar" (click)="removeStudent(user)">delete</span>
+          </div>
+          <div>{{user.first_name}}</div>
+          <div>{{user.last_name}}</div>
+          <div><small>{{user.model_code}}</small></div>
+        </div>        
+      </div>
+      <div class="d-flex flex-column col-sm-4 col-md-3 col-lg-2 align-items-center">
+        <div class="circle d-flex flex-column align-items-center justify-content-center" (click)="addStudent()"> 
+          <span class="material-icons add-circle" >add_circle</span>
+        </div> 
+        <input size="6" [(ngModel)]="studentCode" class="input code" maxlength="6" placeholder="add code">
       </div>
     </div>
     

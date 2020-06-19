@@ -1,9 +1,12 @@
+import { UserModel } from './../../../core/models/userModel';
+import { User } from './../../../core/models/user.model';
 import { AlertService } from './../../../core/services/alert.service';
 import { SubjectModel } from './../../../core/models/subject.model';
 import { GroupModel } from './../../../core/models/groupModel';
 import { Component, OnInit, Input, ViewChild, ElementRef, Output, EventEmitter } from '@angular/core';
 import {GroupsService} from "../../../core/services";
 import {Group} from "../../../core/models/group.model";
+import { debug } from 'console';
 
 @Component({
   selector: 'app-edit-group',
@@ -20,6 +23,7 @@ export class EditGroupComponent implements OnInit {
   @ViewChild('editSubjectEl') editSubjectEl: ElementRef 
   showEditTitle = false
   showEditSubject = false
+  studentCode = null
   
 
   constructor(private groupService: GroupsService,
@@ -61,7 +65,7 @@ export class EditGroupComponent implements OnInit {
       if (index>0)
       this.editSubjectEl.nativeElement.options[this.subjects[index].id].selected = true
       //this.editSubjectEl.nativeElement.autofocus = true
-      // this.editSubjectEl.nativeElement.show().focus()
+      // this.editSubjectEl.nativeElement.show().focus() 
     },0)
   }
   saveGroup(){
@@ -77,7 +81,6 @@ export class EditGroupComponent implements OnInit {
       }
       this.showEditTitle = false 
       this.showEditSubject = false
-      // if ////////////////////////////////////////////////
       this.groupService.changeGroup(obj).subscribe(res => {
         this.group.title = res['data']['title']
         this.group.subject = res['data']['subject']
@@ -122,7 +125,7 @@ export class EditGroupComponent implements OnInit {
       this.groupService.remove(this.group.id)
     }
   }
-  initials(user:object){
+  initials(user:User){
     let str = ""
     str = user['first_name'].charAt(0) + user['last_name'].charAt(0)
     str.toUpperCase
@@ -131,5 +134,21 @@ export class EditGroupComponent implements OnInit {
 
   closeCreateGroup(){
     this.closeCreateMode.emit(false)
+  }
+  addStudent(){
+    if (!this.studentCode) return
+    this.groupService.addStudentByCode(this.group.id,this.studentCode).subscribe(res => {
+      let user = new UserModel()  
+      user = res['data']   
+      this.group.users.push(user) 
+      this.studentCode = ""
+    })
+  }
+  removeStudent(student:User){
+    if(!confirm(`Ви справді бажаєте видалитикористувача ${student.first_name} ${student.last_name}`)) return
+    this.groupService.removeStudent(this.group.id, student.id).subscribe(res => {
+      let index = this.group.users.findIndex(item => item.id == student.id)
+      this.group.users.splice(index,1)
+    })
   }
 }

@@ -31,6 +31,7 @@
             <div *ngIf="!group.show" class="row align-items-center" >
               <p class="ml-2">{{group.title}}</p>
               <p class="ml-2 subject-title">{{group.subject}}</p>
+              <p *ngIf="group.users">Кількість: {{sizeOfGroup(group)}}</p>
             </div>
           </li>
         </ul>
