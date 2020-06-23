@@ -1,3 +1,4 @@
+import { NgxImageCompressService } from 'ngx-image-compress';
 import {NgModule} from '@angular/core';
 import {SharedModule} from '../shared/shared.module';
 import {ProfileRoutingModule} from './profile-routing.module';
@@ -12,7 +13,11 @@ import {NgxUiLoaderModule} from 'ngx-ui-loader';
     ProfileRoutingModule,
     NgxUiLoaderModule
   ],
-  declarations: [LayoutProfileComponent, ProfileComponent, ProfileSettingsComponent]
+
+  declarations: [LayoutProfileComponent, ProfileComponent, ProfileSettingsComponent],
+  providers: [
+    NgxImageCompressService
+  ]
 })
 export class ProfileModule {
 

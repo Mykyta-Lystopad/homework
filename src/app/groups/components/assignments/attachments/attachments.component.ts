@@ -26,8 +26,6 @@ export class AttachmentsComponent implements OnInit {
   acceptConfig: string[] = [
     'image/png',
     'image/jpeg',
-    '.doc',
-    '.docx'
   ];
   colors = {
     ['black']: 'red'
@@ -75,15 +73,9 @@ export class AttachmentsComponent implements OnInit {
 
   }
   handleInputChange(e:any) {
-    console.log(e.target.value);
     const file = e.dataTransfer ? e.dataTransfer.files[0] : e.target.files[0];
     let that = this
-    // const pattern = /image-*/;
     const reader = new FileReader();
-    // if (!file.type.match(pattern) && file.size > 2097152) {
-    //   this.Alert.warning('Можно загружать файлы форматов png,jpeg,doc,docx размер которых не перевышает 2mb');
-    //   return;
-    // }
     reader.onload = this._handleReaderLoaded.bind(this, that);
     this.currentAttachment.file_name = file.name   
     reader.readAsDataURL(file);

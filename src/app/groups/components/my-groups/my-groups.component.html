@@ -7,20 +7,21 @@
     </div>
 
     <div
-      *ngIf="groupService.allGroups.length"
-    >
+      *ngIf="groupService.allGroups.length">
       <div class="row mt-2">
-        <div class="col-4 rounded-circle"
+        <div class="col-sm-6 col-md-4 col-lg-3"
              style="cursor:pointer;"
              (click)="showUsers(group.id)"
              *ngFor="let group of groupService.allGroups; let idx = index"
         >
-          <div class="card order-card" [ngClass]="group.id===idGroup?'bg-c-yellow': 'bg-c-green'" style="height: 100px;font-size: 14px;">
-            <div class="card-block">
+          <div class="d-flex flex-column justify-content-center align-items-center " >
+            <div class="circle d-flex justify-content-center align-items-center" [ngClass]="group.id===idGroup?'bg-c-yellow': 'bg-c-green'">
               <h6 class="m-b-20">{{group.title}}</h6>
-              <h2 class="text-right"><i class="fa fa-cart-plus f-left"></i></h2>
-              <p class="m-b-0">{{group.subject}}</p>
+              <!-- <h2 class="text-right"><i class="fa fa-cart-plus f-left"></i></h2> -->
+              
             </div>
+            <p class="m-b-0">{{group.subject}}</p>
+            <p class="m-b-0">{{group.note}}</p>
           </div>
         </div>
       </div>

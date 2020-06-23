@@ -29,4 +29,10 @@ export class StudentsComponent implements OnInit {
         });
     });
   }
+  initials(user:User){
+    let str = ""
+    str = user['first_name'].charAt(0) + user['last_name'].charAt(0)
+    str.toUpperCase
+    return str
+  } 
 }

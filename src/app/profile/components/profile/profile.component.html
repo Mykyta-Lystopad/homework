@@ -2,7 +2,13 @@
   <div class="row container-profile bg-profile">
     <div class="col-md-3">
       <div class="profile-img">
-        <img src="https://media.pn.am/media/issue/197/297/photo/197297.jpg" alt="">
+        <img *ngIf="!currentUser.avatar" src="https://media.pn.am/media/issue/197/297/photo/197297.jpg" alt="">
+        <img *ngIf="currentUser.avatar" src={{currentUser.avatar}} alt="">
+       
+        <input
+        class="file-upload"
+        type="file" [accept]="acceptConfig"
+        (change)="loadAvatar($event)"/>
 
       </div>
     </div>
@@ -10,10 +16,10 @@
       <div class="profile-head">
         <button class="btn-settings" [routerLink]="'settings'"><img class="img-settings" src="https://image.flaticon.com/icons/svg/126/126472.svg"></button>
         <h5>
-          {{curentUser.first_name}} {{curentUser.last_name}}
+          {{currentUser.first_name}} {{currentUser.last_name}}
         </h5>
         <h6>
-          {{curentUser.role}}
+          {{currentUser.role}}
         </h6>
 
         <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -33,7 +39,7 @@
               <label>User Id</label>
             </div>
             <div class="col-md-6">
-              <p>{{curentUser.id}}</p>
+              <p>{{currentUser.id}}</p>
             </div>
           </div>
           <div class="row">
@@ -41,7 +47,7 @@
               <label>Name</label>
             </div>
             <div class="col-md-6">
-              <p>{{curentUser.first_name}} {{curentUser.last_name}} </p>
+              <p>{{currentUser.first_name}} {{currentUser.last_name}} </p>
             </div>
           </div>
           <div class="row">
@@ -49,7 +55,7 @@
               <label>Email</label>
             </div>
             <div class="col-md-6">
-              <p>{{curentUser.email}}</p>
+              <p>{{currentUser.email}}</p>
             </div>
           </div>
           <div class="row">

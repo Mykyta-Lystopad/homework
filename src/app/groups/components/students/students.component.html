@@ -1,21 +1,25 @@
 <div class="row">
-  <div class="container-fluid container-for-groups">
+  <div class="container-fluid">
     <div
       *ngIf="users.length; else loading"
     >
 
       <div class="row mt-2">
-        <div class="col-3"
+        <div class="col-sm-5 col-md-4 col-lg-3 col-xl-2"
              style="cursor:pointer;"
              *ngFor="let user of users"
              [routerLink]="['/groups',idGroup,'student',user.id]"
         >
-          <div class="card order-card bg-c-pink"  style="height: 100px; font-size: 12px;">
-            <div class="card-block">
-              <h6 class="m-b-20">{{user.first_name}} {{user.last_name}}</h6>
-              <h2 class="text-right"><i class="fa fa-cart-plus f-left"></i></h2>
-              <p class="m-b-0">{{user.email}}</p>
-            </div>
+          <div class="block d-flex flex-column align-items-center">
+            
+              <div  *ngIf="!user.avatar" class="circle">
+                {{initials(user)}}
+
+              </div>
+              <img *ngIf="user.avatar" src={{user.avatar}} class="avatar" alt='{{user.first_name}} {{user.last_name}}' >  
+              <span>{{user.first_name}} {{user.last_name}}</span>
+              <small>{{user.model_code}}</small>
+
           </div>
         </div>
       </div>

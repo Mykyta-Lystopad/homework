@@ -113,3 +113,13 @@ div .input{
       outline: none;
   }
 }
+.file-upload{
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0; 
+  right: 0;
+  opacity: 0;
+  filter: alpha(opacity=0);
+  cursor: pointer;
+}

@@ -47,13 +47,14 @@
   </div>
   <!-- users/students --> 
   <div *ngIf="group.users">
-    <hr>
     <div class="d-flex flex-wrap">
       <div  *ngFor="let user of group.users" class="col-sm-4 col-md-3 col-lg-2">
         <div class="d-flex flex-column justify-content-center align-items-center">
           <div class="circle d-flex flex-column justify-content-center align-items-center" > 
-              {{initials(user)}} 
-            
+              <div *ngIf="!user.avatar">
+                {{initials(user)}} 
+              </div>
+              <img *ngIf="user.avatar" src={{user.avatar}} class="image">
             <span class="delete-icon material-icons in-avatar" (click)="removeStudent(user)">delete</span>
           </div>
           <div>{{user.first_name}}</div>
@@ -68,7 +69,6 @@
         <input size="6" [(ngModel)]="studentCode" class="input code" maxlength="6" placeholder="add code">
       </div>
     </div>
-    
   </div>
   
 </div>
