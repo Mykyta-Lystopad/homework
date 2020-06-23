@@ -99,19 +99,23 @@ export class AssignmentComponent implements OnInit {
     }
     
   }  
-  // getStudentName(){
-  //   this.assignSvc.getStudentName(this.groupId).subscribe(res =>{
-  //     let index = res['data']['users'].findIndex(usr => usr['id'] == this.studentId);
-  //     this.studentName =  `${res['data']['users'][index].first_name} ${res['data']['users'][index].last_name}`;
-  //   })
-  // }
-
   ///////////////////////////////////////////////////// Assign ///////////////////////////////////////////
   createAssign(){
     this.assign.problems.forEach(element => {
       element.id = undefined
     });
-    this.assignSvc.addAssign(this.assign).subscribe(res => {
+    let objForSent = {
+      group_id: this.assign.group_id,      
+      title: this.assign.title,
+      description: this.assign.description,
+      problems: this.assign.problems,
+      created_at: this.assign.created_at,
+      due_date: this.assign.due_date, 
+      attachments: this.assign.attachments.map(item => item.id)
+
+
+    }
+    this.assignSvc.addAssign(objForSent).subscribe(res => {
       this.assign.title = ''
       this.assign.description = ''
       this.assign.problems = null;
@@ -298,6 +302,11 @@ export class AssignmentComponent implements OnInit {
       this.assign.userAnswer.messages.splice(index, 1)
     })    
   }
+  ////////////////////////////////attaches //////////////////////////////////////
+  emitAttaches(attachments){
+     this.assign.attachments = attachments
+  }
+  
   
 
 }

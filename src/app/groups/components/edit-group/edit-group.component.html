@@ -6,14 +6,13 @@
     <input #editTitleEl *ngIf="showEditTitle"       
       type="text" 
       class="input"
+      maxlength="3"
       [(ngModel)]="currentGroup.title" 
       (blur)="saveGroup()"
       (keydown.enter)="showEditTitle = false">
-    
-
     <div *ngIf="!showEditTitle && !showEditSubject && !createMode">
       <span  class="delete-icon material-icons" (click)="delete()">delete</span>
-    </div>
+    </div> 
   </div>
   <!-- Subject -->
   <div>
@@ -26,6 +25,17 @@
       <option value="{{subject.id}}" *ngFor="let subject of subjects">{{subject.title}}</option>
     </select>
   </div>
+    <!-- Note -->
+    <div>
+      <div *ngIf="( !group.note && !showEditNote )" class="placeholder" (click)="toShowEditNote()">Нотатки (якщо потрібно)</div>
+      <div *ngIf="!showEditNote" (click)="toShowEditNote()">{{group.note}}</div>
+      <input #editNoteEl *ngIf="showEditNote"       
+        type="text" 
+        class="input"
+        [(ngModel)]="currentGroup.note" 
+        (blur)="saveGroup()"
+        (keydown.enter)="showEditNote = false">
+    </div>
   <!-- buttons -->
   <div *ngIf="createMode" class="row  d-flex justify-content-between">
     <button type="button" class="col-2 btn btn-success" (click)="createGroup()">Зберегти</button>

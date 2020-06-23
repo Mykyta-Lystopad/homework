@@ -64,7 +64,7 @@ export class AssignmentService {
     return this.apiSvc.get(`api/assignments/${assignId}?user_id=${userId}`)
   }
 
-  addAssign(assign: Assignment) {
+  addAssign(assign: object) {
     return this.apiSvc.post('api/assignments', assign).pipe(tap(res => {
       this.alertSvc.success('Нове завдання створено')
       this.assignments.unshift(res['data']);

@@ -1,7 +1,8 @@
+import { map } from 'rxjs/operators';
 import { NgxImageCompressService } from 'ngx-image-compress';
 import { Attachment } from './../../../../core/models/attachment.model';
 import { AttachmentModel } from './../../../../core/models/attachmentModel';
-import { Component, Input, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, Input, OnInit, ViewChild, ElementRef, Output, EventEmitter } from '@angular/core';
 import {AlertService, AttachmentService} from '../../../../core/services';
 
 
@@ -39,6 +40,7 @@ export class AttachmentsComponent implements OnInit {
   @Input() assignID: number;
   @Input() userAnswer: boolean;
   @Input() role: string;
+  @Output() emitAttaches: EventEmitter<any> = new EventEmitter()
   @ViewChild('modalBody') modalBody : ElementRef 
   displayMode: boolean;
   index: number;
@@ -115,11 +117,16 @@ export class AttachmentsComponent implements OnInit {
     this.attachService.createAttachment(this.currentAttachment).subscribe(res => {
       this.currentAttachment.id = res['data']['id']
       this.objForSend.attachments.push(res['data']['id'])
-      this.attachService.updateColection(this.assignID, this.objForSend).subscribe(resr => {
-        this.attachments = resr['data']['attachments']
-       });
+      if(this.assignID){
+        this.attachService.updateColection(this.assignID, this.objForSend).subscribe(resr => {
+          this.attachments = resr['data']['attachments']
+        });
+      } else {
+        this.attachments.push(res['data'])
+        this.emitAttaches.emit(this.attachments)         
+      }
     });
-
+    
     this.openCreateModal = false;
   }
 
@@ -148,12 +155,13 @@ export class AttachmentsComponent implements OnInit {
     let that = this; 
     reader.onloadend =  () => {
       base64data = reader.result;
-      debugger
       that.currentAttachment.file_content = base64data;
       this.attachService.updeteAttachment(this.currentAttachment).subscribe(res => {
         let index = that.attachments.findIndex(item => item.id == that.currentAttachment.id)
         that.attachments[index].file_link = res['data']['file_link']
+        that.attachments[index].thumb_link = res['data']['thumb_link']
         that.currentAttachment.file_link = res['data']['file_link']
+        that.currentAttachment.thumb_link = res['data']['thumb_link']
         this.modalEditor = false
         this.wait = false
       })
@@ -166,10 +174,17 @@ export class AttachmentsComponent implements OnInit {
     this.attachments.forEach(item=>{this.objForSend.attachments.push(item.id)})    
     let index = this.objForSend.attachments.findIndex(item => item == id)    
     this.objForSend.attachments.splice(index,1)
-    this.attachService.updateColection(this.assignID, this.objForSend).subscribe(resr => {
+    if (this.assignID){
+      this.attachService.updateColection(this.assignID, this.objForSend).subscribe(resr => {
+        index = this.attachments.findIndex(item => item.id == id)
+        this.attachments.splice(index,1)
+      });
+    } else {
       index = this.attachments.findIndex(item => item.id == id)
       this.attachments.splice(index,1)
-    });
+      this.emitAttaches.emit(this.attachments)
+    }
+    
 
   }
   

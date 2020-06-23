@@ -31,6 +31,7 @@
             <div *ngIf="!group.show" class="row align-items-center" >
               <p class="ml-2">{{group.title}}</p>
               <p class="ml-2 subject-title">{{group.subject}}</p>
+              <p class="ml-2 subject-title">{{group.note}}</p>
               <p *ngIf="group.users">Кількість: {{sizeOfGroup(group)}}</p>
             </div>
           </li>
@@ -61,6 +62,7 @@
               <div>
                 <div class="ml-2">{{group.title}}</div>
                 <div class="ml-2 subject-title">{{group.subject}}</div>
+                <div class="ml-2 subject-title">{{group.note}}</div>
               </div>
               <div class="ml-2 row">Code: <h5> {{group.model_code}}</h5></div>
             </div>

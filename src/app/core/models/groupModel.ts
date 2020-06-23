@@ -7,6 +7,7 @@ export class GroupModel implements Group{
   qr_code_link?: string;
   subject: string;
   title: string;
+  note: string;
   show:boolean;
   users?: User[]
   constructor(){
@@ -15,6 +16,7 @@ export class GroupModel implements Group{
     this.qr_code_link = "";
     this.subject = "";
     this.title = "";
+    this.note = "";
     this.show = false;
     this.users = null
   }

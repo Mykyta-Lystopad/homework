@@ -20,8 +20,10 @@ export class EditGroupComponent implements OnInit {
   currentGroup = new GroupModel() 
   subjects: SubjectModel[] = []
   @ViewChild('editTitleEl') editTitleEl: ElementRef
+  @ViewChild('editNoteEl') editNoteEl: ElementRef
   @ViewChild('editSubjectEl') editSubjectEl: ElementRef 
   showEditTitle = false
+  showEditNote = false
   showEditSubject = false
   studentCode = null
   
@@ -47,6 +49,7 @@ export class EditGroupComponent implements OnInit {
     this.currentGroup.model_code = this.group.model_code
     this.currentGroup.qr_code_link = this.group.qr_code_link
     this.currentGroup.subject = this.group.subject
+    this.currentGroup.note = this.group.note
     this.currentGroup.title = this.group.title
     this.currentGroup.users = this.group.users
   }
@@ -56,6 +59,12 @@ export class EditGroupComponent implements OnInit {
     this.showEditTitle = true
     setTimeout(()=>{this.editTitleEl.nativeElement.focus()},0)
   }
+  toShowEditNote(){
+    this.copyData() 
+    this.showEditNote = true
+    setTimeout(()=>{this.editNoteEl.nativeElement.focus()},0)
+  }
+
   toShowEditSubject(){
     this.copyData() 
     this.showEditSubject = true
@@ -73,6 +82,7 @@ export class EditGroupComponent implements OnInit {
       let obj = {
         id: this.currentGroup.id,
         title: this.currentGroup.title,
+        note: this.currentGroup.note,
         subject_id: +this.currentGroup.subject
       } 
       if (!obj.subject_id){
@@ -81,16 +91,19 @@ export class EditGroupComponent implements OnInit {
       }
       this.showEditTitle = false 
       this.showEditSubject = false
+      this.showEditNote = false
       this.groupService.changeGroup(obj).subscribe(res => {
         this.group.title = res['data']['title']
         this.group.subject = res['data']['subject']
+        this.group.note = res['data']['note']
       })
     } else {
       this.group.title = this.currentGroup.title
-      
+      this.group.note = this.currentGroup.note
       console.log(this.group);
       this.showEditTitle = false 
       this.showEditSubject = false
+      this.showEditNote = false
     }
   }
   subjChange(event:any){
@@ -108,6 +121,7 @@ export class EditGroupComponent implements OnInit {
     if (this.group.title && this.group.subject){
       let obj = {
         title: this.group.title,
+        note: this.group.note,
         subject_id: null
       } 
       let index = this.subjects.findIndex(elem => elem.title == this.group.subject)
