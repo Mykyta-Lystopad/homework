@@ -38,8 +38,6 @@ export class EditGroupComponent implements OnInit {
     } else {
       this.groupService.getGroup(this.group.id).subscribe(res => {
         this.group = res['data']
-        console.log(this.group);
-        
       })
     }
     this.groupService.getSubjects().subscribe(response => {
@@ -102,7 +100,6 @@ export class EditGroupComponent implements OnInit {
     } else {
       this.group.title = this.currentGroup.title
       this.group.note = this.currentGroup.note
-      console.log(this.group);
       this.showEditTitle = false 
       this.showEditSubject = false
       this.showEditNote = false

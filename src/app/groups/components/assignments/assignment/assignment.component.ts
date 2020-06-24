@@ -80,16 +80,12 @@ export class AssignmentComponent implements OnInit {
     if (!this.assignCreationMode){
       this.assignSvc.getAssign(this.assignId, this.studentId).subscribe(res => {      
         this.assign = res['data']
-        console.log(res['data']);
-        
         this.attachments = res['data']['attachments']
-        //this.attachmentService.createDoubleArray(res['data'].attachments, 5);
         if (isNaN(this.studentId)){
           this.studentId = undefined
         }
         this.assign.student_id = this.studentId
         this.currentAssign.id = this.assign.id
-        //if (this.studentId && this.user.role == 'teacher') this.getStudentName()
       })    
     } else {
       this.assign.title = ""

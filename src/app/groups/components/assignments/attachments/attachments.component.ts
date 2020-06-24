@@ -232,7 +232,5 @@ export class AttachmentsComponent implements OnInit {
     }
     this.scrollX = event.layerX
     this.scrollY = event.layerY
-    //console.log('zoom: ', this.zoom, 'scrolling: ', this.scrolling);
-    
   }
 }

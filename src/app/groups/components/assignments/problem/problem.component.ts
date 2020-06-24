@@ -3,14 +3,14 @@ import { AssignmentService } from './../../../../core/services/assigntments.serv
 import { UserSolution } from './../../../../core/models/solution.model';
 import { Problem } from './../../../../core/models/problem.model';
 import { User } from '../../../../core/models';
-import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 
 @Component({
   selector: 'app-problem',
   templateUrl: './problem.component.html',
   styleUrls: ['./problem.component.scss']
 })
-export class ProblemComponent implements OnInit {
+export class ProblemComponent implements OnInit, AfterViewInit {
  
   @Input() problem: Problem;
   @Input() user: User;
@@ -20,8 +20,8 @@ export class ProblemComponent implements OnInit {
   @Output() emitDel: EventEmitter<{}> = new EventEmitter();
   @Output() emitEdit: EventEmitter<Problem> = new EventEmitter(); 
   @Output() emitSolve: EventEmitter<{}> = new EventEmitter();
-  @ViewChild('editProbEl') editProbEl: ElementRef;
-  @ViewChild('markSliderEl') markSliderEl: ElementRef;
+  @ViewChild('editProbEl', {static: false}) editProbEl: ElementRef;
+  @ViewChild('markSliderEl', {static: false}) markSliderEl: ElementRef;
   
   enableMarkSlider = false;
 
@@ -49,14 +49,18 @@ export class ProblemComponent implements OnInit {
     }    
     
     
+     
   }
   ngAfterViewInit(){
-    if (this.markSliderEl && this.problem.userSolution.teacher_mark){
-      this.currentMark = this.problem.userSolution.teacher_mark
-    }
-    else{
-      this.currentMark = 0
-    }
+    setTimeout(_ =>{
+      if (this.markSliderEl && this.problem.userSolution.teacher_mark){
+        this.currentMark = this.problem.userSolution.teacher_mark
+      }
+      else{
+        this.currentMark = 0
+      }
+    }, 0)
+    
   }
 
   onSolve(){
@@ -84,8 +88,10 @@ export class ProblemComponent implements OnInit {
   editProblemChange(flag:boolean){
     if (this.user.role == 'teacher' && this.studentId == undefined){
       this.editProblemFlag = flag
-      this.editedProblem.title = this.problem.title      
-      setTimeout(()=>{ this.editProbEl.nativeElement.focus()},0);   
+      this.editedProblem.title = this.problem.title    
+      if (flag){
+        setTimeout(()=>{ this.editProbEl.nativeElement.focus()},0);   
+      }
     }    
   }
   showEditMark(){
@@ -96,7 +102,8 @@ export class ProblemComponent implements OnInit {
  
     }
   saveMark(){
-    this.assignSvc.changeMark(this.problem.userSolution.id, {"teacher_mark": this.currentMark}).subscribe(res => {
+    this.assignSvc.changeMark(this.problem.userSolution.id, {"teacher_mark": this.currentMark})
+    .subscribe(res => {
       this.problem.userSolution.teacher_mark = +res['data']['teacher_mark']
     })
     this.editMark = false

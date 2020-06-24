@@ -322,11 +322,7 @@ export class ImageDrawingComponent implements OnInit, OnChanges {
               
         this.canUndo = this.canvas.getObjects().length > 0;
         this.canRedo = this.stack.length > 0;
-    //    console.log('stack',this.stack);
-        
-    //    console.log('objs',this.canvas.getObjects());
         this.canvas.renderAll();  
-        //console.log(this.canvas);
         let upperCanvas: any = document.getElementsByClassName('upper-canvas')[0]
         let ctx = upperCanvas.getContext("2d")
         ctx.clearRect(0,0,ctx.canvas.clientWidth, ctx.canvas.clientHeight)

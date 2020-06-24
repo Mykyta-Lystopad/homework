@@ -51,7 +51,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   }
   loadAvatar(event:any){
-    console.log(event);
     const file = event.dataTransfer ? event.dataTransfer.files[0] : event.target.files[0];
     let that = this
     const reader = new FileReader();
@@ -82,7 +81,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
     }  
   }
   saveAvatar(){
-    console.log(this.avatar);
     this.apiService.post('api/attachments', this.avatar).subscribe (res =>{
       this.currentUser.avatar = res['data']['file_link']
     }, error => {

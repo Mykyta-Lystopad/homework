@@ -33,7 +33,6 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
     this.userSub = this.userService.currentUser
       .subscribe(res => {
         this.curentUser = res;
-        console.log(res);
       });
 
     this.form = new FormGroup({
@@ -63,7 +62,6 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
     };
     /*
     this.profileService.updateInfoUser(user).subscribe(res => {
-      console.log(res);
     })
 */
   }

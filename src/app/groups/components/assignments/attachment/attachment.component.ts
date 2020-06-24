@@ -29,13 +29,11 @@ export class AttachmentComponent implements OnInit {
   }
   mouseDown(e){
     this.drag = true
-    console.log(this.drag);
     this.ctx.beginPath();
     this.mouseMove(e)
   }
   mouseUp(){
     this.drag = false
-    console.log(this.drag);
   }
   mouseMove(event:any){
     if (this.drag){
@@ -45,7 +43,6 @@ export class AttachmentComponent implements OnInit {
       this.ctx.stroke()
       this.ctx.beginPath();
       this.ctx.moveTo(event.clientX, event.clientY)
-      console.log('drawing......');
     }
     
   }

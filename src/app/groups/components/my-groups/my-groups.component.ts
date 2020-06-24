@@ -62,7 +62,6 @@ export class MyGroupsComponent implements OnInit, OnDestroy {
     if (this.targetId > 3) {
       this.targetId = 0
     }
-    console.log(this.targetId)
     return this.colorArray[this.targetId]
   }
 }
