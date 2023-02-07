@@ -54,6 +54,12 @@ export class SignInComponent implements OnInit {
   }
 
 
+  // redirectRegister() {
+  //   this.router.navigate(['/register']);
+  // }
+
+
+
   redirectRegister() {
     this.router.navigate(['/register']);
   }
