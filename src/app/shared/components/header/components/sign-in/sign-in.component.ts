@@ -40,23 +40,18 @@ export class SignInComponent implements OnInit {
     };
 
     this.router.navigate([`groups`]);
-    //
-    // this.apiService.post('api/auth/login', user).subscribe((res: UserResponseModel) => {
-    //
-    //   if (res.success) {
-    //     // this.userService.setAuth(res.data);
-    //     this.router.navigate([`groups`]);
-    //     this.ngxService.stop();
-    //   }
-    // }
-    // );
-    // this.ngxService.stop();
+
+    this.apiService.post('api/auth/login', user).subscribe((res: UserResponseModel) => {
+
+      if (res.success) {
+        // this.userService.setAuth(res.data);
+        this.router.navigate([`groups`]);
+        this.ngxService.stop();
+      }
+    }
+    );
+    this.ngxService.stop();
   }
-
-
-  // redirectRegister() {
-  //   this.router.navigate(['/register']);
-  // }
 
 
 
