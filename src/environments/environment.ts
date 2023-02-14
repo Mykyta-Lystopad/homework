@@ -6,6 +6,3 @@ export const environment: Environment = {
   KEY_ROLE: 'user-role'
 };
 
-
-
-

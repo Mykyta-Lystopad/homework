@@ -5,4 +5,3 @@ export const environment: Environment = {
   production: true,
   KEY_ROLE: 'user-role'
 };
-
