@@ -23,6 +23,7 @@ pipeline {
 
         stage("Lint Dockerfile") {
             agent {
+                label 'docker'
                 docker {
                     image 'hadolint/hadolint:latest-debian'
                 }
