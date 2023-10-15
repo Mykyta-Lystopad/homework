@@ -38,17 +38,16 @@ pipeline {
                   currentBuild.result = 'FAILURE'
               }
           }
-      }
-
-      post {
-          always {
-              script {
-                  if (currentBuild.resultIsBetterOrEqualTo('FAILURE')) {
-                      echo "Блокуємо мерж гілки feature в основну гілку"
-                      // Add your code to block merges from feature to main here
-                  }
-              }
-          }
+        }
+        post {
+            always {
+                script {
+                    if (currentBuild.resultIsBetterOrEqualTo('FAILURE')) {
+                        echo "Блокуємо мерж гілки feature в основну гілку"
+                        // Add your code to block merges from feature to main here
+                    }
+                }
+            }
+        }
     }
-}
 }
