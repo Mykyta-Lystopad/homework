@@ -20,13 +20,34 @@ pipeline {
                 }
             }
         }
-
-        stage('Lint Dockerfiles') {
-            steps {
-                script {
-                    sh 'hadolint ./Dockerfile'
+        stage ("lint dockerfile") {
+            agent {
+                docker {
+                    image 'hadolint/hadolint:latest-debian'
+                    //image 'ghcr.io/hadolint/hadolint:latest-debian'
                 }
             }
+        steps {
+            sh 'hadolint dockerfiles/*
+            sh 'hadolint ./Dockerfile'
+            }
         }
+        post {
+          failure {
+              script {
+                  currentBuild.result = 'FAILURE'
+              }
+          }
+      }
+
+      post {
+          always {
+              script {
+                  if (currentBuild.resultIsBetterOrEqualTo('FAILURE')) {
+                      echo "Блокуємо мерж гілки feature в основну гілку"
+                      // Add your code to block merges from feature to main here
+                  }
+              }
+          }
     }
 }
