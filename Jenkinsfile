@@ -28,7 +28,7 @@ pipeline {
                 }
             }
         steps {
-            #sh 'hadolint dockerfiles/*
+            // sh 'hadolint dockerfiles/*
             sh 'hadolint ./Dockerfile'
             }
         }
