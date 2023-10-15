@@ -24,12 +24,20 @@ pipeline {
         stage("Lint Dockerfile") {
             agent {
                 label 'docker'
-                docker {
-                    image 'hadolint/hadolint:latest-debian'
-                }
             }
             steps {
-                sh 'hadolint ./Dockerfile'
+                script {
+                    // Check the Dockerfile path relative to your workspace
+                    def dockerfilePath = "Dockerfile"
+        
+                    // Make sure the Dockerfile exists
+                    if (fileExists(dockerfilePath)) {
+                        // Use hadolint Docker image to lint the Dockerfile
+                        sh "docker run --rm -i hadolint/hadolint:latest-debian < ${dockerfilePath}"
+                    } else {
+                        error "Dockerfile not found at path: ${dockerfilePath}"
+                    }
+                }
             }
             post {
                 failure {
