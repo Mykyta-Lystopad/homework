@@ -14,8 +14,10 @@ pipeline {
             steps {
                 script {
                     def commitMessage = sh(script: 'git log -1 --pretty=%B', returnStdout: true).trim()
-                    if (!commitMessage.startsWith("KEY-")) {
-                        error "Commit must start with a Jira ticket (e.g., KEY-123)"
+                    if (!(commitMessage.length() >= 10 && commitMessage.startsWith("EPM-"))) {
+                        error "Commit message must be at least 10 characters long and start with 'EPM-'."
+                    // if (!commitMessage.startsWith("KEY-")) {
+                    //     error "Commit must start with a Jira ticket (e.g., KEY-123)"
                     }
                 }
             }
