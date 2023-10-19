@@ -49,6 +49,7 @@ pipeline {
                     script {
                         if (currentBuild.resultIsBetterOrEqualTo('FAILURE')) {
                             error "Build failed. Merging not allowed."
+
                         }
                     }
                 }
