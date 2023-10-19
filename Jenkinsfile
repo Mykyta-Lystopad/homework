@@ -16,8 +16,6 @@ pipeline {
                     def commitMessage = sh(script: 'git log -1 --pretty=%B', returnStdout: true).trim()
                     if (!(commitMessage.length() >= 10 && commitMessage.startsWith("EPM-"))) {
                         error "Commit message must be at least 10 characters long and start with 'EPM-'."
-                    // if (!commitMessage.startsWith("KEY-")) {
-                    //     error "Commit must start with a Jira ticket (e.g., KEY-123)"
                     }
                 }
             }
@@ -50,8 +48,8 @@ pipeline {
                 always {
                     script {
                         if (currentBuild.resultIsBetterOrEqualTo('FAILURE')) {
-                            echo "Блокуємо мерж гілки feature в основну гілку"
-                            // Add your code to block merges from feature to main here
+                            error "Build failed. Merging not allowed."
+
                         }
                     }
                 }
