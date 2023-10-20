@@ -3,16 +3,10 @@ pipeline {
         label 'worker01'
     }
 
-    triggers {
-        // Trigger the pipeline when changes are merged into the main branch
-        githubPush(branch: 'main')
-    }
-
     stages {
         stage('Clone Repository') {
             steps {
                 // Clone your Git repository
-                // You might need to configure credentials for this
                 sh 'git clone https://github.com/Mykyta-Lystopad/homework.git'
             }
         }
