@@ -29,14 +29,14 @@ pipeline {
             steps {
                 // Build a Docker image
                 // Use a Dockerfile and specify the image name and tag
-                sh 'sudo docker build -t google-class:latest .'
+                sh 'sudo docker build -t nominonik/google-class:latest .'
             }
         }
 
         stage('Tag Docker Image') {
             steps {
                 // Tag the Docker image with a specific version
-                sh 'sudo docker tag google-class:latest google-class:1.0'
+                sh 'sudo docker tag nominonik/google-class:latest nominonik/google-class:1.0'
             }
         }
 
