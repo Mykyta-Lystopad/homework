@@ -1,9 +1,9 @@
 pipeline {
     agent { label 'docker' }
     // abort previouse job
-    if (env.CHANGE_ID != null) {
-    properties([disableConcurrentBuilds(abortPrevious: true)])
-    }
+    // if (env.CHANGE_ID != null) {
+    // properties([disableConcurrentBuilds(abortPrevious: true)])
+    // }
     stages {
         stage('Clone Repository') {
             steps {
