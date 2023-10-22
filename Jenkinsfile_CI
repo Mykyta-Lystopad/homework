@@ -1,0 +1,54 @@
+pipeline {
+    agent {
+        label 'docker'
+    }
+
+    stages {
+        stage('Clone Repository') {
+            steps {
+                dir("homework_dir") {
+                    git(
+                        url: "https://github.com/Mykyta-Lystopad/homework.git",
+                        branch: "main",
+                        changelog: true,
+                        poll: true
+                    )
+                }
+            }
+        }
+
+        stage('Static Code Analysis') {
+            steps {
+                // Run SonarQube analysis
+                echo "Run SonarQube analysis"
+                // Make sure SonarQube is correctly set up in your environment
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                // Build a Docker image
+                // Use a Dockerfile and specify the image name and tag
+                sh 'sudo docker build -t nominonik/google-class:latest .'
+            }
+        }
+
+        stage('Tag Docker Image') {
+            steps {
+                // Tag the Docker image with a specific version
+                sh 'sudo docker tag nominonik/google-class:latest nominonik/google-class:1.0'
+            }
+        }
+
+        stage('Push Docker Image to Docker Hub') {
+            steps {
+                // Authenticate with Docker Hub (you may need to set up credentials)
+                sh 'sudo docker login -u nominonik -p swe32!@ASE'
+
+                // Push the Docker image to Docker Hub
+                sh 'sudo docker push nominonik/google-class:latest'
+                sh 'sudo docker push nominonik/google-class:1.0'
+            }
+        }
+    }
+}
