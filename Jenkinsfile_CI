@@ -36,7 +36,7 @@ pipeline {
         stage('Tag Docker Image') {
             steps {
                 // Tag the Docker image with a specific version
-                sh 'sudo docker tag nominonik/google-class:latest nominonik/google-class:1.0'
+                sh 'sudo docker tag nominonik/google-class:latest nominonik/google-class:2.0'
             }
         }
 
@@ -47,7 +47,7 @@ pipeline {
 
                 // Push the Docker image to Docker Hub
                 sh 'sudo docker push nominonik/google-class:latest'
-                sh 'sudo docker push nominonik/google-class:1.0'
+                sh 'sudo docker push nominonik/google-class:2.0'
             }
         }
     }
