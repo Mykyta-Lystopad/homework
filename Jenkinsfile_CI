@@ -24,7 +24,12 @@ pipeline {
             steps {
                 echo "Run SonarQube analysis"
                 withSonarQubeEnv(installationName: 'SonarQube') {
-                  sh 'mvn clean org.sonarsource.scanner.maven:sonar-maven-plugin/3.9.0.2155:sonar'
+                    script {
+                        def scannerHome = tool 'SonarScanner';
+                        withEnv(["PATH+SONARSCANNER=${scannerHome}/bin"]) {
+                            sh "sonar-scanner"
+                        }
+                    }
                 }
             }
         }
