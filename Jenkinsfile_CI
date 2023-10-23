@@ -20,7 +20,7 @@ pipeline {
         stage('Static Code Analysis') {
             steps {
                 echo "Run SonarQube analysis"
-                withSonarQubeEnv(InstallationName: 'SonarQube') {
+                withSonarQubeEnv(installationName: 'SonarQube') {
                   sh 'mvn clean package sonar:sonar'
                 }
             }
