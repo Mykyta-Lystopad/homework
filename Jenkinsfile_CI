@@ -19,9 +19,10 @@ pipeline {
 
         stage('Static Code Analysis') {
             steps {
-                // Run SonarQube analysis
                 echo "Run SonarQube analysis"
-                // Make sure SonarQube is correctly set up in your environment
+                withSonarQubeEnv(installationName: 'SonarQube') {
+                  sh 'mvn clean package sonar:sonar'
+                }
             }
         }
 
