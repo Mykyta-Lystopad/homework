@@ -13,7 +13,7 @@
 //     } 
 // }
 
-// vars 5555uuuuuuu
+// vars 5555
 def container_name = "homework"
 def image_path = "nominonik/google-class"
 
