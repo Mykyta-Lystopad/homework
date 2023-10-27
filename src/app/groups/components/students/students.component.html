@@ -1,0 +1,37 @@
+<div class="row">
+  <div class="container-fluid">
+    <div
+      *ngIf="users.length; else loading"
+    >
+
+      <div class="row mt-2">
+        <div class="col-sm-5 col-md-4 col-lg-3 col-xl-2"
+             style="cursor:pointer;"
+             *ngFor="let user of users"
+             [routerLink]="['/groups',idGroup,'student',user.id]"
+        >
+          <div class="block d-flex flex-column align-items-center">
+            
+              <div  *ngIf="!user.avatar" class="circle">
+                {{initials(user)}}
+
+              </div>
+              <img *ngIf="user.avatar" src={{user.avatar}} class="avatar" alt='{{user.first_name}} {{user.last_name}}' >  
+              <span>{{user.first_name}} {{user.last_name}}</span>
+              <small>{{user.model_code}}</small>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <ng-template #loading>
+      <div class="text-center">
+        <div class="spinner-border" role="status" *ngIf="showSpinner">
+          <span class="sr-only">Loading...</span>
+        </div>
+        <h3>Empty...</h3>
+      </div>
+    </ng-template>
+  </div>
+</div>

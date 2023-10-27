@@ -1,0 +1,39 @@
+.badge-img img {
+  cursor: pointer;
+}
+
+img {
+  width: 26px;
+}
+
+.subject-title {
+  font-size: 12px;
+}
+
+.edit-block {
+  position: relative;
+  width: 26px;
+  height: 26px;
+}
+
+.card-hover:hover {
+  background: rgba(181, 181, 181, 1);
+  cursor: pointer;
+  color: #fff;
+
+  .edit-block:before {
+    content: '';
+    background: url(~src/assets/img/edit.png) no-repeat center;
+    background-size: cover;
+    display: block;
+    width: 26px;
+    height: 26px;
+    position: absolute;
+  }
+
+}
+.code{
+  font-size: 40px;
+  font-weight: bold;
+  width: 240px;
+}

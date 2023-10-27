@@ -1,0 +1,125 @@
+
+@import './assets/normalize';
+/* Importing Bootstrap SCSS file. */
+@import '~bootstrap/scss/bootstrap';
+
+*{
+  padding: 0;
+  margin: 0;
+}
+html{
+  height:100%;
+}
+body{
+  height:100%;
+  display:flex;
+  flex-direction: column;
+
+}
+
+  app-root,
+  app-layout-index,
+  app-index,
+  app-profile,
+  app-layout-profile,
+  app-profile-settings,
+  app-layout-group,
+  app-my-groups{
+    flex: 1 0 auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  app-index{
+    width: 100%;
+    flex-direction: row;
+  }
+.material-icons{
+    cursor: pointer;
+    color: rgb(100, 100, 100);
+}
+.delete{
+  color: rgb(100, 100, 100);
+}
+.edit{
+    color: orange;
+}
+
+.card-body{
+  padding: 10px;
+}
+.order-card {
+  color: #fff;
+}
+
+.bg-c-blue {
+  background: linear-gradient(45deg, #4099ff, #73b4ff);
+}
+
+.bg-c-green {
+  background: linear-gradient(45deg, #2ed8b6, #59e0c5);
+}
+
+.bg-c-yellow {
+  background: linear-gradient(45deg, #FFB64D, #ffcb80);
+}
+
+.bg-c-pink {
+  background: linear-gradient(45deg, #FF5370, #ff869a);
+}
+
+.card {
+  border-radius: 5px;
+  -webkit-box-shadow: 0 1px 2.94px 0.06px rgba(4, 26, 55, 0.16);
+  box-shadow: 0 1px 2.94px 0.06px rgba(4, 26, 55, 0.16);
+  border: none;
+  margin-bottom: 10px;
+  -webkit-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+  outline: none;
+}
+
+.card .card-block {
+  padding: 10px;
+}
+
+.order-card i {
+  font-size: 16px;
+}
+
+.f-left {
+  float: left;
+}
+
+.f-right {
+  float: right;
+}
+.placeholder{
+  color: silver;
+  cursor: pointer;
+}
+input {
+  background-color: white;
+  width: 100%;
+  border:none
+  &:focus{
+      outline: none;
+  }
+}
+div .input{
+  width: 100%;
+  border:none;
+  &:focus{
+      outline: none;
+  }
+}
+.file-upload{
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0; 
+  right: 0;
+  opacity: 0;
+  filter: alpha(opacity=0);
+  cursor: pointer;
+}

@@ -1,0 +1,75 @@
+<div class="container">
+  <div class="row justify-content-between align-items-center">
+    <!-- title -->
+    <div *ngIf="(createMode && !group.title && !showEditTitle )" class="placeholder" (click)="toShowEditTitle()">Назва групи</div>
+    <div *ngIf="!showEditTitle" (click)="toShowEditTitle()">{{group.title}}</div>
+    <input #editTitleEl *ngIf="showEditTitle"       
+      type="text" 
+      class="input"
+      maxlength="3"
+      [(ngModel)]="currentGroup.title" 
+      (blur)="saveGroup()"
+      (keydown.enter)="showEditTitle = false">
+    <div *ngIf="!showEditTitle && !showEditSubject && !createMode">
+      <span  class="delete-icon material-icons" (click)="delete()">delete</span>
+    </div> 
+  </div>
+  <!-- Subject -->
+  <div>
+    <div *ngIf="(createMode && !group.subject && !showEditSubject )" class="placeholder" (click)="toShowEditSubject()">Оберіть предмет</div>
+    <div *ngIf="!showEditSubject" (click)="toShowEditSubject()">{{group.subject}}</div>
+    <select #editSubjectEl *ngIf="showEditSubject"  class="input"
+            (change)="subjChange($event)" 
+            (blur)="saveGroup()">
+      <option value="">Оберіть предмет</option>
+      <option value="{{subject.id}}" *ngFor="let subject of subjects">{{subject.title}}</option>
+    </select>
+  </div>
+    <!-- Note -->
+    <div>
+      <div *ngIf="( !group.note && !showEditNote )" class="placeholder" (click)="toShowEditNote()">Нотатки (якщо потрібно)</div>
+      <div *ngIf="!showEditNote" (click)="toShowEditNote()">{{group.note}}</div>
+      <input #editNoteEl *ngIf="showEditNote"       
+        type="text" 
+        class="input"
+        [(ngModel)]="currentGroup.note" 
+        (blur)="saveGroup()"
+        (keydown.enter)="showEditNote = false">
+    </div>
+  <!-- buttons -->
+  <div *ngIf="createMode" class="row  d-flex justify-content-between">
+    <button type="button" class="col-2 btn btn-success" (click)="createGroup()">Зберегти</button>
+    <button type="button" class="btn col-2 ml-2 btn-warning" (click)="closeCreateGroup()">Скасувати</button>
+  </div>
+  <!-- Group Code -->
+  <div *ngIf="group.model_code" class="row d-flex justify-content-center">
+    Code: <h5> {{group.model_code}}</h5> 
+  </div>
+  <!-- users/students --> 
+  <div *ngIf="group.users">
+    <div class="d-flex flex-wrap">
+      <div  *ngFor="let user of group.users" class="col-sm-4 col-md-3 col-lg-2">
+        <div class="d-flex flex-column justify-content-center align-items-center">
+          <div class="circle d-flex flex-column justify-content-center align-items-center" > 
+              <div *ngIf="!user.avatar">
+                {{initials(user)}} 
+              </div>
+              <img *ngIf="user.avatar" src={{user.avatar}} class="image">
+            <span class="delete-icon material-icons in-avatar" (click)="removeStudent(user)">delete</span>
+          </div>
+          <div>{{user.first_name}}</div>
+          <div>{{user.last_name}}</div>
+          <div><small>{{user.model_code}}</small></div>
+        </div>        
+      </div>
+      <div class="d-flex flex-column col-sm-4 col-md-3 col-lg-2 align-items-center">
+        <div class="circle d-flex flex-column align-items-center justify-content-center" (click)="addStudent()"> 
+          <span class="material-icons add-circle" >add_circle</span>
+        </div> 
+        <input size="6" [(ngModel)]="studentCode" class="input code" maxlength="6" placeholder="add code">
+      </div>
+    </div>
+  </div>
+  
+</div>
+

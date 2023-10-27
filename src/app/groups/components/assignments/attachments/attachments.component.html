@@ -1,0 +1,136 @@
+<div class="container-fluid">
+  <div *ngIf="!displayMode">
+  
+  </div>  
+
+  <div class="row " >
+
+    <div *ngFor="let image of attachments" class="col-sm-6 col-md-3 col-lg-3">
+      <img class="img-fluid sketch"
+        src={{image.thumb_link}} 
+        alt={{image.file_name}} 
+        (click)="showModal(image)">
+      <div *ngIf="!displayMode" class="round d-flex align-items-center justify-content-center" (click)="deleteAttach(image.id)" >
+        <span class="delete-icon material-icons" >delete</span>
+      </div>
+    </div>
+
+    <div *ngIf="!displayMode" class="col-sm-6 col-md-3 col-lg-3 rectangle" >
+      <div class="d-flex align-items-center justify-content-center border">
+        <span class="material-icons add-circle">add_circle</span> 
+        <input
+        class="file-upload"
+        type="file" [accept]="acceptConfig"
+        (change)="handleInputChange($event)"/>
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal -->
+<div *ngIf="showModalImage" 
+id="modalCotainer" 
+class = "modal-cotainer" 
+(mousedown)="closeModal($event)"
+(mouseup)="scrolling = false"
+
+>
+  <div class="modal-dialog-centered" role="document">
+    <div class="modal-content" >
+      <div class="modal-header">
+        <h6 class="modal-title">{{currentAttachment.file_name}}</h6>
+        <!-- <div *ngIf="!displayMode && (role == 'teacher')">
+          <span 
+        class="material-icons edit"
+        (click)="openEditor(currentAttachment)"
+        *ngIf="true"
+        >edit</span>
+        </div> -->
+        
+        <button type="button" class="close" aria-label="Close" (click)="closeBtn()">
+          <span aria-hidden="true" >&times;</span>
+        </button>
+      </div>
+      
+       
+      <div #modalBody class="modal-body" 
+      [ngClass]="{'scroll': modalEditor || zoom, 
+                  'grab': zoom,
+                  'grabbing': scrolling && zoom}"
+      (mousedown)="scrolling = true"
+      (mousemove)="scroll($event)"
+      >
+
+        <div class="buttons-bar">
+          <div *ngIf="!displayMode && (role == 'teacher')" 
+          class ="edit-btn" 
+          (click)="openEditor(currentAttachment)">
+            <span class="material-icons" [ngClass]="{'edit': modalEditor}">edit</span>
+          </div>
+          <div  *ngIf="!modalEditor"
+          class ="edit-btn" 
+          (click)="zoomChange()">
+            <span class="material-icons" *ngIf="!zoom">zoom_in</span>
+            <span class="material-icons edit" *ngIf="zoom">zoom_out</span>
+          </div>
+        </div>
+        
+
+        <image-drawing *ngIf="modalEditor"
+          [src]="imageUrl"
+          [outputMimeType]="'image*'"
+          [colors]="colors"
+          enableRemoveImage = true
+          outputQuality="0.8"
+          (sizeOfCanvasObjects) = "canvaObjects($event)"
+          (save)="save($event)"
+          (cancel)="cancel()">
+        </image-drawing>
+        <!-- <div  *ngIf="modalEditor">
+          <app-attachment
+          [attachment] = 'currentAttachment'
+          ></app-attachment>
+        </div> -->
+
+        
+
+
+
+        <div class="navigate-blocks" *ngIf="!modalEditor && !zoom">
+            <div class="navigate" (click)="listImages(false)" [style.visibility]="!index ? 'hidden' : 'visible'">
+              <div>
+                <span class="material-icons large-icon">keyboard_arrow_left</span>
+              </div>              
+            </div>
+            <div class="navigate" (click)="listImages(true)" [style.visibility]="calculateArraySize() ? 'hidden' : 'visible'">
+              <div>
+                <span class="material-icons large-icon">keyboard_arrow_right</span>
+              </div>              
+            </div>        
+          </div>
+        <div *ngIf="!modalEditor" class="d-flex justify-content-center" [ngClass]="{'image': !zoom}">
+          
+          <img draggable="false"  src={{currentAttachment.file_link}} [ngClass]="{'image': !zoom}"> 
+          
+        </div>
+        <!-- <div class="modal-footer d-flex justify-content-center">
+            <button type="button" class="btn btn-secondary" (click)="openEditor(currentAttachment)">Editor</button>
+          </div> -->
+       
+      </div>
+      <div *ngIf="wait" class="spinner-border" role="status">
+        <span class="sr-only">Saving...</span>
+      </div>
+      <div class="d-flex justify-content-center">
+        <div > {{index + 1}}/{{calculateArraySize('number')}} </div>
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+
+<!-- <canvas #tempCanvas style="visibility: visible;"></canvas> -->
+

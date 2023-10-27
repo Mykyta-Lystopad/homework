@@ -1,0 +1,16 @@
+<div class="row">
+  <div class="col">
+    <div ngbDropdown class="d-inline-block">
+      <button class="btn btn-outline-light" id="dropdownBasic1" ngbDropdownToggle>{{curentUser.first_name}}</button>
+      <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+        <button ngbDropdownItem [routerLink]="'profile'"  >Профіль</button>
+        <button ngbDropdownItem [routerLink]="'groups/edit'" >Налаштування групп</button>
+        <button ngbDropdownItem>Мої повідомлення</button>
+        <button ngbDropdownItem>Учні</button>
+        <button ngbDropdownItem>Батьки</button>
+        <div class="dropdown-divider"></div>
+        <button ngbDropdownItem (click)="logout()">Вийти</button>
+      </div>
+    </div>
+  </div>
+</div>

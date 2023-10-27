@@ -1,0 +1,56 @@
+
+<div class="container">
+   
+<div *ngIf="currentUser.role == 'teacher' && !student_id; else studentNameBlock">
+  <div class="d-flex justify-content-center placeholder" *ngIf="!createAssignFlag" (click)="showNewAssignBlock()">
+    <h4>Створити нове завдання</h4>
+  </div>
+</div>
+<ng-template #studentNameBlock>
+  {{studentName}}
+</ng-template>
+
+
+<!-------------------------------- Create assignment modal ---------------------------------------->
+<div *ngIf="createAssignFlag">
+  <app-assignment 
+    [assignId] = 'this.group_id'
+    [assignCreationMode] = true 
+    (emitHideCreateAssign) = 'hideCreateAssign($event)'
+    ></app-assignment>
+</div>
+<!-- --------------------------------------Assignments ------------------------------------------------>
+  <div class="assign" *ngFor="let assign of assignments; let i = index">
+    <!-- <div class="card"[routerLink]="['assignments', assign.id]" routerLinkActive="router-link-active"> -->
+      <div *ngIf="!assignments[i].show; else showAssignmentComponent" (click)="showAssignDetail(i)">
+        <div class="card-body" >
+          <h6 class="card-title">{{ assign.title }}</h6>
+            <div>
+              <div *ngIf="assign.description" class="col-12">{{ assign.description }}</div>          
+            </div>  
+            <ul class="d-flex flex-row">
+              <li *ngFor="let prob of assign.problems"> {{prob.title}}; </li>
+            </ul>    
+        <div class="d-flex flex-wrap justify-content-end">
+          <div >{{ assign.due_date | date: "dd.MM.yyyy"}}</div>  
+        </div>     
+        </div>
+        
+      </div>  
+      <ng-template #showAssignmentComponent>
+        
+          <app-assignment [assignId] = 'assignments[i].id' ></app-assignment>  
+      
+        
+      </ng-template>
+      
+    <!-- </div> -->
+  </div>
+<!--
+  <p *ngIf="((assignments.problems | async)?.length === 0)">List is empty</p>
+-->
+</div>
+
+
+
+

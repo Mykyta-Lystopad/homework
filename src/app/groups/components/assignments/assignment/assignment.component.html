@@ -1,0 +1,155 @@
+<div class="container">
+  <div class="wrap">
+ <!-- ------------------------date ----------------------------------------- -->    
+    <div class="d-flex justify-content-between flex-row">
+
+        <div *ngIf="!showEditDueDate" (click)="changeEditDueDate()">
+          <div *ngIf="assignCreationMode">
+              <div *ngIf="currentAssign.due_date; else noDueDate">
+                <p >{{ currentAssign.due_date | date:"dd.MM.yy" }} </p>
+              </div>
+          </div>
+          <div *ngIf="!assignCreationMode">
+            <div *ngIf="assign.due_date; else noDueDate">
+              <p >{{ assign.due_date | date:"dd.MM.yy" }} </p>
+            </div>
+          </div>
+          <ng-template #noDueDate>
+            <p class="placeholder" *ngIf="!assign.student_id">Дата закінчення</p>
+          </ng-template>
+        </div>
+        <div *ngIf="showEditDueDate">
+          <input class="input" type="date" #editDueDateEl [(ngModel)]="currentAssign.due_date" (change)='dueDatePick()' (blur)='showEditDueDate = false' >
+        </div>
+        <div *ngIf="!assign.student_id">
+          <div *ngIf="!assignCreationMode">
+            <div *ngIf="user.role == 'teacher'" class="d-flex justify-content-end">
+              <span class="material-icons delete" (click)="assignDelete()">delete</span>
+            </div>
+          </div> 
+        </div>
+
+    </div>
+  <!-- title -->
+      <div *ngIf="!showEditAssignmentTitle; else editAssignTitle" (click)="showEditAssign('title')">
+        <h5>{{ assign.title }}</h5>    
+          <div *ngIf="!assign.title">
+            <h5 class="placeholder">Додати назву завдання</h5>       
+          </div> 
+      </div> 
+      
+      <ng-template #editAssignTitle>
+        <div>
+          <input class="input" type="text" #assignTitleEl  [(ngModel)]="currentAssign.title" (keydown.enter)="showEditAssignmentTitle = false" (blur)="assignmentEdit('title')">
+        </div>
+             </ng-template>
+    
+      
+
+    
+      
+<!-- note -->
+    <div>
+      <div *ngIf="!showEditAssignmentDescription; else editAssignDescription" (click)="showEditAssign('description')">
+        <h6 *ngIf="assign.description; else descriptionPlaceholder">{{ assign.description }}</h6>  
+        <ng-template #descriptionPlaceholder>
+          <h6 class="placeholder" *ngIf="!assign.student_id">Додати нотатки,якщо необхідно</h6>
+        </ng-template>           
+      </div> 
+      <ng-template #editAssignDescription>
+        <input class="input" type="text" #assignNoteEl  [(ngModel)]="currentAssign.description" (keydown.enter)="showEditAssignmentDescription = false" (blur)="assignmentEdit('description')">
+      </ng-template>
+    </div>
+    
+    
+    
+<!--------------------------------------------------------- problems -->
+    <hr>
+    <div *ngIf="assign.problems">
+      <div>
+        <app-problem *ngFor="let prob of assign.problems" 
+        [problem]='prob' 
+        [user]='user' 
+        [studentId]='studentId' 
+        (emitDel)='probDel($event)' 
+        (emitEdit)='probEdit($event)'
+        (emitSolve)='probCompletedChange($event)'
+        ></app-problem>
+        <div *ngIf="!assign.student_id">
+          <div *ngIf="user.role == 'teacher'">
+            <div *ngIf="!showCreateProblem" class="placeholder" (click)="toShowCreateProblem()">Додати завдання</div>
+          </div>
+        </div>
+        <input class="input" type="text" *ngIf="showCreateProblem" #addProblemEl [(ngModel)]="currentProblem.title"  (keydown.enter)="showCreateProblem = false" (blur)=createProblem()>
+      </div>
+      <hr>
+    </div>
+   
+    
+  <!------------------------------- Attaches in assignment --------------------------------->
+    <div *ngIf="assign.attachments">
+      <!-- <app-attachment *ngFor="let attach of assign.attachments" [attachment] = 'attach'></app-attachment> -->
+      <app-attachments
+        [attachments] = 'assign.attachments'
+        [assignID] = 'assign.id'
+        [userAnswer] = 'false'
+        [role] = 'user.role'
+        (emitAttaches) = emitAttaches($event)
+      ></app-attachments>
+    </div>
+
+    <!------------------------------- Attaches --------------------------------->
+    <div *ngIf="assign.userAnswer && assign.student_id">
+      <h6>Відповідь учня/студента</h6>
+      <!-- <app-attachment *ngFor="let attach of assign.userAnswer.attachments" [attachment] = 'attach'></app-attachment> -->
+    
+      <app-attachments
+        [attachments] = 'assign.userAnswer.attachments'
+        [assignID] = 'assign.id'
+        [role] = 'user.role'
+        [userAnswer] = 'true'
+        (emitAttaches) = emitAttaches($event)
+      ></app-attachments>
+    
+    </div> 
+    
+    <!----------------------------- messages block -------------------------------------------->
+    <div *ngIf="assign.student_id">
+      <hr>
+      <h6>Повідомлення</h6>
+      
+      <div *ngIf="assign.userAnswer">
+        <app-message *ngFor="let mess of assign.userAnswer.messages" 
+        [message]='mess' 
+        [currentUserId]='user.id'
+        (deleteEmit) = 'deleteMessage($event)'
+        (editEmit) = 'editMessage($event)'
+        ></app-message>
+      </div>
+
+      <div *ngIf="studentId">
+        <div *ngIf="!showNewMessage">
+          <p class="placeholder" (click)="toShowEditMessage()">Додати нове повідомлення</p>
+        </div>
+
+        <input *ngIf="showNewMessage" 
+          class="input"
+          #newMessageEl 
+          type="text" 
+          [(ngModel)]="message.message" 
+          placeholder="message..." 
+          (blur) = "sendMessage()"
+          (keydown.enter) = "showNewMessage = false">      
+      </div> 
+    </div>
+    <!-- ---------------------------Create buttons ----------------------------------->
+    <div *ngIf="assignCreationMode" class="d-flex justify-content-around">
+      <button class="btn btn-success" (click)="createAssign()">Зберегти</button>
+      <button class="btn btn-warning" (click)="assignDelete()">Скасувати</button>
+    </div> 
+ 
+    
+  </div>
+</div>
+
+

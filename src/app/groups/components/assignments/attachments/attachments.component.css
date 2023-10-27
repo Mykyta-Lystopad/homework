@@ -1,0 +1,164 @@
+.picsum-img-wrapper{
+  height: 300px;
+  width: 500px;
+}
+.sketch{
+  margin-bottom: 0.5em;
+  margin-right: 0.5em;
+  min-width: 60px;
+  object-fit: cover;
+    width: 100%;
+    height: 100%;
+    max-height: 15vh;
+  /* max-width: 200px; */
+  
+}
+.round{
+  border: silver solid 1px;
+  border-radius: 15px;
+  width: 30px;
+  height: 30px;
+  background-color: rgb(230, 230, 230);
+  position: absolute;
+  z-index: 1;
+  bottom: 8px;
+  right: 15px;
+}
+
+
+.rectangle{
+  /* height: 6em; */
+  padding-left: 15px;
+  padding-right: 15px;
+  height: 15vh;
+  width: calc(100% - 30px);
+}
+.border{
+    border: silver solid 3px;
+    background-color: white;
+    height: calc(100% - 8px);
+}
+.modal-dialog-centered{
+  /* max-width: 90%;
+  max-height: 90%; */
+  width: 100%;
+
+
+}
+.modal-content{
+  border-radius: 10px;
+  height: 95%;
+}
+.modal-cotainer{
+  background-color: rgba(0,0,0, 0.5);
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  height: 100%;
+  width: 100%;
+  z-index: 100;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.navigate-blocks{
+  width: calc(100% - 32px);
+  height: calc(100% - 32px);
+  position: absolute;
+  z-index: 110;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.navigate{
+  font-size: large;
+  height: 100%;
+  width: 4em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+}
+.navigate div{
+  background-color: rgba(0,0,0, 0.2);
+  border-radius: 20px;
+  width: 40px;
+  height: 40px;
+}
+.navigate div:hover{
+  background-color: rgba(0,0,0, 0.3);
+}
+.navigate:hover{
+  background-color: rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+}
+.large-icon{
+  font-size: 40px;
+  color: rgba(255, 255, 255, 1);
+}
+@media screen and (max-width: 1000px) {
+  .delete-icon{
+    font-size: 18px;
+  }
+  .round{
+    border: silver solid 1px;
+    border-radius: 20px;
+    width: 20px;
+    height: 20px;
+    background-color: rgb(230, 230, 230);
+    position: absolute;
+    z-index: 1;
+    bottom: 8px;
+
+    right: 15px;
+  }
+}
+.modal-footer{
+  z-index: 220;
+}
+.image{
+  max-height: 100%;
+
+  max-width:100%; 
+  height:100%;
+  object-fit: cover;
+}
+.modal-dialog-centered{
+  height: 100%;
+}
+.modal-body{
+  max-width: 100%;
+  max-height: 89%;
+}
+.scroll{
+  overflow:auto
+}
+.temp{
+  display: block;
+    width: 100%;
+    height: 100%;
+}
+.add-circle{
+  font-size: 40px;
+}
+.buttons-bar{
+    position: fixed;
+    z-index: 300;
+}
+.edit-btn{
+  border: solid silver;
+  background-color: rgba(255, 255, 255, 1);
+  border-radius: 5px;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.grab{
+  cursor: grab;
+}
+.grabbing{
+  cursor: grabbing;
+}

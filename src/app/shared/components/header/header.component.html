@@ -1,0 +1,13 @@
+<div id="header" class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4   shadow-sm">
+  <h5 [routerLink]="['groups']" class="my-0 mr-md-auto" style="cursor: pointer; outline: none">{{nameServise.headerName}}</h5>
+
+  <app-alert></app-alert>
+
+  <nav class="my-2 my-md-0 mr-md-3"  *appShowAuthed="false">
+    <app-sign-in></app-sign-in>
+
+  </nav>
+  <nav class="my-2 my-md-0 mr-md-3" *appShowAuthed="true">
+    <app-dropdown-menu></app-dropdown-menu>
+  </nav>
+</div>

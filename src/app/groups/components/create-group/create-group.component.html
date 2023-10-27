@@ -1,0 +1,74 @@
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-9 card" *ngIf="role == 'teacher'">
+      <div class="row card-header justify-content-between align-items-center">
+        <h5>Налаштування груп</h5>
+      </div>
+      <div *ngIf="!createGroupFlag">
+        <h6 class="placeholder" (click)="createGroupFlag = true" >Створити нову групу</h6>
+      </div>
+      <div class="card-body">
+        <div *ngIf="createGroupFlag">
+          <app-edit-group 
+            [group] = null
+            createMode =true
+            (closeCreateMode) = closeCreateGroup($event)
+          ></app-edit-group>
+        </div>
+      </div>
+      <div class="row justify-content-center">
+        <ul class="list-group col-12 mt-2">
+          <li
+            class="list-group-item d-flex justify-content-between card-hover"
+            (click)="toShowGroup(group.id)"
+            *ngFor="let group of groups$|async">
+            <div *ngIf="group.show" class="col-12">
+              <app-edit-group 
+                [group] = group
+                [createMode] = false
+              ></app-edit-group>
+            </div>
+            <div *ngIf="!group.show" class="row align-items-center" >
+              <p class="ml-2">{{group.title}}</p>
+              <p class="ml-2 subject-title">{{group.subject}}</p>
+              <p class="ml-2 subject-title">{{group.note}}</p>
+              <p *ngIf="group.users">Кількість: {{sizeOfGroup(group)}}</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <!-- role NOT a teacher -->
+    <div class="col-9 card" *ngIf="!(role == 'teacher')">
+      <div class="row card-header justify-content-between align-items-center">
+        <h5>Мої групи</h5>
+      </div>
+      <div *ngIf="!bindToGroup" (click)="showBindToGroup()" class="placeholder">Додати групу</div>
+      <div *ngIf="bindToGroup">
+        <input #codeEl 
+          class="input code" 
+          type="text" 
+          maxlength="6" 
+          [(ngModel)]="groupCodeToBind"> 
+        <button class="btn btn-success" (click)="bindGroup()">Додати групу</button>
+        <button class="btn btn-warning" (click)="bindToGroup = false">Скасувати</button>
+      </div>
+      <div class="row justify-content-center">
+        <ul class="list-group col-12 mt-2">
+          <li
+            class="list-group-item d-flex justify-content-between card-hover"
+            *ngFor="let group of groups$|async">
+            <div *ngIf="!group.show" class="row align-items-center" >
+              <div>
+                <div class="ml-2">{{group.title}}</div>
+                <div class="ml-2 subject-title">{{group.subject}}</div>
+                <div class="ml-2 subject-title">{{group.note}}</div>
+              </div>
+              <div class="ml-2 row">Code: <h5> {{group.model_code}}</h5></div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

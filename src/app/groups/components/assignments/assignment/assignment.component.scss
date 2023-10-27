@@ -1,0 +1,17 @@
+.container{
+    &:hover{
+        background-color:rgba($color: silver, $alpha: 0.2);
+    }
+}
+.wrap{
+    // background-color: rgb(232, 238, 235);
+
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    
+} 
+
+.badge{
+    cursor: pointer;
+}
+

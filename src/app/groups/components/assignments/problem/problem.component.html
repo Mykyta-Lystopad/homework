@@ -1,0 +1,109 @@
+<div *ngIf="!(user.role == 'teacher'); else teacher">
+    <div *ngIf="problem" class="d-flex flex-row justify-content-between">
+        <div class="d-flex flex-row ">
+            <div (click)="onSolve()">
+                <span class="material-icons checked" *ngIf="problem.userSolution.completed; else notCopmleted">check_box</span>
+                <ng-template #notCopmleted>
+                    <span class="material-icons ">check_box_outline_blank</span>
+                </ng-template>
+            </div>
+            <div>{{ problem.title }}</div>      
+        </div>
+        <div *ngIf="problem.userSolution">
+            <div *ngIf="problem.userSolution" class="d-flex justify-content-end tech-mark"> 
+                <div *ngIf="problem.userSolution.teacher_mark; else noMark"> {{problem.userSolution.teacher_mark}} </div>
+                <ng-template #noMark>
+                    
+                </ng-template>                
+            </div>                       
+        </div>
+    </div>
+</div>
+
+<ng-template #teacher>
+        <div>
+            <!--------------------------------------- problem -------------------------->
+            <div *ngIf='studentId; else editDeleteBlock' class="d-flex flex-row justify-content-between " >
+                <div class="d-flex flex-row">   
+                    <div>
+                        <span class="material-icons checked" *ngIf="problem.userSolution.completed; else notCopmleted">check_box</span>
+                        <ng-template #notCopmleted>
+                            <span class="material-icons ">check_box_outline_blank</span>
+                        </ng-template>
+                    </div>
+                    <div>{{ problem.title }}</div>
+                </div> 
+                <div *ngIf="problem.userSolution" class=""> 
+                    <div *ngIf="problem.userSolution.completed" class="d-flex flex-row flex-wrap align-content-center">
+                        <div class="slidecontainer">
+                            <input type="range" 
+                            #markSliderEl 
+                            min="0"
+                            max="12" 
+                            step="1" 
+                            [(ngModel)]="currentMark" 
+                            class="slider" 
+                            (change)="saveMark()"
+                            (mousedown)='showEditMark()'>
+                        </div>
+                        <div *ngIf="!editMark" class="d-flex flex-row">
+                            <div class=" tech-mark" *ngIf="problem.userSolution.teacher_mark; else noMark"> 
+                                {{problem.userSolution.teacher_mark}} 
+                            </div>
+                            <ng-template #noMark>
+                               <div class=" tech-mark d-flex flex-row flex-wrap align-content-center">
+                                <span class="material-icons ">help_outline</span>
+                               </div>
+                            </ng-template>   
+                        </div>
+                        <div class="tech-mark-current" *ngIf="editMark">
+                            {{currentMark}}
+                        </div>
+                    </div>   
+                </div>
+            </div>
+            <!-------------------------------------------- edit ------------------------------------------->
+            <ng-template #editDeleteBlock>
+                <div *ngIf="!editProblemFlag; else editTitle">
+                    <div class="d-flex justify-content-between">
+                        <div  (click)="editProblemChange(true)">
+                            {{ problem.title }}
+                        </div>
+                        <div *ngIf="!studentId && !editProblemFlag">
+                            <span class="material-icons delete" (click)="onDelete()">close</span>      
+                        </div>    
+                    </div>
+                </div>
+                
+             
+                <ng-template #editTitle>    
+                    <div class="d-flex flex-column">
+                        <input type="text" #editProbEl 
+                        class="input"
+                        [(ngModel)]="editedProblem.title" 
+                        (keydown.enter)="editProblemFlag = false" 
+                        (blur)="onEdit()">                
+                    </div>  
+                </ng-template>
+            </ng-template> 
+        </div>
+    
+
+</ng-template>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <div *ngIf = '!(user.role == "teacher")' class="d-flex flex-row flex-wrap align-items-center justify-content-end">        
+    <app-solution [solution] = 'problem.solutions'></app-solution>
+</div> -->

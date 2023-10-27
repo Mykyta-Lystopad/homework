@@ -1,0 +1,28 @@
+
+      <div class="d-flex  align-items-center" [class.justify-content-end] = "message.user.id == currentUserId">
+          <div class="card-text" *ngIf="!editShow; else editBlock" (click)="changeEditShow()">
+            <div [class.justify-content-end] = "message.user.id == currentUserId" class="small">
+              {{getDate()}}
+              {{message.created_at | date:"HH:mm"}}
+            </div>
+            <div [class.justify-content-end] = "message.user.id == currentUserId">
+              {{message.message}}
+            </div>
+          </div>
+      </div>
+     
+      
+      <ng-template #editBlock>
+        <div>
+            <input type="text" #editMessageEl class="input" 
+            [(ngModel)]="editedMessage" 
+            (blur)="editMessage()" 
+            (keydown.enter)="editShow = false">
+        </div>
+      </ng-template>
+
+     
+
+
+
+
