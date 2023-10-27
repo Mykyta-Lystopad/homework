@@ -1,0 +1,165 @@
+// void setBuildStatus(String message, String context, String state) {
+//   // add a Github access token as a global 'secret text' credential on Jenkins with the id 'github-commit-status-token'
+//     withCredentials([string(credentialsId: 'git-token', variable: 'TOKEN')]) {
+//       // 'set -x' for debugging. Don't worry the access token won't be actually logged
+//       // Also, the sh command actually executed is not properly logged, it will be further escaped when written to the log
+//         sh """
+//             set -x
+//             curl \"https://api.github.com/repos/org/repo/statuses/$GIT_COMMIT?access_token=$TOKEN\" \
+//                 -H \"Content-Type: application/json\" \
+//                 -X POST \
+//                 -d \"{\\\"description\\\": \\\"$message\\\", \\\"state\\\": \\\"$state\\\", \\\"context\\\": \\\"$context\\\", \\\"target_url\\\": \\\"$BUILD_URL\\\"}\"
+//         """
+//     } 
+// }
+
+// vars 5555
+def container_name = "homework"
+def image_path = "nominonik/google-class"
+
+
+pipeline {
+    agent {
+        label 'docker'
+    }
+
+    parameters {
+        choice(name: 'ENVIRONMENT', choices: 'dev\nqa', description: 'Select the target environment')
+        string(name: 'PUSH_VERSION', defaultValue: '2.3', description: 'Enter the version or tag of the Docker image for build image')
+        string(name: 'PULL_VERSION', defaultValue: 'latest', description: 'Enter the version or tag of the Docker image for deploy job')
+    }
+
+
+    options {
+      withCredentials([
+        usernamePassword(credentialsId: "docker_hub", passwordVariable: 'DOCKERHUB_PASSWORD', usernameVariable: 'DOCKERHUB_USERNAME')
+      ])
+    }
+
+
+    stages {
+        // stage('Block Pull Request Stage') {
+        //     steps {
+        //         setBuildStatus("Compiling", "compile", "pending")
+        //         script {
+        //             try {
+        //                 // do the build here
+        //                 setBuildStatus("Build complete", "compile", "success")
+        //             } catch (err) {
+        //                 setBuildStatus("Failed", "pl-compile", "failure")
+        //                 throw err
+        //             }
+        //         }
+        //     }
+        // }
+
+        stage('Clone Repository') {
+            steps {
+                dir("${container_name}_dir") {
+                    git(
+                        url: "https://github.com/Mykyta-Lystopad/${container_name}.git",
+                        branch: "main",
+                        changelog: true,
+                        poll: true
+                    )
+                }
+            }
+        }
+
+        stage('Static Code Analysis') {
+            steps {
+                echo "Run SonarQube analysis"
+                withSonarQubeEnv(installationName: 'SonarQube') {
+                    script {
+                        def scannerHome = tool 'SonarScanner';
+                        withEnv(["PATH+SONARSCANNER=${scannerHome}/bin"]) {
+                            sh "sonar-scanner"
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+            sh "sudo docker build -t ${image_path}-${params.ENVIRONMENT}:latest ."
+            }
+           
+        }
+
+        stage('Tag Docker Image') {
+            steps {
+                script {
+                    sh "sudo docker tag ${image_path}-${params.ENVIRONMENT}:latest \
+                    ${image_path}-${params.ENVIRONMENT}:${params.PUSH_VERSION}"
+
+                }
+            }
+        }
+
+        stage('Push Docker Image to Docker Hub') {
+            steps {
+                script {
+                    def scriptPushVar
+
+                    scriptPushVar = "sudo docker login -u ${DOCKERHUB_USERNAME} -p ${DOCKERHUB_PASSWORD}; \
+                        sudo docker push ${image_path}-${params.ENVIRONMENT}:latest; \
+                        sudo docker push ${image_path}-${params.ENVIRONMENT}:${params.PUSH_VERSION}"
+
+                    sh(script: scriptPushVar, returnStatus: false, returnStdout: true)
+                }
+                timeout(time: 7, unit: 'DAYS') {
+                    input message: "Approve the deployment to ${params.ENVIRONMENT} environment with version latest?", ok: 'Deploy'
+                }
+            }
+           
+        }
+
+        stage('Deploy to Environment') {
+            when {
+                expression { currentBuild.resultIsBetterOrEqualTo('SUCCESS') }
+            }
+            steps {
+                script {
+                    echo "Deploying to environment: ${params.ENVIRONMENT} with version: latest"
+
+                    // Pull the Docker image from Docker Hub
+                    sh "docker pull ${image_path}-${params.ENVIRONMENT}:${params.PUSH_VERSION}"
+                    // Remove old container "homework"
+                    sh "docker rm -f ${container_name}"
+                    // Run container
+                    sh "docker run -d -p 4200:4200 --name ${container_name} ${image_path}-${params.ENVIRONMENT}:${params.PUSH_VERSION} npm start"
+
+                }
+
+            }
+        }
+
+        stage('Health Check') {
+            when {
+                expression { currentBuild.resultIsBetterOrEqualTo('SUCCESS') }
+            }
+            steps {
+                script {
+                    echo "Performing health check for environment: ${params.ENVIRONMENT}"
+
+                    // def response = sh(script: "curl -s -o /dev/null -w %{http_code} http://192.168.0.139:4200")
+                    // def response = sh(script: "curl -I -s http://192.168.0.139:4200 | grep -i "HTTP/1.1" | cut -d' ' -f2")
+                    def response = sh "curl -I -s http://192.168.0.139:4200 | grep -i 'HTTP/1.1' | cut -d' ' -f2"
+
+                    sh "echo ${response}"
+
+                    if (response == 200) {
+                        echo "Health check passed with response code ${response}."
+                    } else {
+                        echo "Health check failed with response code ${response}."
+
+                    }
+
+                }
+            }
+        }
+
+
+    }
+}
