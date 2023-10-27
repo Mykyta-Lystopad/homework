@@ -13,7 +13,7 @@ void setBuildStatus(String message, String context, String state) {
     } 
 }
 
-// vars
+// vars 5555
 def container_name = "homework"
 def image_path = "nominonik/google-class"
 
@@ -90,13 +90,9 @@ pipeline {
         stage('Tag Docker Image') {
             steps {
                 script {
-                    // if (params.ENVIRONMENT == 'dev') {
                     sh "sudo docker tag ${image_path}-${params.ENVIRONMENT}:latest \
                     ${image_path}-${params.ENVIRONMENT}:${params.PUSH_VERSION}"
-                    // } else {
-                    //     sh "sudo docker tag ${image_path}-${params.ENVIRONMENT}:latest \
-                    //     ${image_path}-${params.ENVIRONMENT}:${push_version}"
-                    // }
+
                 }
             }
         }
