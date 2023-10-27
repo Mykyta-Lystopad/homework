@@ -13,9 +13,7 @@ void setBuildStatus(String message, String context, String state) {
     } 
 }
 
-// vars 3333333
-// vars 3333333
-// vars 3333333
+// vars
 def container_name = "homework"
 def image_path = "nominonik/google-class"
 
@@ -119,13 +117,6 @@ pipeline {
                         sudo docker push ${image_path}-${params.ENVIRONMENT}:latest; \
                         sudo docker push ${image_path}-${params.ENVIRONMENT}:${params.PUSH_VERSION}"
 
-                    // sh "sudo docker login --username=${DOCKERHUB_USERNAME} --password=${DOCKERHUB_PASSWORD}"
-                    // sh "sudo docker push nominonik/google-class-dev:latest"
-                    // sh "sudo docker push nominonik/google-class-dev:${push_version}"
-
-                    // dssfsvdsvsvdvsdv
-                    // }
-                    
                     sh(script: scriptPushVar, returnStatus: false, returnStdout: true)
                 }
                 timeout(time: 7, unit: 'DAYS') {
