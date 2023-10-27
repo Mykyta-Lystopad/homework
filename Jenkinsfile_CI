@@ -102,13 +102,6 @@ pipeline {
                 script {
                     def scriptPushVar
 
-                    // if (params.ENVIRONMENT == 'dev') {
-                    //      // for dev env
-                    //     scriptPullVar = "sudo docker push ${image_path}-${params.ENVIRONMENT}:latest; \
-                    //     sudo docker push ${image_path}-${params.ENVIRONMENT}:${push_version}"
-                    // } else {
-                    //     // for qa env
-
                     scriptPushVar = "sudo docker login -u ${DOCKERHUB_USERNAME} -p ${DOCKERHUB_PASSWORD}; \
                         sudo docker push ${image_path}-${params.ENVIRONMENT}:latest; \
                         sudo docker push ${image_path}-${params.ENVIRONMENT}:${params.PUSH_VERSION}"
