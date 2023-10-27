@@ -9,6 +9,7 @@
 
 # dependencies
 /node_modules
+Jenkinsfile_CI
 
 # profiling files
 chrome-profiler-events*.json
