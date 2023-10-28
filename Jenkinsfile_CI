@@ -1,18 +1,29 @@
-void setBuildStatus(String message, String context, String state) {
-  // add a Github access token as a global 'secret text' credential on Jenkins with the id 'github-commit-status-token'
-    withCredentials([string(credentialsId: 'git-token', variable: 'TOKEN')]) {
-      // 'set -x' for debugging. Don't worry the access token won't be actually logged
-      // Also, the sh command actually executed is not properly logged, it will be further escaped when written to the log
-        def check = sh """
-            set -x
-            curl \"https://api.github.com/repos/org/repo/statuses/$GIT_COMMIT?access_token=$TOKEN\" \
-                -H \"Content-Type: application/json\" \
-                -X POST \
-                -d \"{\\\"description\\\": \\\"$message\\\", \\\"state\\\": \\\"$state\\\", \\\"context\\\": \\\"$context\\\", \\\"target_url\\\": \\\"$BUILD_URL\\\"}\"
-        """
+// void setBuildStatus(String message, String context, String state) {
+//   // add a Github access token as a global 'secret text' credential on Jenkins with the id 'github-commit-status-token'
+//     withCredentials([string(credentialsId: 'git-token', variable: 'TOKEN')]) {
+//       // 'set -x' for debugging. Don't worry the access token won't be actually logged
+//       // Also, the sh command actually executed is not properly logged, it will be further escaped when written to the log
+//         def check = sh """
+//             set -x
+//             curl \"https://api.github.com/repos/org/repo/statuses/$GIT_COMMIT?access_token=$TOKEN\" \
+//                 -H \"Content-Type: application/json\" \
+//                 -X POST \
+//                 -d \"{\\\"description\\\": \\\"$message\\\", \\\"state\\\": \\\"$state\\\", \\\"context\\\": \\\"$context\\\", \\\"target_url\\\": \\\"$BUILD_URL\\\"}\"
+//         """
 
-        echo "def check - ${check}"
-    } 
+//         echo "def check - ${check}"
+//     } 
+// }
+
+
+void setBuildStatus(String message, String state) {
+  step([
+      $class: "GitHubCommitStatusSetter",
+      reposSource: [$class: "ManuallyEnteredRepositorySource", url: "https://github.com/Mykyta-Lystopad/homework.git"],
+      contextSource: [$class: "ManuallyEnteredCommitContextSource", context: "ci/jenkins/build-status"],
+      errorHandlers: [[$class: "ChangingBuildStatusErrorHandler", result: "UNSTABLE"]],
+      statusResultSource: [ $class: "ConditionalStatusResultSource", results: [[$class: "AnyBuildResult", message: message, state: state]] ]
+  ]);
 }
 
 // vars 5555
@@ -147,7 +158,7 @@ pipeline {
 
                     // def response = sh(script: "curl -s -o /dev/null -w %{http_code} http://192.168.0.139:4200")
                     // def response = sh(script: "curl -I -s http://192.168.0.139:4200 | grep -i "HTTP/1.1" | cut -d' ' -f2")
-                    def response = sh (script: "curl -I -s http://192.168.0.139:4200 | grep -i 'HTTP/1.1' | cut -d' ' -f2", returnStatus: true)
+                    def response = sh script: "curl -I -s http://192.168.0.139:4200 | grep -i 'HTTP/1.1' | cut -d' ' -f2", returnStatus: true
 
                     sh "hostname -I"
                     sh "cat /etc/os-release"
@@ -165,23 +176,33 @@ pipeline {
             }
         }
 
-        stage('Block Pull Request Stage') {
-            steps {
-                setBuildStatus("Compiling", "compile", "pending")
-                script {
-                    echo "script"
-                    try {
-                        // do the build here
-                        echo "try"
-                        setBuildStatus("Build complete", "compile", "success")
-                    } catch (err) {
-                        echo "catch"
-                        setBuildStatus("Failed", "pl-compile", "failure")
-                        throw err
-                    }
-                }
-            }
+        // stage('Block Pull Request Stage') {
+        //     steps {
+        //         setBuildStatus("Compiling", "compile", "pending")
+        //         script {
+        //             echo "script"
+        //             try {
+        //                 // do the build here
+        //                 echo "try"
+        //                 setBuildStatus("Build complete", "compile", "success")
+        //             } catch (err) {
+        //                 echo "catch"
+        //                 setBuildStatus("Failed", "pl-compile", "failure")
+        //                 throw err
+        //             }
+        //         }
+        //     }
+        // }
+
+        post{
+        success{
+            setBuildStatus("Build succeeded", "SUCCESS");
         }
+
+        failure {
+            setBuildStatus("Build failed", "FAILURE");
+        } 
+    }
 
 
 
