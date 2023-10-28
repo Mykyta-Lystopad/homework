@@ -33,9 +33,6 @@ pipeline {
 
 
     stages {
-        when {
-            branch 'PR-main'  
-        }
 
     //     // stage('Block Pull Request Stage') {
     //     //     steps {
@@ -136,6 +133,7 @@ pipeline {
 
         stage('Health Check') {
             when {
+                branch 'PR-main'  
                 expression { currentBuild.resultIsBetterOrEqualTo('SUCCESS') }
             }
             steps {
