@@ -155,8 +155,8 @@ pipeline {
             steps {
                 script {
                     echo "Performing health check for environment: ${params.ENVIRONMENT}"
-                    def response_command
-                    def response
+                    // def response_command
+                    // def response
                     // def response = sh(script: "curl -s -o /dev/null -w %{http_code} http://192.168.0.139:4200")
                     // def response = sh(script: "curl -I -s http://192.168.0.139:4200 | grep -i "HTTP/1.1" | cut -d' ' -f2")
                     // response_command = "curl -I -s http://192.168.0.139:4200 | grep -i 'HTTP/1.1' | cut -d' ' -f2"
@@ -167,14 +167,14 @@ pipeline {
 
                     // response = sh(script: response_command, returnStatus: true)
 
-                    sh "hostname -I"
+                    // sh "hostname -I"
                     // sh "cat /etc/os-release"
 
                     // sh "ls -la"
 
-                    sh "pwd"
+                    // sh "pwd"
 
-                    response=$("curl -s -o /dev/null -w %{http_code http://192.168.0.139:4200")
+                    // response=$("curl -s -o /dev/null -w %{http_code http://192.168.0.139:4200")
 
 
                     // response = httpRequest 'http://localhost:8080/jenkins/api/json?pretty=true'
@@ -192,10 +192,10 @@ pipeline {
                      
                     // sh "bash ~/helth_check-1.sh"
 
-                    echo "Response code: ${response}"
+                    // echo "Response code: ${response}"
                     // echo "Response code: ${response_2}"
 
-                    if (response == 200) {
+                    if (${status} == 200) {
                         echo "Health check passed with response code ${response}."
                     } else {
                         echo "Health check failed with response code ${response}."
