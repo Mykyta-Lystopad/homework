@@ -1,19 +1,14 @@
-// void setBuildStatus(String message, String context, String state) {
-//   // add a Github access token as a global 'secret text' credential on Jenkins with the id 'github-commit-status-token'
-//     withCredentials([string(credentialsId: 'git-token', variable: 'TOKEN')]) {
-//       // 'set -x' for debugging. Don't worry the access token won't be actually logged
-//       // Also, the sh command actually executed is not properly logged, it will be further escaped when written to the log
-//         sh """
-//             set -x
-//             curl \"https://api.github.com/repos/org/repo/statuses/$GIT_COMMIT?access_token=$TOKEN\" \
-//                 -H \"Content-Type: application/json\" \
-//                 -X POST \
-//                 -d \"{\\\"description\\\": \\\"$message\\\", \\\"state\\\": \\\"$state\\\", \\\"context\\\": \\\"$context\\\", \\\"target_url\\\": \\\"$BUILD_URL\\\"}\"
-//         """
-//     } 
-// }
+void setBuildStatus(String message, String state) {
+  step([
+      $class: "GitHubCommitStatusSetter",
+      reposSource: [$class: "ManuallyEnteredRepositorySource", url: "https://github.com/Mykyta-Lystopad/homework.git"],
+      contextSource: [$class: "ManuallyEnteredCommitContextSource", context: "ci/jenkins/build-status"],
+      errorHandlers: [[$class: "ChangingBuildStatusErrorHandler", result: "UNSTABLE"]],
+      statusResultSource: [ $class: "ConditionalStatusResultSource", results: [[$class: "AnyBuildResult", message: message, state: state]] ]
+  ]);
+}
 
-// vars 5555
+// vars
 def container_name = "homework"
 def image_path = "nominonik/google-class"
 
@@ -38,22 +33,11 @@ pipeline {
 
 
     stages {
-        // stage('Block Pull Request Stage') {
-        //     steps {
-        //         setBuildStatus("Compiling", "compile", "pending")
-        //         script {
-        //             try {
-        //                 // do the build here
-        //                 setBuildStatus("Build complete", "compile", "success")
-        //             } catch (err) {
-        //                 setBuildStatus("Failed", "pl-compile", "failure")
-        //                 throw err
-        //             }
-        //         }
-        //     }
-        // }
 
         stage('Clone Repository') {
+            when {
+                branch 'PR-main'
+            }
             steps {
                 dir("${container_name}_dir") {
                     git(
@@ -67,6 +51,9 @@ pipeline {
         }
 
         stage('Static Code Analysis') {
+            when {
+                branch 'PR-main'
+            }
             steps {
                 echo "Run SonarQube analysis"
                 withSonarQubeEnv(installationName: 'SonarQube') {
@@ -81,6 +68,9 @@ pipeline {
         }
 
         stage('Build Docker Image') {
+            when {
+                branch 'PR-main'
+            }
             steps {
             sh "sudo docker build -t ${image_path}-${params.ENVIRONMENT}:latest ."
             }
@@ -88,6 +78,9 @@ pipeline {
         }
 
         stage('Tag Docker Image') {
+            when {
+                branch 'PR-main'
+            }
             steps {
                 script {
                     sh "sudo docker tag ${image_path}-${params.ENVIRONMENT}:latest \
@@ -98,6 +91,9 @@ pipeline {
         }
 
         stage('Push Docker Image to Docker Hub') {
+            when {
+                branch 'PR-main'
+            }
             steps {
                 script {
                     def scriptPushVar
@@ -117,6 +113,7 @@ pipeline {
 
         stage('Deploy to Environment') {
             when {
+                branch 'PR-main' 
                 expression { currentBuild.resultIsBetterOrEqualTo('SUCCESS') }
             }
             steps {
@@ -137,29 +134,43 @@ pipeline {
 
         stage('Health Check') {
             when {
+                branch 'PR-main' 
                 expression { currentBuild.resultIsBetterOrEqualTo('SUCCESS') }
             }
             steps {
                 script {
                     echo "Performing health check for environment: ${params.ENVIRONMENT}"
 
-                    // def response = sh(script: "curl -s -o /dev/null -w %{http_code} http://192.168.0.139:4200")
-                    // def response = sh(script: "curl -I -s http://192.168.0.139:4200 | grep -i "HTTP/1.1" | cut -d' ' -f2")
-                    def response = sh(script: "curl -sL -w '%{http_code}' 192.168.0.139:4200 -o /dev/null")
+                    def response_status = sh(script: "curl -sLI -w '%{http_code}' http://192.168.0.139:4200 -o /dev/null", returnStdout: true)
 
-                    sh "echo ${response}"
+                    echo "response_status = ${response_status}"
 
-                    if (response == 200) {
-                        echo "Health check passed with response code ${response}."
+                    if (response_status == '200') {
+                        echo "Health check passed with response code ${response_status}."
                     } else {
-                        echo "Health check failed with response code ${response}."
+                        echo "Health check failed with response code ${response_status}."
 
                     }
 
                 }
+
             }
         }
 
+        
 
     }
+
+    post {
+            success{
+                setBuildStatus("Build succeeded", "SUCCESS");
+            }
+
+            failure {
+                setBuildStatus("Build failed", "FAILURE");
+            } 
+    }
+
+
+    
 }
