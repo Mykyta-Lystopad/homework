@@ -104,9 +104,9 @@ pipeline {
 
                     sh(script: scriptPushVar, returnStatus: false, returnStdout: true)
                 }
-                timeout(time: 7, unit: 'DAYS') {
-                    input message: "Approve the deployment to ${params.ENVIRONMENT} environment with version latest?", ok: 'Deploy'
-                }
+                // timeout(time: 7, unit: 'DAYS') {
+                //     input message: "Approve the deployment to ${params.ENVIRONMENT} environment with version latest?", ok: 'Deploy'
+                // }
             }
            
         }
