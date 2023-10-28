@@ -195,7 +195,7 @@ pipeline {
                     // echo "Response code: ${response}"
                     // echo "Response code: ${response_2}"
 
-                    if (${status} == 200) {
+                    if (status == 200) {
                         echo "Health check passed with response code ${response}."
                     } else {
                         echo "Health check failed with response code ${response}."
