@@ -84,7 +84,7 @@ pipeline {
     //         steps {
     //         sh "sudo docker build -t ${image_path}-${params.ENVIRONMENT}:latest ."
     //         }
-           
+
     //     }
 
     //     stage('Tag Docker Image') {
@@ -112,6 +112,7 @@ pipeline {
     //                 input message: "Approve the deployment to ${params.ENVIRONMENT} environment with version latest?", ok: 'Deploy'
     //             }
     //         }
+
            
     //     }
 
@@ -145,7 +146,7 @@ pipeline {
 
                     // def response = sh(script: "curl -s -o /dev/null -w %{http_code} http://192.168.0.139:4200")
                     // def response = sh(script: "curl -I -s http://192.168.0.139:4200 | grep -i "HTTP/1.1" | cut -d' ' -f2")
-                    def response = sh "curl -I -s http://192.168.0.139:4200 | grep -i 'HTTP/1.1' | cut -d' ' -f2"
+                    def response = sh(script: "curl -sL -w '%{http_code}' 192.168.0.139:4200 -o /dev/null")
 
                     sh "hostname -I"
                     sh "cat /etc/os-release"
