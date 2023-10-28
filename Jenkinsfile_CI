@@ -1,21 +1,3 @@
-// void setBuildStatus(String message, String context, String state) {
-//   // add a Github access token as a global 'secret text' credential on Jenkins with the id 'github-commit-status-token'
-//     withCredentials([string(credentialsId: 'git-token', variable: 'TOKEN')]) {
-//       // 'set -x' for debugging. Don't worry the access token won't be actually logged
-//       // Also, the sh command actually executed is not properly logged, it will be further escaped when written to the log
-//         def check = sh """
-//             set -x
-//             curl \"https://api.github.com/repos/org/repo/statuses/$GIT_COMMIT?access_token=$TOKEN\" \
-//                 -H \"Content-Type: application/json\" \
-//                 -X POST \
-//                 -d \"{\\\"description\\\": \\\"$message\\\", \\\"state\\\": \\\"$state\\\", \\\"context\\\": \\\"$context\\\", \\\"target_url\\\": \\\"$BUILD_URL\\\"}\"
-//         """
-
-//         echo "def check - ${check}"
-//     } 
-// }
-
-
 void setBuildStatus(String message, String state) {
   step([
       $class: "GitHubCommitStatusSetter",
@@ -51,6 +33,10 @@ pipeline {
 
 
     stages {
+        when {
+            branch 'PR-main'  
+        }
+
     //     // stage('Block Pull Request Stage') {
     //     //     steps {
     //     //         setBuildStatus("Compiling", "compile", "pending")
@@ -155,45 +141,10 @@ pipeline {
             steps {
                 script {
                     echo "Performing health check for environment: ${params.ENVIRONMENT}"
-                    // def response_command
-                    // def response
-                    // def response = sh(script: "curl -s -o /dev/null -w %{http_code} http://192.168.0.139:4200")
-                    // def response = sh(script: "curl -I -s http://192.168.0.139:4200 | grep -i "HTTP/1.1" | cut -d' ' -f2")
-                    // response_command = "curl -I -s http://192.168.0.139:4200 | grep -i 'HTTP/1.1' | cut -d' ' -f2"
 
                     def response_status = sh(script: "curl -sLI -w '%{http_code}' http://192.168.0.139:4200 -o /dev/null", returnStdout: true)
 
                     echo "response_status = ${response_status}"
-
-                    // response = sh(script: response_command, returnresponse_status: true)
-
-                    // sh "hostname -I"
-                    // sh "cat /etc/os-release"
-
-                    // sh "ls -la"
-
-                    // sh "pwd"
-
-                    // response=$("curl -s -o /dev/null -w %{http_code http://192.168.0.139:4200")
-
-
-                    // response = httpRequest 'http://localhost:8080/jenkins/api/json?pretty=true'
-                    //     println("response_status: "+response.response_status)
-                    //     println("Content: "+response.content)
-
-                    // def respons2 = httpRequest 'http://192.168.0.139:4200/jenkins/api/json?pretty=true'
-                    //     println("response_status: "+response-2.response_status)
-                    //     println("Content: "+response-2.content)
-
-                    // sh "touch helth_check.sh"
-                    // echo "curl -I -s http://192.168.0.139:4200 | grep -i 'HTTP/1.1' | cut -d' ' -f2"
-                    // sh "chmod +x ~/helth_check-1.sh"
-                    // response_2 = sh "bash ~/helth_check-1.sh"
-                     
-                    // sh "bash ~/helth_check-1.sh"
-
-                    // echo "Response code: ${response}"
-                    // echo "Response code: ${response_2}"
 
                     if (response_status == '200') {
                         echo "Health check passed with response code ${response_status}."
@@ -207,23 +158,7 @@ pipeline {
             }
         }
 
-        // stage('Block Pull Request Stage') {
-        //     steps {
-        //         setBuildStatus("Compiling", "compile", "pending")
-        //         script {
-        //             echo "script"
-        //             try {
-        //                 // do the build here
-        //                 echo "try"
-        //                 setBuildStatus("Build complete", "compile", "success")
-        //             } catch (err) {
-        //                 echo "catch"
-        //                 setBuildStatus("Failed", "pl-compile", "failure")
-        //                 throw err
-        //             }
-        //         }
-        //     }
-        // }
+        
 
     }
 
