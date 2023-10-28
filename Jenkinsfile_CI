@@ -8,7 +8,7 @@ void setBuildStatus(String message, String state) {
   ]);
 }
 
-// vars 5555
+// vars
 def container_name = "homework"
 def image_path = "nominonik/google-class"
 
@@ -33,21 +33,6 @@ pipeline {
 
 
     stages {
-
-    //     // stage('Block Pull Request Stage') {
-    //     //     steps {
-    //     //         setBuildStatus("Compiling", "compile", "pending")
-    //     //         script {
-    //     //             try {
-    //     //                 // do the build here
-    //     //                 setBuildStatus("Build complete", "compile", "success")
-    //     //             } catch (err) {
-    //     //                 setBuildStatus("Failed", "pl-compile", "failure")
-    //     //                 throw err
-    //     //             }
-    //     //         }
-    //     //     }
-    //     // }
 
     //     stage('Clone Repository') {
     //         steps {
@@ -132,8 +117,7 @@ pipeline {
     //     }
 
         stage('Health Check') {
-            when {
-                branch 'PR-main'  
+            when {  
                 expression { currentBuild.resultIsBetterOrEqualTo('SUCCESS') }
             }
             steps {
