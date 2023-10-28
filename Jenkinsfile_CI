@@ -35,9 +35,6 @@ pipeline {
     stages {
 
         stage('Clone Repository') {
-            when {
-                branch 'PR-main'
-            }
             steps {
                 dir("${container_name}_dir") {
                     git(
@@ -51,9 +48,6 @@ pipeline {
         }
 
         stage('Static Code Analysis') {
-            when {
-                branch 'PR-main'
-            }
             steps {
                 echo "Run SonarQube analysis"
                 withSonarQubeEnv(installationName: 'SonarQube') {
@@ -68,9 +62,6 @@ pipeline {
         }
 
         stage('Build Docker Image') {
-            when {
-                branch 'PR-main'
-            }
             steps {
             sh "sudo docker build -t ${image_path}-${params.ENVIRONMENT}:latest ."
             }
@@ -78,9 +69,6 @@ pipeline {
         }
 
         stage('Tag Docker Image') {
-            when {
-                branch 'PR-main'
-            }
             steps {
                 script {
                     sh "sudo docker tag ${image_path}-${params.ENVIRONMENT}:latest \
@@ -91,9 +79,6 @@ pipeline {
         }
 
         stage('Push Docker Image to Docker Hub') {
-            when {
-                branch 'PR-main'
-            }
             steps {
                 script {
                     def scriptPushVar
@@ -113,7 +98,6 @@ pipeline {
 
         stage('Deploy to Environment') {
             when {
-                branch 'PR-main' 
                 expression { currentBuild.resultIsBetterOrEqualTo('SUCCESS') }
             }
             steps {
@@ -134,7 +118,6 @@ pipeline {
 
         stage('Health Check') {
             when {
-                branch 'PR-main' 
                 expression { currentBuild.resultIsBetterOrEqualTo('SUCCESS') }
             }
             steps {
@@ -156,9 +139,6 @@ pipeline {
 
             }
         }
-
-        
-
     }
 
     post {
