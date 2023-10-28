@@ -163,9 +163,18 @@ pipeline {
                     sh "hostname -I"
                     sh "cat /etc/os-release"
 
-                    echo "Response code: ${response}"
+                    sh "ls -la"
 
-                    if (response == 200) {
+                    touch helth_check.sh
+                    echo "curl -I -s http://192.168.0.139:4200 | grep -i 'HTTP/1.1' | cut -d' ' -f2"  > helth_check.sh
+                    chmod +x helth_check.sh
+                    response_2 = $(bash helth_check.sh)
+                     
+
+                    echo "Response code: ${response}"
+                    echo "Response code: ${response_2}"
+
+                    if (response_2 == 200) {
                         echo "Health check passed with response code ${response}."
                     } else {
                         echo "Health check failed with response code ${response}."
@@ -177,23 +186,23 @@ pipeline {
             }
         }
 
-        // stage('Block Pull Request Stage') {
-        //     steps {
-        //         setBuildStatus("Compiling", "compile", "pending")
-        //         script {
-        //             echo "script"
-        //             try {
-        //                 // do the build here
-        //                 echo "try"
-        //                 setBuildStatus("Build complete", "compile", "success")
-        //             } catch (err) {
-        //                 echo "catch"
-        //                 setBuildStatus("Failed", "pl-compile", "failure")
-        //                 throw err
-        //             }
-        //         }
-        //     }
-        // }
+        stage('Block Pull Request Stage') {
+            steps {
+                setBuildStatus("Compiling", "compile", "pending")
+                script {
+                    echo "script"
+                    try {
+                        // do the build here
+                        echo "try"
+                        setBuildStatus("Build complete", "compile", "success")
+                    } catch (err) {
+                        echo "catch"
+                        setBuildStatus("Failed", "pl-compile", "failure")
+                        throw err
+                    }
+                }
+            }
+        }
 
         
 
@@ -201,13 +210,13 @@ pipeline {
 
     }
 
-    post {
-            success{
-                setBuildStatus("Build succeeded", "SUCCESS");
-            }
+    // post {
+    //         success{
+    //             setBuildStatus("Build succeeded", "SUCCESS");
+    //         }
 
-            failure {
-                setBuildStatus("Build failed", "FAILURE");
-            } 
-    }
+    //         failure {
+    //             setBuildStatus("Build failed", "FAILURE");
+    //         } 
+    // }
 }
