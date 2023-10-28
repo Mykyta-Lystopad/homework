@@ -174,9 +174,12 @@ pipeline {
 
                     sh "pwd"
 
-                    response = httpRequest 'http://localhost:8080/jenkins/api/json?pretty=true'
-                        println("Status: "+response.status)
-                        println("Content: "+response.content)
+                    response=$(curl -s -o /dev/null -w %{http_code} http://192.168.0.139:4200)
+
+
+                    // response = httpRequest 'http://localhost:8080/jenkins/api/json?pretty=true'
+                    //     println("Status: "+response.status)
+                    //     println("Content: "+response.content)
 
                     // def respons2 = httpRequest 'http://192.168.0.139:4200/jenkins/api/json?pretty=true'
                     //     println("Status: "+response-2.status)
