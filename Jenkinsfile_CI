@@ -162,7 +162,7 @@ pipeline {
         always{
             mail to: "niktoring77@gmail.com",
             subject: "Email froom Jenkins pipeline",
-            body: "Logs from Jenkins pipeline",
+            body: "Logs from Jenkins pipeline"
         }
     }
 
