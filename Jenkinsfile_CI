@@ -159,15 +159,16 @@ pipeline {
             // Sending notification to gmail
             always {
             emailext(
+                mail to: "niktoring77@gmail.com",
                 subject: "Email from Jenkins Pipeline",
                 body: """
                 Logs from Jenkins pipeline:
                 ${currentBuild.rawBuild.getLog(100)}
-                """,
-                to: "niktoring77@gmail.com"
+                """
             )
         }
     }
+
 
 
     
