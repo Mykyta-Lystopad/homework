@@ -161,7 +161,7 @@ pipeline {
                     // def response = sh(script: "curl -I -s http://192.168.0.139:4200 | grep -i "HTTP/1.1" | cut -d' ' -f2")
                     // response_command = "curl -I -s http://192.168.0.139:4200 | grep -i 'HTTP/1.1' | cut -d' ' -f2"
 
-                    int response_status = sh(script: "curl -sLI -w '%{http_code}' http://192.168.0.139:4200 -o /dev/null", returnStdout: true)
+                    def response_status = sh(script: "curl -sLI -w '%{http_code}' http://192.168.0.139:4200 -o /dev/null", returnStdout: true)
 
                     echo "response_status = ${response_status}"
 
@@ -195,7 +195,7 @@ pipeline {
                     // echo "Response code: ${response}"
                     // echo "Response code: ${response_2}"
 
-                    if (response_status == 200) {
+                    if (int response_status == 200) {
                         echo "Health check passed with response code ${response_status}."
                     } else {
                         echo "Health check failed with response code ${response_status}."
