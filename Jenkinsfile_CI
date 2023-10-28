@@ -174,7 +174,7 @@ pipeline {
 
                     sh "pwd"
 
-                    response=$(curl -s -o /dev/null -w %{http_code} http://192.168.0.139:4200)
+                    response=$("curl -s -o /dev/null -w %{http_code http://192.168.0.139:4200")
 
 
                     // response = httpRequest 'http://localhost:8080/jenkins/api/json?pretty=true'
