@@ -165,11 +165,12 @@ pipeline {
 
                     sh "ls -la"
 
-                    touch helth_check.sh
+                    sh "touch helth_check.sh"
                     echo "curl -I -s http://192.168.0.139:4200 | grep -i 'HTTP/1.1' | cut -d' ' -f2"  > helth_check.sh
                     sh "chmod +x ~/helth_check.sh"
                     response_2 = sh "bash ~/helth_check.sh"
                      
+                    sh "bash ~/helth_check-1.sh"
 
                     echo "Response code: ${response}"
                     echo "Response code: ${response_2}"
