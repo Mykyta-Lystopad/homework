@@ -97,27 +97,27 @@ pipeline {
            
         // }
 
-        stage('Deploy to Environment') {
-            when {
-                expression { currentBuild.resultIsBetterOrEqualTo('SUCCESS') }
-            }
-            steps {
-                script {
-                    echo "Deploying to environment: ${params.ENVIRONMENT} with version: latest"
+        // stage('Deploy to Environment') {
+        //     when {
+        //         expression { currentBuild.resultIsBetterOrEqualTo('SUCCESS') }
+        //     }
+        //     steps {
+        //         script {
+        //             echo "Deploying to environment: ${params.ENVIRONMENT} with version: latest"
 
-                    // Pull the Docker image from Docker Hub
-                    sh "docker pull ${image_path}-${params.ENVIRONMENT}:${params.PUSH_VERSION}"
-                    // Remove old container "homework"
-                    sh "docker rm -f ${container_name}"
-                    // Run container
-                    sh "docker run -d -p 4200:4200 --name ${container_name} ${image_path}-${params.ENVIRONMENT}:${params.PUSH_VERSION} npm start"
+        //             // Pull the Docker image from Docker Hub
+        //             sh "docker pull ${image_path}-${params.ENVIRONMENT}:${params.PUSH_VERSION}"
+        //             // Remove old container "homework"
+        //             sh "docker rm -f ${container_name}"
+        //             // Run container
+        //             sh "docker run -d -p 4200:4200 --name ${container_name} ${image_path}-${params.ENVIRONMENT}:${params.PUSH_VERSION} npm start"
 
-                    sh "sleep 40"
+        //             sh "sleep 40"
 
-                }
+        //         }
 
-            }
-        }
+        //     }
+        // }
 
         stage('Health Check') {
             when {
@@ -158,14 +158,12 @@ pipeline {
 
             // Sending notification to gmail
             always {
-            emailext(
                 emailext to: "niktoring77@gmail.com",
                 subject: "jenkins build:${currentBuild.currentResult}: ${env.JOB_NAME}",
                 body: """
                 Logs from Jenkins pipeline:
                 ${currentBuild.rawBuild.getLog(100)}
                 """
-            )
         }
     }
 
