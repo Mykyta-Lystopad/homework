@@ -11,6 +11,7 @@ void setBuildStatus(String message, String state) {
 // vars
 def container_name = "homework"
 def image_path = "nominonik/google-class"
+def build_status
 
 
 pipeline {
@@ -148,11 +149,11 @@ pipeline {
     // Use for PR status sending
     post {
             success{
-                setBuildStatus("Build succeeded", "SUCCESS");
+                build_status = setBuildStatus("Build succeeded", "SUCCESS");
             }
 
             failure {
-                setBuildStatus("Build failed", "FAILURE");
+                build_status = setBuildStatus("Build failed", "FAILURE");
             } 
     }
 
@@ -162,7 +163,6 @@ pipeline {
             mail to: "niktoring77@gmail.com",
             subject: "Email froom Jenkins pipeline",
             body: "Logs from Jenkins pipeline",
-            attachLog: true
         }
     }
 
