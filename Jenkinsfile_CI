@@ -159,9 +159,13 @@ pipeline {
                     def response
                     // def response = sh(script: "curl -s -o /dev/null -w %{http_code} http://192.168.0.139:4200")
                     // def response = sh(script: "curl -I -s http://192.168.0.139:4200 | grep -i "HTTP/1.1" | cut -d' ' -f2")
-                    response_command = "curl -I -s http://192.168.0.139:4200 | grep -i 'HTTP/1.1' | cut -d' ' -f2"
+                    // response_command = "curl -I -s http://192.168.0.139:4200 | grep -i 'HTTP/1.1' | cut -d' ' -f2"
 
-                    response = sh(script: response_command, returnStatus: true)
+                    int status = sh(script: "curl -sLI -w '%{http_code}' http://192.168.0.139:4200 -o /dev/null", returnStdout: true)
+
+                    echo "status = ${status}"
+
+                    // response = sh(script: response_command, returnStatus: true)
 
                     sh "hostname -I"
                     // sh "cat /etc/os-release"
@@ -169,6 +173,14 @@ pipeline {
                     // sh "ls -la"
 
                     sh "pwd"
+
+                    def response = httpRequest 'http://localhost:8080/jenkins/api/json?pretty=true'
+                        println("Status: "+response.status)
+                        println("Content: "+response.content)
+
+                    def response = httpRequest 'http://192.168.0.139:4200/jenkins/api/json?pretty=true'
+                        println("Status: "+response.status)
+                        println("Content: "+response.content)
 
                     // sh "touch helth_check.sh"
                     // echo "curl -I -s http://192.168.0.139:4200 | grep -i 'HTTP/1.1' | cut -d' ' -f2"
