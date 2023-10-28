@@ -145,7 +145,7 @@ pipeline {
 
                     // def response = sh(script: "curl -s -o /dev/null -w %{http_code} http://192.168.0.139:4200")
                     // def response = sh(script: "curl -I -s http://192.168.0.139:4200 | grep -i "HTTP/1.1" | cut -d' ' -f2")
-                    def response = sh "curl -I -s http://192.168.0.139:4200 | grep -i 'HTTP/1.1' | cut -d' ' -f2", returnStatus: true
+                    def response = sh (script: "curl -I -s http://192.168.0.139:4200 | grep -i 'HTTP/1.1' | cut -d' ' -f2", returnStatus: true)
 
                     sh "hostname -I"
                     sh "cat /etc/os-release"
