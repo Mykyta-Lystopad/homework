@@ -111,6 +111,8 @@ pipeline {
                     // Run container
                     sh "docker run -d -p 4200:4200 --name ${container_name} ${image_path}-${params.ENVIRONMENT}:${params.PUSH_VERSION} npm start"
 
+                    sh "sleep 20"
+
                 }
 
             }
