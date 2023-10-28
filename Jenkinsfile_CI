@@ -34,90 +34,107 @@ pipeline {
 
     stages {
 
-    //     stage('Clone Repository') {
-    //         steps {
-    //             dir("${container_name}_dir") {
-    //                 git(
-    //                     url: "https://github.com/Mykyta-Lystopad/${container_name}.git",
-    //                     branch: "main",
-    //                     changelog: true,
-    //                     poll: true
-    //                 )
-    //             }
-    //         }
-    //     }
+        stage('Clone Repository') {
+            when {
+                branch 'PR-main'
+            }
+            steps {
+                dir("${container_name}_dir") {
+                    git(
+                        url: "https://github.com/Mykyta-Lystopad/${container_name}.git",
+                        branch: "main",
+                        changelog: true,
+                        poll: true
+                    )
+                }
+            }
+        }
 
-    //     stage('Static Code Analysis') {
-    //         steps {
-    //             echo "Run SonarQube analysis"
-    //             withSonarQubeEnv(installationName: 'SonarQube') {
-    //                 script {
-    //                     def scannerHome = tool 'SonarScanner';
-    //                     withEnv(["PATH+SONARSCANNER=${scannerHome}/bin"]) {
-    //                         sh "sonar-scanner"
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //     }
+        stage('Static Code Analysis') {
+            when {
+                branch 'PR-main'
+            }
+            steps {
+                echo "Run SonarQube analysis"
+                withSonarQubeEnv(installationName: 'SonarQube') {
+                    script {
+                        def scannerHome = tool 'SonarScanner';
+                        withEnv(["PATH+SONARSCANNER=${scannerHome}/bin"]) {
+                            sh "sonar-scanner"
+                        }
+                    }
+                }
+            }
+        }
 
-    //     stage('Build Docker Image') {
-    //         steps {
-    //         sh "sudo docker build -t ${image_path}-${params.ENVIRONMENT}:latest ."
-    //         }
+        stage('Build Docker Image') {
+            when {
+                branch 'PR-main'
+            }
+            steps {
+            sh "sudo docker build -t ${image_path}-${params.ENVIRONMENT}:latest ."
+            }
            
-    //     }
+        }
 
-    //     stage('Tag Docker Image') {
-    //         steps {
-    //             script {
-    //                 sh "sudo docker tag ${image_path}-${params.ENVIRONMENT}:latest \
-    //                 ${image_path}-${params.ENVIRONMENT}:${params.PUSH_VERSION}"
+        stage('Tag Docker Image') {
+            when {
+                branch 'PR-main'
+            }
+            steps {
+                script {
+                    sh "sudo docker tag ${image_path}-${params.ENVIRONMENT}:latest \
+                    ${image_path}-${params.ENVIRONMENT}:${params.PUSH_VERSION}"
 
-    //             }
-    //         }
-    //     }
+                }
+            }
+        }
 
-    //     stage('Push Docker Image to Docker Hub') {
-    //         steps {
-    //             script {
-    //                 def scriptPushVar
+        stage('Push Docker Image to Docker Hub') {
+            when {
+                branch 'PR-main'
+            }
+            steps {
+                script {
+                    def scriptPushVar
 
-    //                 scriptPushVar = "sudo docker login -u ${DOCKERHUB_USERNAME} -p ${DOCKERHUB_PASSWORD}; \
-    //                     sudo docker push ${image_path}-${params.ENVIRONMENT}:latest; \
-    //                     sudo docker push ${image_path}-${params.ENVIRONMENT}:${params.PUSH_VERSION}"
+                    scriptPushVar = "sudo docker login -u ${DOCKERHUB_USERNAME} -p ${DOCKERHUB_PASSWORD}; \
+                        sudo docker push ${image_path}-${params.ENVIRONMENT}:latest; \
+                        sudo docker push ${image_path}-${params.ENVIRONMENT}:${params.PUSH_VERSION}"
 
-    //                 sh(script: scriptPushVar, returnStatus: false, returnStdout: true)
-    //             }
-    //             timeout(time: 7, unit: 'DAYS') {
-    //                 input message: "Approve the deployment to ${params.ENVIRONMENT} environment with version latest?", ok: 'Deploy'
-    //             }
-    //         }
+                    sh(script: scriptPushVar, returnStatus: false, returnStdout: true)
+                }
+                timeout(time: 7, unit: 'DAYS') {
+                    input message: "Approve the deployment to ${params.ENVIRONMENT} environment with version latest?", ok: 'Deploy'
+                }
+            }
            
-    //     }
+        }
 
-    //     stage('Deploy to Environment') {
-    //         when {
-    //             expression { currentBuild.resultIsBetterOrEqualTo('SUCCESS') }
-    //         }
-    //         steps {
-    //             script {
-    //                 echo "Deploying to environment: ${params.ENVIRONMENT} with version: latest"
+        stage('Deploy to Environment') {
+            when {
+                branch 'PR-main' 
+                expression { currentBuild.resultIsBetterOrEqualTo('SUCCESS') }
+            }
+            steps {
+                script {
+                    echo "Deploying to environment: ${params.ENVIRONMENT} with version: latest"
 
-    //                 // Pull the Docker image from Docker Hub
-    //                 sh "docker pull ${image_path}-${params.ENVIRONMENT}:${params.PUSH_VERSION}"
-    //                 // Remove old container "homework"
-    //                 sh "docker rm -f ${container_name}"
-    //                 // Run container
-    //                 sh "docker run -d -p 4200:4200 --name ${container_name} ${image_path}-${params.ENVIRONMENT}:${params.PUSH_VERSION} npm start"
+                    // Pull the Docker image from Docker Hub
+                    sh "docker pull ${image_path}-${params.ENVIRONMENT}:${params.PUSH_VERSION}"
+                    // Remove old container "homework"
+                    sh "docker rm -f ${container_name}"
+                    // Run container
+                    sh "docker run -d -p 4200:4200 --name ${container_name} ${image_path}-${params.ENVIRONMENT}:${params.PUSH_VERSION} npm start"
 
-    //             }
+                }
 
-    //         }
-    //     }
+            }
+        }
 
         stage('Health Check') {
-            when {  
+            when {
+                branch 'PR-main' 
                 expression { currentBuild.resultIsBetterOrEqualTo('SUCCESS') }
             }
             steps {
