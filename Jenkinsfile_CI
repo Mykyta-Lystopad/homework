@@ -96,27 +96,27 @@ pipeline {
            
         // }
 
-        // stage('Deploy to Environment') {
-        //     when {
-        //         expression { currentBuild.resultIsBetterOrEqualTo('SUCCESS') }
-        //     }
-        //     steps {
-        //         script {
-        //             echo "Deploying to environment: ${params.ENVIRONMENT} with version: latest"
+        stage('Deploy to Environment') {
+            when {
+                expression { currentBuild.resultIsBetterOrEqualTo('SUCCESS') }
+            }
+            steps {
+                script {
+                    echo "Deploying to environment: ${params.ENVIRONMENT} with version: latest"
 
-        //             // Pull the Docker image from Docker Hub
-        //             sh "docker pull ${image_path}-${params.ENVIRONMENT}:${params.PUSH_VERSION}"
-        //             // Remove old container "homework"
-        //             sh "docker rm -f ${container_name}"
-        //             // Run container
-        //             sh "docker run -d -p 4200:4200 --name ${container_name} ${image_path}-${params.ENVIRONMENT}:${params.PUSH_VERSION} npm start"
+                    // Pull the Docker image from Docker Hub
+                    sh "docker pull ${image_path}-${params.ENVIRONMENT}:${params.PUSH_VERSION}"
+                    // Remove old container "homework"
+                    sh "docker rm -f ${container_name}"
+                    // Run container
+                    sh "docker run -d -p 4200:4200 --name ${container_name} ${image_path}-${params.ENVIRONMENT}:${params.PUSH_VERSION} npm start"
 
-        //             sh "sleep 20"
+                    sh "sleep 40"
 
-        //         }
+                }
 
-        //     }
-        // }
+            }
+        }
 
         stage('Health Check') {
             when {
@@ -144,7 +144,8 @@ pipeline {
 
 
     }
-
+    
+    // Use for PR status sending
     post {
             success{
                 setBuildStatus("Build succeeded", "SUCCESS");
@@ -153,6 +154,16 @@ pipeline {
             failure {
                 setBuildStatus("Build failed", "FAILURE");
             } 
+    }
+
+    // Sending notification to gmail
+    post{
+        always{
+            mail to: "niktoring77@gmail.com",
+            subject: "Email froom Jenkins pipeline",
+            body: "Logs from Jenkins pipeline",
+            attachLog: true
+        }
     }
 
 
