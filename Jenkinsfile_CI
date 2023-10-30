@@ -112,9 +112,8 @@ pipeline {
 
                     sh(script: scriptDeployingVar, returnStatus: false, returnStdout: true)
 
-                    echo "============= perform sleep command for starting app in container"
+                    echo "============= perform sleep command for starting app in container ======================"
                     sh "sleep 40"
-
                 }
 
             }
