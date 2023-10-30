@@ -64,7 +64,7 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh "sudo docker build -t ${image_path}-${params.ENVIRONMENT}:latest ."
+                sh "docker build -t ${image_path}-${params.ENVIRONMENT}:latest ."
             }
            
         }
@@ -72,7 +72,7 @@ pipeline {
         stage('Tag Docker Image') {
             steps {
                 script {
-                    sh "sudo docker tag ${image_path}-${params.ENVIRONMENT}:latest \
+                    sh "docker tag ${image_path}-${params.ENVIRONMENT}:latest \
                     ${image_path}-${params.ENVIRONMENT}:${params.PUSH_VERSION}"
 
                 }
@@ -84,9 +84,9 @@ pipeline {
                 script {
                     def scriptPushVar
 
-                    scriptPushVar = "sudo docker login -u ${DOCKERHUB_USERNAME} -p ${DOCKERHUB_PASSWORD}; \
-                        sudo docker push ${image_path}-${params.ENVIRONMENT}:latest; \
-                        sudo docker push ${image_path}-${params.ENVIRONMENT}:${params.PUSH_VERSION}"
+                    scriptPushVar = "docker login -u ${DOCKERHUB_USERNAME} -p ${DOCKERHUB_PASSWORD}; \
+                        docker push ${image_path}-${params.ENVIRONMENT}:latest; \
+                        docker push ${image_path}-${params.ENVIRONMENT}:${params.PUSH_VERSION}"
 
                     sh(script: scriptPushVar, returnStatus: false, returnStdout: true)
                 }
@@ -104,14 +104,15 @@ pipeline {
             steps {
                 script {
                     echo "Deploying to environment: ${params.ENVIRONMENT} with version: latest"
+                    def scriptDeployingVar
 
-                    // Pull the Docker image from Docker Hub
-                    sh "docker pull ${image_path}-${params.ENVIRONMENT}:${params.PUSH_VERSION}"
-                    // Remove old container "homework"
-                    sh "docker rm -f ${container_name}"
-                    // Run container
-                    sh "docker run -d -p 4200:4200 --name ${container_name} ${image_path}-${params.ENVIRONMENT}:${params.PUSH_VERSION} npm start"
+                    scriptDeployingVar = "docker pull ${image_path}-${params.ENVIRONMENT}:${params.PUSH_VERSION}; \
+                        docker rm -f ${container_name}; \
+                        docker run -d -p 4200:4200 --name ${container_name} ${image_path}-${params.ENVIRONMENT}:${params.PUSH_VERSION} npm start"
 
+                    sh(script: scriptDeployingVar, returnStatus: false, returnStdout: true)
+
+                    echo "============= perform sleep command for starting app in container"
                     sh "sleep 40"
 
                 }
