@@ -1,3 +1,14 @@
+void setBuildStatus(String message, String state) {
+  step([
+      $class: "GitHubCommitStatusSetter",
+      reposSource: [$class: "ManuallyEnteredRepositorySource", url: "https://github.com/Mykyta-Lystopad/homework.git"],
+      contextSource: [$class: "ManuallyEnteredCommitContextSource", context: "ci/jenkins/build-status"],
+      errorHandlers: [[$class: "ChangingBuildStatusErrorHandler", result: "UNSTABLE"]],
+      statusResultSource: [ $class: "ConditionalStatusResultSource", results: [[$class: "AnyBuildResult", message: message, state: state]] ]
+  ]);
+}
+
+
 pipeline {
     agent { label 'docker' }
     // abort previouse job
@@ -69,15 +80,15 @@ pipeline {
                 } 
 
                 // Sending notification to gmail
-                always {
-                    emailext to: "niktoring77@gmail.com",
-                    subject: "jenkins build:${currentBuild.currentResult}: ${env.JOB_NAME}",
-                    body: """
-                    Logs from Jenkins pipeline:
-                    ${currentBuild.rawBuild.getLog(100)}
-                    """,
-                    attachLog: true
-                }
+                // always {
+                //     emailext to: "niktoring77@gmail.com",
+                //     subject: "jenkins build:${currentBuild.currentResult}: ${env.JOB_NAME}",
+                //     body: """
+                //     Logs from Jenkins pipeline:
+                //     ${currentBuild.rawBuild.getLog(100)}
+                //     """,
+                //     attachLog: true
+                // }
             } 
         }
     }
