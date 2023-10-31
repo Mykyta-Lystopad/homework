@@ -42,22 +42,43 @@ pipeline {
                     }
                 }
             }
-            
-            post {
-                failure {
-                    script {
-                        currentBuild.result = 'FAILURE'
-                    }
-                }
-                always {
-                    script {
-                        if (currentBuild.resultIsBetterOrEqualTo('FAILURE')) {
-                            error "Build failed. Merging not allowed."
 
-                        }
-                    }
+            // post {
+            //     failure {
+            //         script {
+            //             currentBuild.result = 'FAILURE'
+            //         }
+            //     }
+            //     always {
+            //         script {
+            //             if (currentBuild.resultIsBetterOrEqualTo('FAILURE')) {
+            //                 error "Build failed. Merging not allowed."
+
+            //             }
+            //         }
+            //     }
+            // }
+
+            post {
+                success{
+                    setBuildStatus("Build succeeded", "SUCCESS");
                 }
-            }
+
+                failure {
+                    setBuildStatus("Build failed", "FAILURE");
+                } 
+
+                // Sending notification to gmail
+                always {
+                    emailext to: "niktoring77@gmail.com",
+                    subject: "jenkins build:${currentBuild.currentResult}: ${env.JOB_NAME}",
+                    body: """
+                    Logs from Jenkins pipeline:
+                    ${currentBuild.rawBuild.getLog(100)}
+                    """,
+                    attachLog: true
+                }
+            } 
         }
     }
 }
