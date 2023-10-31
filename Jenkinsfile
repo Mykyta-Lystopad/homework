@@ -76,38 +76,40 @@ pipeline {
             post {
                 success{
                     // setBuildStatus("Build succeeded", "SUCCESS");
-                    sh curl -L \
-                        -X POST \
-                        -H "Accept: application/vnd.github+json" \
-                        -H "Authorization: Bearer ${TOKEN}" \
-                        -H "X-GitHub-Api-Version: 2022-11-28" \
-                        https://api.github.com/repos/Mykyta-Lystopad/homework/statuses/b7b8c6270097baf7f88e8fbf9a8247b29e92be4b \
-                        -d '{"state":"success","target_url":"https://Mykyta-Lystopad/homework/build/status","description":"The build:${currentBuild.currentResult}!","context":"continuous-integration/jenkins:${env.JOB_NAME}"}'
-
+                    sh """
+                        curl -L \
+                            -X POST \
+                            -H "Accept: application/vnd.github+json" \
+                            -H "Authorization: Bearer ${TOKEN}" \
+                            -H "X-GitHub-Api-Version: 2022-11-28" \
+                            https://api.github.com/repos/Mykyta-Lystopad/homework/statuses/b7b8c6270097baf7f88e8fbf9a8247b29e92be4b \
+                            -d '{"state":"success","target_url":"https://Mykyta-Lystopad/homework/build/status","description":"The build:${currentBuild.currentResult}!","context":"continuous-integration/jenkins:${env.JOB_NAME}"}'
+                    """
                 }
 
                 failure {
                     // setBuildStatus("Build failed", "FAILURE");
-                    sh curl -L \
-                        -X POST \
-                        -H "Accept: application/vnd.github+json" \
-                        -H "Authorization: Bearer ${TOKEN}" \
-                        -H "X-GitHub-Api-Version: 2022-11-28" \
-                        https://api.github.com/repos/Mykyta-Lystopad/homework/statuses/b7b8c6270097baf7f88e8fbf9a8247b29e92be4b \
-                        -d '{"state":"failured","target_url":"https://Mykyta-Lystopad/homework/build/status","description":"The build:${currentBuild.currentResult}!","context":"continuous-integration/jenkins:${env.JOB_NAME}"}'
-
+                    sh """
+                        curl -L \
+                            -X POST \
+                            -H "Accept: application/vnd.github+json" \
+                            -H "Authorization: Bearer ${TOKEN}" \
+                            -H "X-GitHub-Api-Version: 2022-11-28" \
+                            https://api.github.com/repos/Mykyta-Lystopad/homework/statuses/b7b8c6270097baf7f88e8fbf9a8247b29e92be4b \
+                            -d '{"state":"failured","target_url":"https://Mykyta-Lystopad/homework/build/status","description":"The build:${currentBuild.currentResult}!","context":"continuous-integration/jenkins:${env.JOB_NAME}"}'
+                    """
                 } 
 
-                // Sending notification to gmail
-                // always {
-                //     emailext to: "niktoring77@gmail.com",
-                //     subject: "jenkins build:${currentBuild.currentResult}: ${env.JOB_NAME}",
-                //     body: """
-                //     Logs from Jenkins pipeline:
-                //     ${currentBuild.rawBuild.getLog(100)}
-                //     """,
-                //     attachLog: true
-                // }
+                Sending notification to gmail
+                always {
+                    emailext to: "niktoring77@gmail.com",
+                    subject: "jenkins build:${currentBuild.currentResult}: ${env.JOB_NAME}",
+                    body: """
+                    Logs from Jenkins pipeline:
+                    ${currentBuild.rawBuild.getLog(100)}
+                    """,
+                    attachLog: true
+                }
             } 
         }
     }
