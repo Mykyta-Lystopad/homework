@@ -42,21 +42,21 @@ pipeline {
             agent {
                 label 'docker'
             }
-            
-            // steps {
-            //     script {
-            //         // Check the Dockerfile path relative to your workspace
-            //         def dockerfilePath = "Dockerfile"
+
+            steps {
+                script {
+                    // Check the Dockerfile path relative to your workspace
+                    def dockerfilePath = "Dockerfile"
         
-            //         // Make sure the Dockerfile exists
-            //         if (fileExists(dockerfilePath)) {
-            //             // Use hadolint Docker image to lint the Dockerfile
-            //             sh "docker run --rm -i hadolint/hadolint:latest-debian < ${dockerfilePath}"
-            //         } else {
-            //             error "Dockerfile not found at path: ${dockerfilePath}"
-            //         }
-            //     }
-            // }
+                    // Make sure the Dockerfile exists
+                    if (fileExists(dockerfilePath)) {
+                        // Use hadolint Docker image to lint the Dockerfile
+                        sh "docker run --rm -i hadolint/hadolint:latest-debian < ${dockerfilePath}"
+                    } else {
+                        error "Dockerfile not found at path: ${dockerfilePath}"
+                    }
+                }
+            }
 
             // post {
             //     failure {
@@ -84,7 +84,8 @@ pipeline {
                             -H "Authorization: Bearer ${TOKEN}" \
                             -H "X-GitHub-Api-Version: 2022-11-28" \
                             https://api.github.com/repos/Mykyta-Lystopad/homework/statuses/b7b8c6270097baf7f88e8fbf9a8247b29e92be4b \
-                            -d '{"state":"success","target_url":"https://Mykyta-Lystopad/homework/build/status","description":"The build:${currentBuild.currentResult}!","context":"continuous-integration/jenkins:${env.JOB_NAME}"}'
+                            -d '{"state":"success","target_url":"https://Mykyta-Lystopad/homework/build/status", \
+                            "description":"The build:${currentBuild.currentResult}!","context":"continuous-integration/jenkins:${env.JOB_NAME}"}'
                     """
                 }
 
@@ -97,7 +98,8 @@ pipeline {
                             -H "Authorization: Bearer ${TOKEN}" \
                             -H "X-GitHub-Api-Version: 2022-11-28" \
                             https://api.github.com/repos/Mykyta-Lystopad/homework/statuses/b7b8c6270097baf7f88e8fbf9a8247b29e92be4b \
-                            -d '{"state":"failured","target_url":"https://Mykyta-Lystopad/homework/build/status","description":"The build:${currentBuild.currentResult}!","context":"continuous-integration/jenkins:${env.JOB_NAME}"}'
+                            -d '{"state":"failured","target_url":"https://Mykyta-Lystopad/homework/build/status", \
+                            "description":"The build:${currentBuild.currentResult}!","context":"continuous-integration/jenkins:${env.JOB_NAME}"}'
                     """
                 } 
 
