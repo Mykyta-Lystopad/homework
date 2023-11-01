@@ -1,28 +1,11 @@
-// void setBuildStatus(String message, String state) {
-//   step([
-//       $class: "GitHubCommitStatusSetter",
-//       reposSource: [$class: "ManuallyEnteredRepositorySource", url: "https://github.com/Mykyta-Lystopad/homework.git"],
-//       contextSource: [$class: "ManuallyEnteredCommitContextSource", context: "ci/jenkins/build-status"],
-//       errorHandlers: [[$class: "ChangingBuildStatusErrorHandler", result: "UNSTABLE"]],
-//       statusResultSource: [ $class: "ConditionalStatusResultSource", results: [[$class: "AnyBuildResult", message: message, state: state]] ]
-//   ]);
-// }
-
-
-
 pipeline {
     agent { label 'docker' }
 
     options {
       withCredentials([
         string(credentialsId: 'git-token-2', variable: 'TOKEN')
-        // usernamePassword(credentialsId: "git", passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')
       ])
     }
-
-    // environment {
-    //     GITHUB_CREDENTIALS = credentials('git') // Replace 'vagrant' with your actual credentials ID
-    // }
 
     stages {
         stage('Clone Repository') {
@@ -67,10 +50,7 @@ pipeline {
             post {
                 success{
                     script {
-                    //     if (env.CHANGE_ID) {
-                            // This build is associated with a pull request
                             def currentSHA = env.GIT_COMMIT
-                                // setBuildStatus("Build succeeded", "SUCCESS");
                                 sh """
                                     curl -L \
                                         -X POST \
@@ -81,16 +61,12 @@ pipeline {
                                         -d '{"state":"success","target_url":"https://Mykyta-Lystopad/homework/build/status", \
                                         "description":"The build:${currentBuild.currentResult}!","context":"continuous-integration/jenkins:${env.JOB_NAME}"}'
                                 """
-                        //     }
                         }
                 }    
 
                 failure {
                     script {
-                    //     if (env.CHANGE_ID) {
-                            // This build is associated with a pull request
                             def currentSHA = env.GIT_COMMIT
-                                // setBuildStatus("Build failed", "FAILURE");
                                 sh """
                                     curl -L \
                                         -X POST \
@@ -101,7 +77,6 @@ pipeline {
                                         -d '{"state":"failured","target_url":"https://Mykyta-Lystopad/homework/build/status", \
                                         "description":"The build:${currentBuild.currentResult}!","context":"continuous-integration/jenkins:${env.JOB_NAME}"}'
                                 """
-                    //     }
                     }
                 }
 
@@ -117,10 +92,6 @@ pipeline {
                 }
             }
         }
-
-
-
-
 
 
     }
