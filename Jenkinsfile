@@ -15,7 +15,7 @@ pipeline {
 
     options {
       withCredentials([
-        string(credentialsId: 'git-token-2', variable: 'TOKEN')
+        string(credentialsId: 'git-token', variable: 'TOKEN')
       ])
     }
 
