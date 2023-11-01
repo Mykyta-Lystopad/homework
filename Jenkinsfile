@@ -110,7 +110,7 @@ pipeline {
                                         -H "Authorization: Bearer ${TOKEN}" \
                                         -H "X-GitHub-Api-Version: 2022-11-28" \
                                         https://api.github.com/repos/Mykyta-Lystopad/homework/statuses/${currentSHA} \
-                                        -d '{"state":"failured","target_url":"https://Mykyta-Lystopad/homework/build/status", \
+                                        -d '{"state":"failure","target_url":"https://Mykyta-Lystopad/homework/build/status", \
                                         "description":"The build:${currentBuild.currentResult}!","context":"continuous-integration/jenkins:${env.JOB_NAME}"}'
                                 """
                     //         }
