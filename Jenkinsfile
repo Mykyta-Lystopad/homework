@@ -113,9 +113,7 @@ pipeline {
                     """,
                     attachLog: true
                 }
-            } 
-
-
+            }
         }
     }
 }
