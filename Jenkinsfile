@@ -77,7 +77,7 @@ pipeline {
 
             post {
                 success{
-                    // script {
+                    script {
                     //     if (env.CHANGE_ID) {
                     //         // This build is associated with a pull request
                             def currentSHA = env.GIT_COMMIT
@@ -94,11 +94,11 @@ pipeline {
                                         "description":"The build:${currentBuild.currentResult}!","context":"continuous-integration/jenkins:${env.JOB_NAME}"}'
                                 """
                         //     }
-                        // }
+                        }
                 }    
 
                 failure {
-                    // script {
+                    script {
                     //     if (env.CHANGE_ID) {
                     //         // This build is associated with a pull request
                             def currentSHA = env.GIT_COMMIT
@@ -114,7 +114,7 @@ pipeline {
                                         "description":"The build:${currentBuild.currentResult}!","context":"continuous-integration/jenkins:${env.JOB_NAME}"}'
                                 """
                     //         }
-                    // }
+                    }
                 }
 
                 // Sending notification to gmail
