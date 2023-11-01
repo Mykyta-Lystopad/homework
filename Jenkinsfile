@@ -82,43 +82,79 @@ pipeline {
 
             post {
                 success{
+                    // script {
+                    // //     if (env.CHANGE_ID) {
+                    // //         // This build is associated with a pull request
+                    //         def currentSHA = env.GIT_COMMIT
+                    //             // setBuildStatus("Build succeeded", "SUCCESS");
+                    //             sh """
+                    //                 echo "currentSHA - ${currentSHA}"
+                    //                 curl -L \
+                    //                     -X POST \
+                    //                     -H "Accept: application/vnd.github+json" \
+                    //                     -H 'Authorization: Bearer $GITHUB_CREDENTIALS' \
+                    //                     -H "X-GitHub-Api-Version: 2022-11-28" \
+                    //                     https://api.github.com/repos/Mykyta-Lystopad/homework/statuses/${currentSHA} \
+                    //                     -d '{"state":"success","target_url":"https://Mykyta-Lystopad/homework/build/status", \
+                    //                     "description":"The build:${currentBuild.currentResult}!","context":"continuous-integration/jenkins:${env.JOB_NAME}"}'
+                    //             """
+                    //     //     }
+                    //     }
                     script {
-                    //     if (env.CHANGE_ID) {
-                    //         // This build is associated with a pull request
-                            def currentSHA = env.GIT_COMMIT
-                                // setBuildStatus("Build succeeded", "SUCCESS");
-                                sh """
-                                    echo "currentSHA - ${currentSHA}"
-                                    curl -L \
-                                        -X POST \
-                                        -H "Accept: application/vnd.github+json" \
-                                        -H 'Authorization: Bearer $GITHUB_CREDENTIALS' \
-                                        -H "X-GitHub-Api-Version: 2022-11-28" \
-                                        https://api.github.com/repos/Mykyta-Lystopad/homework/statuses/${currentSHA} \
-                                        -d '{"state":"success","target_url":"https://Mykyta-Lystopad/homework/build/status", \
-                                        "description":"The build:${currentBuild.currentResult}!","context":"continuous-integration/jenkins:${env.JOB_NAME}"}'
-                                """
-                        //     }
+                        def currentSHA = env.GIT_COMMIT
+                        echo "currentSHA - ${currentSHA}"
+                        def response = sh(
+                            script: """
+                                curl -L -X POST -H 'Accept: application/vnd.github+json' \\
+                                -H 'Authorization: Bearer $GITHUB_CREDENTIALS' \\
+                                -H 'X-GitHub-Api-Version: 2022-11-28' \\
+                                https://api.github.com/repos/Mykyta-Lystopad/homework/statuses/${currentSHA} \\
+                                -d '{"state":"success","target_url":"https://Mykyta-Lystopad/homework/build/status", \\
+                                "description":"The build:\${currentBuild.currentResult}!","context":"continuous-integration/jenkins:\${env.JOB_NAME}"}'
+                            """,
+                            returnStatus: true
+                        )
+                        if (response != 0) {
+                            error "Failed to update GitHub status"
                         }
+                    }
                 }    
 
                 failure {
+                    // script {
+                    // //     if (env.CHANGE_ID) {
+                    // //         // This build is associated with a pull request
+                    //         def currentSHA = env.GIT_COMMIT
+                    //             // setBuildStatus("Build failed", "FAILURE");
+                    //             sh """
+                    //                 curl -L \
+                    //                     -X POST \
+                    //                     -H "Accept: application/vnd.github+json" \ 
+                    //                     -H 'Authorization: Bearer $GITHUB_CREDENTIALS' \
+                    //                     -H "X-GitHub-Api-Version: 2022-11-28" \
+                    //                     https://api.github.com/repos/Mykyta-Lystopad/homework/statuses/${currentSHA} \
+                    //                     -d '{"state":"failure","target_url":"https://Mykyta-Lystopad/homework/build/status", \
+                    //                     "description":"The build:${currentBuild.currentResult}!","context":"continuous-integration/jenkins:${env.JOB_NAME}"}'
+                    //             """
+                    // //         }
+                    // }
                     script {
-                    //     if (env.CHANGE_ID) {
-                    //         // This build is associated with a pull request
-                            def currentSHA = env.GIT_COMMIT
-                                // setBuildStatus("Build failed", "FAILURE");
-                                sh """
-                                    curl -L \
-                                        -X POST \
-                                        -H "Accept: application/vnd.github+json" \ 
-                                        -H 'Authorization: Bearer $GITHUB_CREDENTIALS' \
-                                        -H "X-GitHub-Api-Version: 2022-11-28" \
-                                        https://api.github.com/repos/Mykyta-Lystopad/homework/statuses/${currentSHA} \
-                                        -d '{"state":"failure","target_url":"https://Mykyta-Lystopad/homework/build/status", \
-                                        "description":"The build:${currentBuild.currentResult}!","context":"continuous-integration/jenkins:${env.JOB_NAME}"}'
-                                """
-                    //         }
+                        def currentSHA = env.GIT_COMMIT
+                        echo "currentSHA - ${currentSHA}"
+                        def response = sh(
+                            script: """
+                                curl -L -X POST -H 'Accept: application/vnd.github+json' \\
+                                -H 'Authorization: Bearer $GITHUB_CREDENTIALS' \\
+                                -H 'X-GitHub-Api-Version: 2022-11-28' \\
+                                https://api.github.com/repos/Mykyta-Lystopad/homework/statuses/${currentSHA} \\
+                                -d '{"state":"failure","target_url":"https://Mykyta-Lystopad/homework/build/status", \\
+                                "description":"The build:\${currentBuild.currentResult}!","context":"continuous-integration/jenkins:\${env.JOB_NAME}"}'
+                            """,
+                            returnStatus: true
+                        )
+                        if (response != 0) {
+                            error "Failed to update GitHub status"
+                        }
                     }
                 }
 
