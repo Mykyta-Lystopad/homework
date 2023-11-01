@@ -106,20 +106,20 @@ pipeline {
                 // }
 
                 // Sending notification to gmail
-                always {
-                    emailext to: "niktoring77@gmail.com",
-                    subject: "jenkins build:${currentBuild.currentResult}: ${env.JOB_NAME}",
-                    body: """
-                    Logs from Jenkins pipeline:
-                    ${currentBuild.rawBuild.getLog(100)}
-                    """,
-                    attachLog: true
-                }
+                // always {
+                //     emailext to: "niktoring77@gmail.com",
+                //     subject: "jenkins build:${currentBuild.currentResult}: ${env.JOB_NAME}",
+                //     body: """
+                //     Logs from Jenkins pipeline:
+                //     ${currentBuild.rawBuild.getLog(100)}
+                //     """,
+                //     attachLog: true
+                // }
             }
         }
 
 
 
-        
+
     }
 }
