@@ -13,6 +13,7 @@ def container_name = "homework"
 def image_path = "nominonik/google-class"
 
 
+
 pipeline {
     agent {
         label 'docker'
@@ -35,9 +36,6 @@ pipeline {
     stages {
 
         stage('Clone Repository') {
-            when {
-                branch 'PR-main'
-            }
             steps {
                 dir("${container_name}_dir") {
                     git(
@@ -51,9 +49,6 @@ pipeline {
         }
 
         stage('Static Code Analysis') {
-            when {
-                branch 'PR-main'
-            }
             steps {
                 echo "Run SonarQube analysis"
                 withSonarQubeEnv(installationName: 'SonarQube') {
@@ -68,22 +63,16 @@ pipeline {
         }
 
         stage('Build Docker Image') {
-            when {
-                branch 'PR-main'
-            }
             steps {
-            sh "sudo docker build -t ${image_path}-${params.ENVIRONMENT}:latest ."
+                sh "docker build -t ${image_path}-${params.ENVIRONMENT}:latest ."
             }
            
         }
 
         stage('Tag Docker Image') {
-            when {
-                branch 'PR-main'
-            }
             steps {
                 script {
-                    sh "sudo docker tag ${image_path}-${params.ENVIRONMENT}:latest \
+                    sh "docker tag ${image_path}-${params.ENVIRONMENT}:latest \
                     ${image_path}-${params.ENVIRONMENT}:${params.PUSH_VERSION}"
 
                 }
@@ -91,16 +80,13 @@ pipeline {
         }
 
         stage('Push Docker Image to Docker Hub') {
-            when {
-                branch 'PR-main'
-            }
             steps {
                 script {
                     def scriptPushVar
 
-                    scriptPushVar = "sudo docker login -u ${DOCKERHUB_USERNAME} -p ${DOCKERHUB_PASSWORD}; \
-                        sudo docker push ${image_path}-${params.ENVIRONMENT}:latest; \
-                        sudo docker push ${image_path}-${params.ENVIRONMENT}:${params.PUSH_VERSION}"
+                    scriptPushVar = "docker login -u ${DOCKERHUB_USERNAME} -p ${DOCKERHUB_PASSWORD}; \
+                        docker push ${image_path}-${params.ENVIRONMENT}:latest; \
+                        docker push ${image_path}-${params.ENVIRONMENT}:${params.PUSH_VERSION}"
 
                     sh(script: scriptPushVar, returnStatus: false, returnStdout: true)
                 }
@@ -113,20 +99,21 @@ pipeline {
 
         stage('Deploy to Environment') {
             when {
-                branch 'PR-main' 
                 expression { currentBuild.resultIsBetterOrEqualTo('SUCCESS') }
             }
             steps {
                 script {
                     echo "Deploying to environment: ${params.ENVIRONMENT} with version: latest"
+                    def scriptDeployingVar
 
-                    // Pull the Docker image from Docker Hub
-                    sh "docker pull ${image_path}-${params.ENVIRONMENT}:${params.PUSH_VERSION}"
-                    // Remove old container "homework"
-                    sh "docker rm -f ${container_name}"
-                    // Run container
-                    sh "docker run -d -p 4200:4200 --name ${container_name} ${image_path}-${params.ENVIRONMENT}:${params.PUSH_VERSION} npm start"
+                    scriptDeployingVar = "docker pull ${image_path}-${params.ENVIRONMENT}:${params.PUSH_VERSION}; \
+                        docker rm -f ${container_name}; \
+                        docker run -d -p 4200:4200 --name ${container_name} ${image_path}-${params.ENVIRONMENT}:${params.PUSH_VERSION} npm start"
 
+                    sh(script: scriptDeployingVar, returnStatus: false, returnStdout: true)
+
+                    echo "============= perform sleep command for starting app in container ======================"
+                    sh "sleep 40"
                 }
 
             }
@@ -134,7 +121,6 @@ pipeline {
 
         stage('Health Check') {
             when {
-                branch 'PR-main' 
                 expression { currentBuild.resultIsBetterOrEqualTo('SUCCESS') }
             }
             steps {
@@ -157,10 +143,10 @@ pipeline {
             }
         }
 
-        
 
     }
-
+    
+    // Use for PR status sending
     post {
             success{
                 setBuildStatus("Build succeeded", "SUCCESS");
@@ -169,8 +155,16 @@ pipeline {
             failure {
                 setBuildStatus("Build failed", "FAILURE");
             } 
-    }
 
-
-    
+            // Sending notification to gmail
+            always {
+                emailext to: "niktoring77@gmail.com",
+                subject: "jenkins build:${currentBuild.currentResult}: ${env.JOB_NAME}",
+                body: """
+                Logs from Jenkins pipeline:
+                ${currentBuild.rawBuild.getLog(100)}
+                """,
+                attachLog: true
+        }
+    }    
 }

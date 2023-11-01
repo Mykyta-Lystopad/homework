@@ -1,9 +1,29 @@
+// void setBuildStatus(String message, String state) {
+//   step([
+//       $class: "GitHubCommitStatusSetter",
+//       reposSource: [$class: "ManuallyEnteredRepositorySource", url: "https://github.com/Mykyta-Lystopad/homework.git"],
+//       contextSource: [$class: "ManuallyEnteredCommitContextSource", context: "ci/jenkins/build-status"],
+//       errorHandlers: [[$class: "ChangingBuildStatusErrorHandler", result: "UNSTABLE"]],
+//       statusResultSource: [ $class: "ConditionalStatusResultSource", results: [[$class: "AnyBuildResult", message: message, state: state]] ]
+//   ]);
+// }
+
+
+
 pipeline {
     agent { label 'docker' }
-    // abort previouse job
-    // if (env.CHANGE_ID != null) {
-    // properties([disableConcurrentBuilds(abortPrevious: true)])
+
+    options {
+      withCredentials([
+        string(credentialsId: 'git-token-2', variable: 'TOKEN')
+        // usernamePassword(credentialsId: "git", passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')
+      ])
+    }
+
+    // environment {
+    //     GITHUB_CREDENTIALS = credentials('git') // Replace 'vagrant' with your actual credentials ID
     // }
+
     stages {
         stage('Clone Repository') {
             steps {
@@ -28,6 +48,7 @@ pipeline {
             agent {
                 label 'docker'
             }
+
             steps {
                 script {
                     // Check the Dockerfile path relative to your workspace
@@ -42,21 +63,65 @@ pipeline {
                     }
                 }
             }
+
             post {
+                success{
+                    script {
+                        if (env.CHANGE_ID) {
+                            // This build is associated with a pull request
+                            def currentSHA = env.GIT_COMMIT
+                                // setBuildStatus("Build succeeded", "SUCCESS");
+                                sh """
+                                    curl -L \
+                                        -X POST \
+                                        -H "Accept: application/vnd.github+json" \
+                                        -H "Authorization: Bearer ${TOKEN}" \
+                                        -H "X-GitHub-Api-Version: 2022-11-28" \
+                                        https://api.github.com/repos/Mykyta-Lystopad/homework/statuses/${currentSHA} \
+                                        -d '{"state":"success","target_url":"https://Mykyta-Lystopad/homework/build/status", \
+                                        "description":"The build:${currentBuild.currentResult}!","context":"continuous-integration/jenkins:${env.JOB_NAME}"}'
+                                """
+                            }
+                        }
+                }    
+
                 failure {
                     script {
-                        currentBuild.result = 'FAILURE'
+                        if (env.CHANGE_ID) {
+                            // This build is associated with a pull request
+                            def currentSHA = env.GIT_COMMIT
+                                // setBuildStatus("Build failed", "FAILURE");
+                                sh """
+                                    curl -L \
+                                        -X POST \
+                                        -H "Accept: application/vnd.github+json" \
+                                        -H "Authorization: Bearer ${TOKEN}" \
+                                        -H "X-GitHub-Api-Version: 2022-11-28" \
+                                        https://api.github.com/repos/Mykyta-Lystopad/homework/statuses/${currentSHA} \
+                                        -d '{"state":"failured","target_url":"https://Mykyta-Lystopad/homework/build/status", \
+                                        "description":"The build:${currentBuild.currentResult}!","context":"continuous-integration/jenkins:${env.JOB_NAME}"}'
+                                """
+                            }
                     }
                 }
-                always {
-                    script {
-                        if (currentBuild.resultIsBetterOrEqualTo('FAILURE')) {
-                            error "Build failed. Merging not allowed."
 
-                        }
-                    }
+                // Sending notification to gmail
+                always {
+                    emailext to: "niktoring77@gmail.com",
+                    subject: "jenkins build:${currentBuild.currentResult}: ${env.JOB_NAME}",
+                    body: """
+                    Logs from Jenkins pipeline:
+                    ${currentBuild.rawBuild.getLog(100)}
+                    """,
+                    attachLog: true
                 }
             }
         }
+
+
+
+
+
+
     }
 }

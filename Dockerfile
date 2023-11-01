@@ -5,10 +5,8 @@ WORKDIR /app
 # Copy package.json and package-lock.json to the container
 COPY package*.json ./
 
-# Install project dependencies
-RUN npm install
-
-RUN npm audit fix
+# Install and update project dependencies
+RUN npm install && npm audit fix
 
 COPY . .
 
