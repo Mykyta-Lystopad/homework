@@ -67,7 +67,7 @@ pipeline {
             post {
                 success{
                     script {
-                        if (env.CHANGE_ID) {
+                    //     if (env.CHANGE_ID) {
                             // This build is associated with a pull request
                             def currentSHA = env.GIT_COMMIT
                                 // setBuildStatus("Build succeeded", "SUCCESS");
@@ -81,13 +81,13 @@ pipeline {
                                         -d '{"state":"success","target_url":"https://Mykyta-Lystopad/homework/build/status", \
                                         "description":"The build:${currentBuild.currentResult}!","context":"continuous-integration/jenkins:${env.JOB_NAME}"}'
                                 """
-                            }
+                        //     }
                         }
                 }    
 
                 failure {
                     script {
-                        if (env.CHANGE_ID) {
+                    //     if (env.CHANGE_ID) {
                             // This build is associated with a pull request
                             def currentSHA = env.GIT_COMMIT
                                 // setBuildStatus("Build failed", "FAILURE");
@@ -101,7 +101,7 @@ pipeline {
                                         -d '{"state":"failured","target_url":"https://Mykyta-Lystopad/homework/build/status", \
                                         "description":"The build:${currentBuild.currentResult}!","context":"continuous-integration/jenkins:${env.JOB_NAME}"}'
                                 """
-                            }
+                    //     }
                     }
                 }
 
