@@ -8,15 +8,16 @@
 //   ]);
 // }
 
-options {
-      withCredentials([
-        usernameColonPassword(credentialsId: 'git-token-2', variable: 'TOKEN')
-      ])
-    }
 
 
 pipeline {
     agent { label 'docker' }
+
+    options {
+      withCredentials([
+        usernameColonPassword(credentialsId: 'git-token-2', variable: 'TOKEN')
+      ])
+    }
 
     stages {
         stage('Clone Repository') {
