@@ -13,11 +13,15 @@
 pipeline {
     agent { label 'docker' }
 
-    options {
-      withCredentials([
-        string(credentialsId: 'git-token-2', variable: 'TOKEN')
-        usernamePassword(credentialsId: "vagrant", passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')
-      ])
+    // options {
+    //   withCredentials([
+    //     // string(credentialsId: 'git-token-2', variable: 'TOKEN')
+    //     // usernamePassword(credentialsId: "git", passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')
+    //   ])
+    // }
+
+    environment {
+        GITHUB_CREDENTIALS = credentials('git') // Replace 'vagrant' with your actual credentials ID
     }
 
     stages {
@@ -88,8 +92,7 @@ pipeline {
                                     curl -L \
                                         -X POST \
                                         -H "Accept: application/vnd.github+json" \
-                                        // -H "Authorization: Bearer ${TOKEN}" \
-                                        -u $USERNAME:$PASSWORD \
+                                        -H 'Authorization: Bearer $GITHUB_CREDENTIALS' \
                                         -H "X-GitHub-Api-Version: 2022-11-28" \
                                         https://api.github.com/repos/Mykyta-Lystopad/homework/statuses/${currentSHA} \
                                         -d '{"state":"success","target_url":"https://Mykyta-Lystopad/homework/build/status", \
@@ -108,9 +111,8 @@ pipeline {
                                 sh """
                                     curl -L \
                                         -X POST \
-                                        -H "Accept: application/vnd.github+json" \
-                                        // -H "Authorization: Bearer ${TOKEN}" \
-                                        -u $USERNAME:$PASSWORD \
+                                        -H "Accept: application/vnd.github+json" \ 
+                                        -H 'Authorization: Bearer $GITHUB_CREDENTIALS' \
                                         -H "X-GitHub-Api-Version: 2022-11-28" \
                                         https://api.github.com/repos/Mykyta-Lystopad/homework/statuses/${currentSHA} \
                                         -d '{"state":"failure","target_url":"https://Mykyta-Lystopad/homework/build/status", \
