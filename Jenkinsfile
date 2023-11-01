@@ -64,7 +64,7 @@ pipeline {
                 }
             }
 
-            post {
+            // post {
                 // success{
                 //     script {
                 //         if (env.CHANGE_ID) {
@@ -115,7 +115,7 @@ pipeline {
                 //     """,
                 //     attachLog: true
                 // }
-            }
+            // }
         }
 
 
