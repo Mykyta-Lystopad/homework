@@ -83,6 +83,7 @@ pipeline {
                             def currentSHA = env.GIT_COMMIT
                                 // setBuildStatus("Build succeeded", "SUCCESS");
                                 sh """
+                                    echo "currentSHA - ${currentSHA}"
                                     curl -L \
                                         -X POST \
                                         -H "Accept: application/vnd.github+json" \
@@ -128,7 +129,7 @@ pipeline {
                 }
             }
 
-            
+
         }
     }
 }
