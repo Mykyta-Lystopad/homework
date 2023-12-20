@@ -29,6 +29,9 @@ pipeline {
             steps {
                 script {
                     checkout scm
+                    sh """
+                    echo "test-1"
+                    """
                 }
             }
         }
