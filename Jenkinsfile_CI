@@ -51,6 +51,7 @@ pipeline {
         stage('Static Code Analysis') {
             steps {
                 echo "Run SonarQube analysis"
+                echo "qa-1"
                 withSonarQubeEnv(installationName: 'SonarQube') {
                     script {
                         def scannerHome = tool 'SonarScanner';
