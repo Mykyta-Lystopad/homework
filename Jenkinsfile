@@ -67,6 +67,21 @@ pipeline {
         //             }
         //         }
         //     }
+        stage("Install Hadolint") {
+            agent any
+            
+            steps {
+                script {
+                    // Download and install Hadolint
+                    sh """
+                        wget -O hadolint https://github.com/hadolint/hadolint/releases/download/v2.12.0/hadolint-Linux-x86_64
+                        sudo mv hadolint /usr/local/bin/hadolint
+                        sudo chmod +x /usr/local/bin/hadolint
+                    """
+                }
+            }
+        }
+
         stage("Lint Dockerfile") {
             agent {
                 label 'docker'
@@ -80,8 +95,8 @@ pipeline {
 
                     // Make sure the Dockerfile exists
                     if (fileExists(dockerfilePath)) {
-                        // Use hadolint Docker image to lint the Dockerfile
-                        sh "docker run --rm -i hadolint/hadolint:latest-debian < ${dockerfilePath} > ${lintResultFile}"
+                        // Use installed Hadolint to lint the Dockerfile
+                        sh "hadolint < ${dockerfilePath} > ${lintResultFile}"
 
                         echo "dockerfilePath: ${dockerfilePath} > lintResultFile: ${lintResultFile}"
 
@@ -91,13 +106,26 @@ pipeline {
                         echo "Linting Results:"
                         sh "cat ${lintResultFile}"
 
-                        // Archive linting results as an artifact
-                        archiveArtifacts artifacts: "${lintResultFile}", fingerprint: true
+                        // Prompt the user to read linting message
+                        def userInput = input(
+                            message: 'Do you want to read the linting message?',
+                            ok: 'Yes',
+                            parameters: [string(defaultValue: 'No', description: 'Select Yes to read the linting message', name: 'readLintMessage')]
+                        )
+
+                        // Handle user input
+                        if (userInput == 'Yes') {
+                            echo "User wants to read the linting message."
+                        } else {
+                            echo "User chose not to read the linting message."
+                        }
+                        
                     } else {
                         error "Dockerfile not found at path: ${dockerfilePath}"
                     }
                 }
             }
+
 
 
             post {
