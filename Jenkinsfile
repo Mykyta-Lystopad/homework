@@ -80,6 +80,8 @@ pipeline {
                     def dockerfilePath = "Dockerfile"
                     def lintResultFile = "hadolint_result.txt"
 
+                    echo "hadolint < ${dockerfilePath} > ${lintResultFile}"
+
                     // Make sure the Dockerfile exists
                     if (fileExists(dockerfilePath)) {
                         // Use installed Hadolint to lint the Dockerfile
