@@ -75,8 +75,8 @@ pipeline {
                     // Download and install Hadolint
                     sh """
                         wget -O hadolint https://github.com/hadolint/hadolint/releases/download/v2.12.0/hadolint-Linux-x86_64
-                        mv hadolint /usr/local/bin/hadolint
-                        chmod +x /usr/local/bin/hadolint
+                        sudo mv hadolint /usr/local/bin/hadolint
+                        sudo chmod +x /usr/local/bin/hadolint
                     """
                 }
             }
