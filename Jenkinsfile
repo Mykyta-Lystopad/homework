@@ -91,13 +91,11 @@ pipeline {
                    // Make sure the Dockerfile exists
                     if (fileExists(dockerfilePath)) {
                         // Use installed Hadolint to lint the Dockerfile
-                        sh "hadolint ${dockerfilePath} > ${lintResultFile}"
-
-                        echo "dockerfilePath: ${dockerfilePath} > lintResultFile: ${lintResultFile}"
+                        hadolint ${dockerfilePath} > ${lintResultFile}
 
                         // Display linting results in the console
                         echo "Linting Results:"
-                        sh "cat ${lintResultFile}"
+                        cat ${lintResultFile}
 
                         // Prompt the user to read linting message
                         def userInput = input(
