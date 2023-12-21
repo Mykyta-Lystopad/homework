@@ -83,7 +83,9 @@ pipeline {
                         // Use hadolint Docker image to lint the Dockerfile
                         sh "docker run --rm -i hadolint/hadolint:latest-debian < ${dockerfilePath} > ${lintResultFile}"
 
-                        echo "${dockerfilePath} > ${lintResultFile}"
+                        echo "dockerfilePath: ${dockerfilePath} > lintResultFile: ${lintResultFile}"
+
+                        echo "pwd: $pwd"
 
                         // Display linting results in the console
                         echo "Linting Results:"
