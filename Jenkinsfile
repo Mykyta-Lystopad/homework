@@ -151,7 +151,7 @@ pipeline {
 
                         // Display linting results in the console
                         echo "Linting Results:"
-                        cat ${lintResultFile}
+                        sh "cat ${lintResultFile}"
 
                         // Prompt the user to read linting message
                         def userInput = input(
