@@ -86,7 +86,7 @@ pipeline {
 
                     echo "dockerfilePath: ${dockerfilePath}  lintResultFile: ${lintResultFile}"
 
-                    sh "$(/usr/local/bin/hadolint -v)"
+                    sh "/usr/local/bin/hadolint -v"
 
                     sh "/usr/local/bin/hadolint ${dockerfilePath} > ${lintResultFile}"
 
