@@ -58,6 +58,10 @@ pipeline {
                     if (fileExists(dockerfilePath)) {
                         // Use hadolint Docker image to lint the Dockerfile
                         sh "docker run --rm -i hadolint/hadolint:latest-debian < ${dockerfilePath}"
+
+                        // Archive linting results as an artifact
+                        archiveArtifacts artifacts: 'hadolint_result.txt', fingerprint: true
+
                     } else {
                         error "Dockerfile not found at path: ${dockerfilePath}"
                     }
