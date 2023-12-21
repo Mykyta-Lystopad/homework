@@ -86,13 +86,15 @@ pipeline {
 
                     echo "dockerfilePath: ${dockerfilePath}  lintResultFile: ${lintResultFile}"
 
-                    sh "/usr/local/bin/hadolint -v"
+                    sh """
+                    /usr/local/bin/hadolint -v"
 
-                    sh "/usr/local/bin/hadolint ${dockerfilePath} > ${lintResultFile}"
+                    /usr/local/bin/hadolint ${dockerfilePath} > ${lintResultFile}
 
                     // Display linting results in the console
                     echo "Linting Results:"
                     cat ${lintResultFile}
+                    """
 
                    // Make sure the Dockerfile exists
                     if (fileExists(dockerfilePath)) {
