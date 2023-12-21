@@ -154,18 +154,18 @@ pipeline {
                         sh "cat ${lintResultFile}"
 
                         // Prompt the user to read linting message
-                        def userInput = input(
-                            message: 'Do you want to read the linting message?',
-                            ok: 'Yes',
-                            parameters: [string(defaultValue: 'No', description: 'Select Yes to read the linting message', name: 'readLintMessage')]
-                        )
+                        // def userInput = input(
+                        //     message: 'Do you want to read the linting message?',
+                        //     ok: 'Yes',
+                        //     parameters: [string(defaultValue: 'No', description: 'Select Yes to read the linting message', name: 'readLintMessage')]
+                        // )
 
-                        // Handle user input
-                        if (userInput == 'Yes') {
-                            echo "User wants to read the linting message."
-                        } else {
-                            echo "User chose not to read the linting message."
-                        }
+                        // // Handle user input
+                        // if (userInput == 'Yes') {
+                        //     echo "User wants to read the linting message."
+                        // } else {
+                        //     echo "User chose not to read the linting message."
+                        // }
 
                     } else {
                         error "Dockerfile not found at path: ${dockerfilePath}"
