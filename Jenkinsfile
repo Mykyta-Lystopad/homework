@@ -79,19 +79,19 @@ pipeline {
                     // Check the Dockerfile path relative to your workspace
                     echo "JENKINS_HOME: ${JENKINS_HOME}"
                     echo "JOB_NAME: ${JOB_NAME}"
-                    echo "${WORKSPACE}: ${${WORKSPACE}}"
+                    echo "WORKSPACE: ${WORKSPACE}"
                     def workspacePath = "${WORKSPACE}"
                     def dockerfilePath = "${workspacePath}/Dockerfile"
                     def lintResultFile = "${workspacePath}/hadolint_result.txt"
 
                     echo "pwd: $pwd"
 
-                    echo "hadolint < ${dockerfilePath} > ${lintResultFile}"
+                    echo "dockerfilePath: ${dockerfilePath}  lintResultFile: ${lintResultFile}"
 
                    // Make sure the Dockerfile exists
                     if (fileExists(dockerfilePath)) {
                         // Use installed Hadolint to lint the Dockerfile
-                        sh "hadolint < ${dockerfilePath} > ${lintResultFile}"
+                        sh "hadolint ${dockerfilePath} > ${lintResultFile}"
 
                         echo "dockerfilePath: ${dockerfilePath} > lintResultFile: ${lintResultFile}"
 
