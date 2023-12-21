@@ -79,7 +79,8 @@ pipeline {
                     // Check the Dockerfile path relative to your workspace
                     echo "JENKINS_HOME: ${JENKINS_HOME}"
                     echo "JOB_NAME: ${JOB_NAME}"
-                    def workspacePath = "${JENKINS_HOME}/workspace/${JOB_NAME}"
+                    echo "${WORKSPACE}: ${${WORKSPACE}}"
+                    def workspacePath = "${WORKSPACE}"
                     def dockerfilePath = "${workspacePath}/Dockerfile"
                     def lintResultFile = "${workspacePath}/hadolint_result.txt"
 
