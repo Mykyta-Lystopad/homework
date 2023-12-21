@@ -68,33 +68,33 @@ pipeline {
         //         }
         //     }
 
-        stage("Lint Dockerfile") {
-            agent {
-                label 'docker'
-            }
+        // stage("Lint Dockerfile") {
+        //     agent {
+        //         label 'docker'
+        //     }
 
-            steps {
-                script {
-                    echo "Lint Dockerfile Stage"
-                    // Check the Dockerfile path relative to your workspace
-                    echo "JENKINS_HOME: ${JENKINS_HOME}"
-                    echo "JOB_NAME: ${JOB_NAME}"
-                    echo "WORKSPACE: ${WORKSPACE}"
-                    def workspacePath = "${WORKSPACE}"
-                    def dockerfilePath = "${workspacePath}/Dockerfile"
-                    def lintResultFile = "${workspacePath}/hadolint_result.txt"
+        //     steps {
+        //         script {
+        //             echo "Lint Dockerfile Stage"
+        //             // Check the Dockerfile path relative to your workspace
+        //             echo "JENKINS_HOME: ${JENKINS_HOME}"
+        //             echo "JOB_NAME: ${JOB_NAME}"
+        //             echo "WORKSPACE: ${WORKSPACE}"
+        //             def workspacePath = "${WORKSPACE}"
+        //             def dockerfilePath = "${workspacePath}/Dockerfile"
+        //             def lintResultFile = "${workspacePath}/hadolint_result.txt"
 
-                    echo "dockerfilePath: ${dockerfilePath}  lintResultFile: ${lintResultFile}"
+        //             echo "dockerfilePath: ${dockerfilePath}  lintResultFile: ${lintResultFile}"
 
-                    sh """
-                    /usr/local/bin/hadolint -v
+        //             sh """
+        //             /usr/local/bin/hadolint -v
 
-                    /usr/local/bin/hadolint ${dockerfilePath} > ${lintResultFile}
+        //             /usr/local/bin/hadolint ${dockerfilePath} > ${lintResultFile}
 
-                    // Display linting results in the console
-                    echo "Linting Results:"
-                    cat ${lintResultFile}
-                    """
+        //             // Display linting results in the console
+        //             echo "Linting Results:"
+        //             cat ${lintResultFile}
+        //             """
 
                 //    // Make sure the Dockerfile exists
                 //     if (fileExists(dockerfilePath)) {
@@ -122,10 +122,55 @@ pipeline {
                 //     } else {
                 //         error "Dockerfile not found at path: ${dockerfilePath}"
                 //     }
+            //     }
+            // }
+
+        steps {
+            script {
+                echo "Lint Dockerfile Stage"
+                echo "JENKINS_HOME: ${JENKINS_HOME}"
+                echo "JOB_NAME: ${JOB_NAME}"
+                echo "WORKSPACE: ${WORKSPACE}"
+                
+                def workspacePath = "${WORKSPACE}"
+                def dockerfilePath = "${workspacePath}/Dockerfile"
+                def lintResultFile = "${workspacePath}/hadolint_result.txt"
+
+                echo "dockerfilePath: ${dockerfilePath}  lintResultFile: ${lintResultFile}"
+
+                // Print the content of the workspace directory
+                sh "ls -la ${workspacePath}"
+
+                // Make sure the Dockerfile exists
+                if (fileExists(dockerfilePath)) {
+                    echo "Dockerfile found at: ${dockerfilePath}"
+                    // Use installed Hadolint to lint the Dockerfile
+                    def hadolintCommand = "/usr/local/bin/hadolint ${dockerfilePath} > ${lintResultFile}"
+                    echo "Executing: ${hadolintCommand}"
+                    sh hadolintCommand
+
+                    // Display linting results in the console
+                    echo "Linting Results:"
+                    cat ${lintResultFile}
+
+                    // Prompt the user to read linting message
+                    def userInput = input(
+                        message: 'Do you want to read the linting message?',
+                        ok: 'Yes',
+                        parameters: [string(defaultValue: 'No', description: 'Select Yes to read the linting message', name: 'readLintMessage')]
+                    )
+
+                    // Handle user input
+                    if (userInput == 'Yes') {
+                        echo "User wants to read the linting message."
+                    } else {
+                        echo "User chose not to read the linting message."
+                    }
+
+                } else {
+                    error "Dockerfile not found at path: ${dockerfilePath}"
                 }
             }
-
-
 
             post {
                 success{
