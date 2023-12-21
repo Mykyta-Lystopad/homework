@@ -75,6 +75,7 @@ pipeline {
 
             steps {
                 script {
+                    echo "Lint Dockerfile Stage"
                     // Check the Dockerfile path relative to your workspace
                     def dockerfilePath = "Dockerfile"
                     def lintResultFile = "hadolint_result.txt"
