@@ -84,11 +84,11 @@ pipeline {
                     def dockerfilePath = "${workspacePath}/Dockerfile"
                     def lintResultFile = "${workspacePath}/hadolint_result.txt"
 
-                    echo "pwd: $pwd"
-
                     echo "dockerfilePath: ${dockerfilePath}  lintResultFile: ${lintResultFile}"
 
-                    sh "hadolint ${dockerfilePath} > ${lintResultFile}"
+                    echo "hadolint version = $(/usr/local/bin/hadolint -v)"
+
+                    sh "/usr/local/bin/hadolint ${dockerfilePath} > ${lintResultFile}"
 
                     // Display linting results in the console
                     echo "Linting Results:"
