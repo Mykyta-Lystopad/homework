@@ -44,6 +44,29 @@ pipeline {
             }
         }
 
+        // stage("Lint Dockerfile") {
+        //     agent {
+        //         label 'docker'
+        //     }
+
+        //     steps {
+        //         script {
+        //             // Check the Dockerfile path relative to your workspace
+        //             def dockerfilePath = "Dockerfile"
+        
+        //             // Make sure the Dockerfile exists
+        //             if (fileExists(dockerfilePath)) {
+        //                 // Use hadolint Docker image to lint the Dockerfile
+        //                 sh "docker run --rm -i hadolint/hadolint:latest-debian < ${dockerfilePath}"
+
+        //                 // Archive linting results as an artifact
+        //                 archiveArtifacts artifacts: 'hadolint_result.txt', fingerprint: true
+
+        //             } else {
+        //                 error "Dockerfile not found at path: ${dockerfilePath}"
+        //             }
+        //         }
+        //     }
         stage("Lint Dockerfile") {
             agent {
                 label 'docker'
@@ -53,20 +76,25 @@ pipeline {
                 script {
                     // Check the Dockerfile path relative to your workspace
                     def dockerfilePath = "Dockerfile"
-        
+                    def lintResultFile = "hadolint_result.txt"
+
                     // Make sure the Dockerfile exists
                     if (fileExists(dockerfilePath)) {
                         // Use hadolint Docker image to lint the Dockerfile
-                        sh "docker run --rm -i hadolint/hadolint:latest-debian < ${dockerfilePath}"
+                        sh "docker run --rm -i hadolint/hadolint:latest-debian < ${dockerfilePath} > ${lintResultFile}"
+
+                        // Display linting results in the console
+                        echo "Linting Results:"
+                        sh "cat ${lintResultFile}"
 
                         // Archive linting results as an artifact
-                        archiveArtifacts artifacts: 'hadolint_result.txt', fingerprint: true
-
+                        archiveArtifacts artifacts: "${lintResultFile}", fingerprint: true
                     } else {
                         error "Dockerfile not found at path: ${dockerfilePath}"
                     }
                 }
             }
+
 
             post {
                 success{
