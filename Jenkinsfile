@@ -86,7 +86,7 @@ pipeline {
 
                     echo "dockerfilePath: ${dockerfilePath}  lintResultFile: ${lintResultFile}"
 
-                    echo "hadolint version=$(/usr/local/bin/hadolint -v)"
+                    sh "$(/usr/local/bin/hadolint -v)"
 
                     sh "/usr/local/bin/hadolint ${dockerfilePath} > ${lintResultFile}"
 
