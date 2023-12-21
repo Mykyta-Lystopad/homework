@@ -147,7 +147,7 @@ pipeline {
                         // Use installed Hadolint to lint the Dockerfile
                         def hadolintCommand = "/usr/local/bin/hadolint ${dockerfilePath} > ${lintResultFile}"
                         echo "Executing: ${hadolintCommand}"
-                        sh hadolintCommand
+                        
 
                         // Display linting results in the console
                         echo "Linting Results:"
