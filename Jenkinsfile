@@ -77,17 +77,22 @@ pipeline {
                 script {
                     echo "Lint Dockerfile Stage"
                     // Check the Dockerfile path relative to your workspace
-                    def dockerfilePath = "Dockerfile"
-                    def lintResultFile = "hadolint_result.txt"
+                    echo "JENKINS_HOME: ${JENKINS_HOME}"
+                    echo "JOB_NAME: ${JOB_NAME}"
+                    def workspacePath = "${JENKINS_HOME}/workspace/${JOB_NAME}"
+                    def dockerfilePath = "${workspacePath}/Dockerfile"
+                    def lintResultFile = "${workspacePath}/hadolint_result.txt"
 
                     echo "pwd: $pwd"
 
                     echo "hadolint < ${dockerfilePath} > ${lintResultFile}"
 
-                    // Make sure the Dockerfile exists
+                   // Make sure the Dockerfile exists
                     if (fileExists(dockerfilePath)) {
                         // Use installed Hadolint to lint the Dockerfile
-                        sh "hadolint ${dockerfilePath} > ${lintResultFile}"
+                        sh "hadolint < ${dockerfilePath} > ${lintResultFile}"
+
+                        echo "dockerfilePath: ${dockerfilePath} > lintResultFile: ${lintResultFile}"
 
                         // Display linting results in the console
                         echo "Linting Results:"
@@ -106,7 +111,7 @@ pipeline {
                         } else {
                             echo "User chose not to read the linting message."
                         }
-                        
+
                     } else {
                         error "Dockerfile not found at path: ${dockerfilePath}"
                     }
