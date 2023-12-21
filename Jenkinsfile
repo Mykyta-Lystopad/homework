@@ -96,32 +96,32 @@ pipeline {
                     cat ${lintResultFile}
                     """
 
-                   // Make sure the Dockerfile exists
-                    if (fileExists(dockerfilePath)) {
-                        // Use installed Hadolint to lint the Dockerfile
-                        sh "hadolint ${dockerfilePath} > ${lintResultFile}"
+                //    // Make sure the Dockerfile exists
+                //     if (fileExists(dockerfilePath)) {
+                //         // Use installed Hadolint to lint the Dockerfile
+                //         sh "hadolint ${dockerfilePath} > ${lintResultFile}"
 
-                        // Display linting results in the console
-                        echo "Linting Results:"
-                        cat ${lintResultFile}
+                //         // Display linting results in the console
+                //         echo "Linting Results:"
+                //         cat ${lintResultFile}
 
-                        // // Prompt the user to read linting message
-                        // def userInput = input(
-                        //     message: 'Do you want to read the linting message?',
-                        //     ok: 'Yes',
-                        //     parameters: [string(defaultValue: 'No', description: 'Select Yes to read the linting message', name: 'readLintMessage')]
-                        // )
+                //         // // Prompt the user to read linting message
+                //         // def userInput = input(
+                //         //     message: 'Do you want to read the linting message?',
+                //         //     ok: 'Yes',
+                //         //     parameters: [string(defaultValue: 'No', description: 'Select Yes to read the linting message', name: 'readLintMessage')]
+                //         // )
 
-                        // // Handle user input
-                        // if (userInput == 'Yes') {
-                        //     echo "User wants to read the linting message."
-                        // } else {
-                        //     echo "User chose not to read the linting message."
-                        // }
+                //         // // Handle user input
+                //         // if (userInput == 'Yes') {
+                //         //     echo "User wants to read the linting message."
+                //         // } else {
+                //         //     echo "User chose not to read the linting message."
+                //         // }
 
-                    } else {
-                        error "Dockerfile not found at path: ${dockerfilePath}"
-                    }
+                //     } else {
+                //         error "Dockerfile not found at path: ${dockerfilePath}"
+                //     }
                 }
             }
 
