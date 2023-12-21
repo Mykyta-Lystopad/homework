@@ -67,20 +67,6 @@ pipeline {
         //             }
         //         }
         //     }
-        stage("Install Hadolint") {
-            agent any
-            
-            steps {
-                script {
-                    // Download and install Hadolint
-                    sh """
-                        wget -O hadolint https://github.com/hadolint/hadolint/releases/download/v2.12.0/hadolint-Linux-x86_64
-                        sudo mv hadolint /usr/local/bin/hadolint
-                        sudo chmod +x /usr/local/bin/hadolint
-                    """
-                }
-            }
-        }
 
         stage("Lint Dockerfile") {
             agent {
