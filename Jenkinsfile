@@ -44,86 +44,10 @@ pipeline {
             }
         }
 
-        // stage("Lint Dockerfile") {
-        //     agent {
-        //         label 'docker'
-        //     }
-
-        //     steps {
-        //         script {
-        //             // Check the Dockerfile path relative to your workspace
-        //             def dockerfilePath = "Dockerfile"
-        
-        //             // Make sure the Dockerfile exists
-        //             if (fileExists(dockerfilePath)) {
-        //                 // Use hadolint Docker image to lint the Dockerfile
-        //                 sh "docker run --rm -i hadolint/hadolint:latest-debian < ${dockerfilePath}"
-
-        //                 // Archive linting results as an artifact
-        //                 archiveArtifacts artifacts: 'hadolint_result.txt', fingerprint: true
-
-        //             } else {
-        //                 error "Dockerfile not found at path: ${dockerfilePath}"
-        //             }
-        //         }
-        //     }
-
         stage("Lint Dockerfile") {
             agent {
                 label 'docker'
             }
-
-        //     steps {
-        //         script {
-        //             echo "Lint Dockerfile Stage"
-        //             // Check the Dockerfile path relative to your workspace
-        //             echo "JENKINS_HOME: ${JENKINS_HOME}"
-        //             echo "JOB_NAME: ${JOB_NAME}"
-        //             echo "WORKSPACE: ${WORKSPACE}"
-        //             def workspacePath = "${WORKSPACE}"
-        //             def dockerfilePath = "${workspacePath}/Dockerfile"
-        //             def lintResultFile = "${workspacePath}/hadolint_result.txt"
-
-        //             echo "dockerfilePath: ${dockerfilePath}  lintResultFile: ${lintResultFile}"
-
-        //             sh """
-        //             /usr/local/bin/hadolint -v
-
-        //             /usr/local/bin/hadolint ${dockerfilePath} > ${lintResultFile}
-
-        //             // Display linting results in the console
-        //             echo "Linting Results:"
-        //             cat ${lintResultFile}
-        //             """
-
-                //    // Make sure the Dockerfile exists
-                //     if (fileExists(dockerfilePath)) {
-                //         // Use installed Hadolint to lint the Dockerfile
-                //         sh "hadolint ${dockerfilePath} > ${lintResultFile}"
-
-                //         // Display linting results in the console
-                //         echo "Linting Results:"
-                //         cat ${lintResultFile}
-
-                //         // // Prompt the user to read linting message
-                //         // def userInput = input(
-                //         //     message: 'Do you want to read the linting message?',
-                //         //     ok: 'Yes',
-                //         //     parameters: [string(defaultValue: 'No', description: 'Select Yes to read the linting message', name: 'readLintMessage')]
-                //         // )
-
-                //         // // Handle user input
-                //         // if (userInput == 'Yes') {
-                //         //     echo "User wants to read the linting message."
-                //         // } else {
-                //         //     echo "User chose not to read the linting message."
-                //         // }
-
-                //     } else {
-                //         error "Dockerfile not found at path: ${dockerfilePath}"
-                //     }
-            //     }
-            // }
 
             steps {
                 script {
