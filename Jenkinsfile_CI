@@ -1,5 +1,4 @@
 // vars
-def container_name = "homework"
 def image_path = "nominonik/google-class"
 def image_part_name = "google-class"
 
