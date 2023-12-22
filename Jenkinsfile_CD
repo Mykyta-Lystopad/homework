@@ -51,7 +51,7 @@ pipeline {
 
                         echo "Docker Image Names: ${imageNames}"
 
-                        echo "tags: ${tags}"
+                        echo "imageNames: ${imageNames}"
 
                         // Set the choices for the VERSION parameter
                         currentBuild.setBuildParameter("VERSION", imageNames.join('\n'))
