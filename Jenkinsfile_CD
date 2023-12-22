@@ -40,17 +40,22 @@ pipeline {
                     def registry = 'https://registry.hub.docker.com/v2/repositories/nominonik/google-class/tags'
 
                     // Fetching tags from Docker Hub with authentication
-                    def response = sh(script: "curl -u ${DOCKERHUB_USERNAME}:${DOCKERHUB_PASSWORD} -s ${registry}", returnStdout: true).trim()
+                    def response = sh(script: "curl -u ${DOCKERHUB_USERNAME}:${DOCKERHUB_PASSWORD} -s ${registry}", returnStatus: true, returnStdout: true).trim()
 
-                    echo "response: ${response}"
+                    // Check if the curl command was successful
+                    if (response == 0) {
+                        echo "response: ${response}"
 
-                    // Parse the JSON response
-                    def tags = readJSON(text: response).collect { it.name }
+                        // Parse the JSON response
+                        def tags = readJSON(text: response).collect { it.name }
 
-                    echo "tags: ${tags}"
+                        echo "tags: ${tags}"
 
-                    // Set the choices for the VERSION parameter
-                    currentBuild.setBuildParameter("VERSION", tags.join('\n'))
+                        // Set the choices for the VERSION parameter
+                        currentBuild.setBuildParameter("VERSION", tags.join('\n'))
+                    } else {
+                        error "Failed to fetch Docker image tags. Exit code: ${response}"
+                    }
                 }
             }
         }
