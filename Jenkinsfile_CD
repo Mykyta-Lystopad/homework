@@ -21,7 +21,7 @@ pipeline {
 
     parameters {
         string(name: 'ENVIRONMENT', defaultValue: 'dev', description: 'Write the target environment')
-        choice(name: 'VERSION', choices: ['latest'], description: 'Enter the version or tag of the Docker image for build image')
+        choice(name: 'VERSION', choices: [], description: 'Enter the version or tag of the Docker image for build image')
     }
 
 
