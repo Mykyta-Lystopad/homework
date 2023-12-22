@@ -44,9 +44,9 @@ pipeline {
 
                     echo "response: ${response}"
 
-                    def imageNames = sh(script: "echo ${response} | grep -oE 'google-class-[^\"]*'")
+                    // def imageNames = sh(script: "echo ${response} | grep -oE 'google-class-[^\"]*'")
 
-                    echo "Docker Image Names: ${imageNames}"
+                    // echo "Docker Image Names: ${imageNames}"
 
                     // // Check if the curl command was successful
                     // if (response == 0) {
