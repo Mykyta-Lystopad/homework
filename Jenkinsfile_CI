@@ -1,16 +1,7 @@
-void setBuildStatus(String message, String state) {
-  step([
-      $class: "GitHubCommitStatusSetter",
-      reposSource: [$class: "ManuallyEnteredRepositorySource", url: "https://github.com/Mykyta-Lystopad/homework.git"],
-      contextSource: [$class: "ManuallyEnteredCommitContextSource", context: "ci/jenkins/build-status"],
-      errorHandlers: [[$class: "ChangingBuildStatusErrorHandler", result: "UNSTABLE"]],
-      statusResultSource: [ $class: "ConditionalStatusResultSource", results: [[$class: "AnyBuildResult", message: message, state: state]] ]
-  ]);
-}
-
 // vars
 def container_name = "homework"
 def image_path = "nominonik/google-class"
+def image_part_name = "google-class"
 
 
 
@@ -20,9 +11,9 @@ pipeline {
     }
 
     parameters {
-        choice(name: 'ENVIRONMENT', choices: 'dev\nqa', description: 'Select the target environment')
-        string(name: 'PUSH_VERSION', defaultValue: '2.3', description: 'Enter the version or tag of the Docker image for build image')
-        string(name: 'PULL_VERSION', defaultValue: 'latest', description: 'Enter the version or tag of the Docker image for deploy job')
+        // choice(name: 'ENVIRONMENT', choices: 'dev\nqa', description: 'Select the target environment')
+        string(name: 'PUSH_VERSION', defaultValue: '2.4', description: 'Enter the version or tag of the Docker image for build image')
+        // string(name: 'PULL_VERSION', defaultValue: 'latest', description: 'Enter the version or tag of the Docker image for deploy job')
     }
 
 
@@ -64,46 +55,48 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh "docker build -t ${image_path}-${params.ENVIRONMENT}:latest ."
+                // sh "docker build -t ${image_path}-${params.ENVIRONMENT}:latest ."
+                sh "docker build -t ${image_path}:${image_part_name}-latest ."
             }
            
         }
 
         stage('Tag Docker Image') {
+            // to do get build number
             steps {
                 script {
-                    sh "docker tag ${image_path}-${params.ENVIRONMENT}:latest \
-                    ${image_path}-${params.ENVIRONMENT}:${params.PUSH_VERSION}"
+                    sh "docker tag ${image_path}:${image_part_name}-latest \
+                    ${image_path}:${image_part_name}-${params.PUSH_VERSION}-${env.BUILD_NUMBER}" // 1. + build number 
 
                 }
             }
         }
 
-        stage('Push Docker Image to Docker Hub') {
+        stage('Push Docker Image to Docker Hub') { // to nominonik/google-class
             steps {
                 script {
                     def scriptPushVar
 
                     scriptPushVar = "docker login -u ${DOCKERHUB_USERNAME} -p ${DOCKERHUB_PASSWORD}; \
-                        docker push ${image_path}-${params.ENVIRONMENT}:latest; \
-                        docker push ${image_path}-${params.ENVIRONMENT}:${params.PUSH_VERSION}"
+                        docker push ${image_path}:${image_part_name}-latest; \
+                        docker push ${image_path}:${image_part_name}-${params.PUSH_VERSION}-${env.BUILD_NUMBER}"
 
                     sh(script: scriptPushVar, returnStatus: false, returnStdout: true)
 
                     
-                    // Prompt the user to read linting message
-                    def userInput = input(
-                        message: 'Do you want to read the linting message?',
-                        ok: 'Yes',
-                        parameters: [string(defaultValue: 'No', description: 'Select Yes to read the linting message', name: 'readLintMessage')]
-                    )
+                    // // Prompt the user to read linting message
+                    // def userInput = input(
+                    //     message: 'Do you want to read the linting message?',
+                    //     ok: 'Yes',
+                    //     parameters: [string(defaultValue: 'No', description: 'Select Yes to read the linting message', name: 'readLintMessage')]
+                    // )
 
-                    // Handle user input
-                    if (userInput == 'Yes') {
-                        echo "User wants to read the linting message."
-                    } else {
-                        echo "User chose not to read the linting message."
-                    }
+                    // // Handle user input
+                    // if (userInput == 'Yes') {
+                    //     echo "User wants to read the linting message."
+                    // } else {
+                    //     echo "User chose not to read the linting message."
+                    // }
                 }
                     // timeout(time: 7, unit: 'DAYS') {
                     //     input message: "Approve the deployment to ${params.ENVIRONMENT} environment with version latest?", ok: 'Deploy'
@@ -113,74 +106,74 @@ pipeline {
            
         }
 
-        stage('Deploy to Environment') {
-            when {
-                expression { currentBuild.resultIsBetterOrEqualTo('SUCCESS') }
-            }
-            steps {
-                script {
-                    echo "Deploying to environment: ${params.ENVIRONMENT} with version: latest"
-                    def scriptDeployingVar
+        // stage('Deploy to Environment') {
+        //     when {
+        //         expression { currentBuild.resultIsBetterOrEqualTo('SUCCESS') }
+        //     }
+        //     steps {
+        //         script {
+        //             echo "Deploying to environment: ${params.ENVIRONMENT} with version: latest"
+        //             def scriptDeployingVar
 
-                    scriptDeployingVar = "docker pull ${image_path}-${params.ENVIRONMENT}:${params.PUSH_VERSION}; \
-                        docker rm -f ${container_name}; \
-                        docker run -d -p 4200:4200 --name ${container_name} ${image_path}-${params.ENVIRONMENT}:${params.PUSH_VERSION} npm start"
+        //             scriptDeployingVar = "docker pull ${image_path}-${params.ENVIRONMENT}:${params.PUSH_VERSION}; \
+        //                 docker rm -f ${container_name}; \
+        //                 docker run -d -p 4200:4200 --name ${container_name} ${image_path}-${params.ENVIRONMENT}:${params.PUSH_VERSION} npm start"
 
-                    sh(script: scriptDeployingVar, returnStatus: false, returnStdout: true)
+        //             sh(script: scriptDeployingVar, returnStatus: false, returnStdout: true)
 
-                    echo "============= perform sleep command for starting app in container ======================"
-                    sh "sleep 40"
-                }
+        //             echo "============= perform sleep command for starting app in container ======================"
+        //             sh "sleep 40"
+        //         }
 
-            }
-        }
+        //     }
+        // }
 
-        stage('Health Check') {
-            when {
-                expression { currentBuild.resultIsBetterOrEqualTo('SUCCESS') }
-            }
-            steps {
-                script {
-                    echo "Performing health check for environment: ${params.ENVIRONMENT}"
+        // stage('Health Check') {
+        //     when {
+        //         expression { currentBuild.resultIsBetterOrEqualTo('SUCCESS') }
+        //     }
+        //     steps {
+        //         script {
+        //             echo "Performing health check for environment: ${params.ENVIRONMENT}"
 
-                    def response_status = sh(script: "curl -sLI -w '%{http_code}' http://192.168.0.139:4200 -o /dev/null", returnStdout: true)
+        //             def response_status = sh(script: "curl -sLI -w '%{http_code}' http://192.168.0.139:4200 -o /dev/null", returnStdout: true)
 
-                    echo "response_status = ${response_status}"
+        //             echo "response_status = ${response_status}"
 
-                    if (response_status == '200') {
-                        echo "Health check passed with response code ${response_status}."
-                    } else {
-                        echo "Health check failed with response code ${response_status}."
+        //             if (response_status == '200') {
+        //                 echo "Health check passed with response code ${response_status}."
+        //             } else {
+        //                 echo "Health check failed with response code ${response_status}."
 
-                    }
+        //             }
 
-                }
+        //         }
 
-            }
-        }
+        //     }
+        // }
 
 
     }
     
-    // Use for PR status sending
-    post {
-            success{
-                setBuildStatus("Build succeeded", "SUCCESS");
-            }
+    // // Use for PR status sending
+    // post {
+    //         success{
+    //             setBuildStatus("Build succeeded", "SUCCESS");
+    //         }
 
-            failure {
-                setBuildStatus("Build failed", "FAILURE");
-            } 
+    //         failure {
+    //             setBuildStatus("Build failed", "FAILURE");
+    //         } 
 
-            // Sending notification to gmail
-            always {
-                emailext to: "niktoring77@gmail.com",
-                subject: "jenkins build:${currentBuild.currentResult}: ${env.JOB_NAME}",
-                body: """
-                Logs from Jenkins pipeline:
-                ${currentBuild.rawBuild.getLog(100)}
-                """,
-                attachLog: true
-        }
-    }    
+    //         // Sending notification to gmail
+    //         always {
+    //             emailext to: "niktoring77@gmail.com",
+    //             subject: "jenkins build:${currentBuild.currentResult}: ${env.JOB_NAME}",
+    //             body: """
+    //             Logs from Jenkins pipeline:
+    //             ${currentBuild.rawBuild.getLog(100)}
+    //             """,
+    //             attachLog: true
+    //     }
+    // }    
 }
