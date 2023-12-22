@@ -57,19 +57,19 @@ pipeline {
                     // echo "Docker Image Names: ${imageNames}"
 
                     // Check if the curl command was successful
-                    if (response == 0) {
-                        echo "response: ${response}"
+                    // if (response == 0) {
+                    echo "response: ${response}"
 
-                        // Parse the JSON response
-                        def imageNames = sh(script: "echo ${response} | grep -oE 'google-class-[^,]*'", returnStdout: true).trim()
+                    // Parse the JSON response
+                    def imageNames = sh(script: "echo ${response} | grep -oE 'google-class-[^,]*'", returnStdout: true).trim()
 
-                        echo "Docker Image Names: ${imageNames}"
+                    echo "Docker Image Names: ${imageNames}"
 
-                        // Set the choices for the VERSION parameter
-                        currentBuild.setBuildParameter("VERSION", imageNames.join('\n'))
-                    } else {
-                        error "Failed to fetch Docker image tags. Exit code: ${response}"
-                    }
+                    // Set the choices for the VERSION parameter
+                    currentBuild.setBuildParameter("VERSION", imageNames.join('\n'))
+                    // } else {
+                    //     error "Failed to fetch Docker image tags. Exit code: ${response}"
+                    // }
                 }
             }
         }
