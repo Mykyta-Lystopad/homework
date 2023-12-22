@@ -78,7 +78,8 @@ pipeline {
             // TODO regat with qa or dev
             steps {
                 script {
-                    sh "docker tag ${image_path}-${params.ENVIRONMENT}:${params.VERSION}-${params.ENVIRONMENT}" // google-class-2.4-201-qa or dev
+                    sh "docker tag ${image_path}-${params.ENVIRONMENT}:${params.VERSION}-${params.ENVIRONMENT}-latest \
+                     ${image_path}-${params.ENVIRONMENT}:${params.VERSION}-${params.ENVIRONMENT}" // google-class-2.4-201-qa or dev
                 }
             }
         }
