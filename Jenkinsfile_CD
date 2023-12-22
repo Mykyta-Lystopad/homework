@@ -57,10 +57,13 @@ pipeline {
 
                     echo "Docker Image Names: ${imageNames}"
 
+                    // Split the newline-separated string into a list of strings
+                    def choicesList = imageNames.split('\n')
+
                     // Set the choices for the VERSION parameter
                     properties([
                         parameters([
-                            choice(name: 'VERSION', choices: imageNames.split('\n'), description: 'Choose the version')
+                            choice(name: 'VERSION', choices: choicesList, description: 'Choose the version')
                         ])
                     ])
                 }
