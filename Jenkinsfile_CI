@@ -94,7 +94,7 @@ pipeline {
                 //     input message: "Approve the deployment to ${params.ENVIRONMENT} environment with version latest?", ok: 'Deploy'
                 // }
 
-                Prompt the user to read linting message
+                // Prompt the user to read linting message
                 def userInput = input(
                     message: 'Do you want to read the linting message?',
                     ok: 'Yes',
