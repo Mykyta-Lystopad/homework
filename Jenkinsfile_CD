@@ -60,8 +60,8 @@ pipeline {
                     // Split the newline-separated string into a list of strings
                     def choicesList = imageNames.split('\n')
 
-                    // Convert Groovy list to Java list
-                    def javaChoicesList = new ArrayList<String>(choicesList)
+                    // Convert Groovy list to Java list using collect
+                    def javaChoicesList = choicesList.collect { it.trim() }
 
                     // Set the choices for the VERSION parameter
                     properties([
