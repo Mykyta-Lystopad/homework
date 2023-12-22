@@ -42,20 +42,26 @@ pipeline {
                     // Fetching tags from Docker Hub with authentication
                     def response = sh(script: "curl -u ${DOCKERHUB_USERNAME}:${DOCKERHUB_PASSWORD} -s ${registry}", returnStatus: true, returnStdout: true).trim()
 
-                    // Check if the curl command was successful
-                    if (response == 0) {
-                        echo "response: ${response}"
+                    echo "response: ${response}"
 
-                        // Parse the JSON response
-                        def imageNames = sh(script: "echo ${response} | grep -oE 'google-class-[^\"]*'")
+                    def imageNames = sh(script: "echo ${response} | grep -oE 'google-class-[^\"]*'")
 
-                        echo "Docker Image Names: ${imageNames}"
+                    echo "Docker Image Names: ${imageNames}"
 
-                        // Set the choices for the VERSION parameter
-                        currentBuild.setBuildParameter("VERSION", imageNames.join('\n'))
-                    } else {
-                        error "Failed to fetch Docker image tags. Exit code: ${response}"
-                    }
+                    // // Check if the curl command was successful
+                    // if (response == 0) {
+                    //     echo "response: ${response}"
+
+                    //     // Parse the JSON response
+                    //     def imageNames = sh(script: "echo ${response} | grep -oE 'google-class-[^\"]*'")
+
+                    //     echo "Docker Image Names: ${imageNames}"
+
+                    //     // Set the choices for the VERSION parameter
+                    //     currentBuild.setBuildParameter("VERSION", imageNames.join('\n'))
+                    // } else {
+                    //     error "Failed to fetch Docker image tags. Exit code: ${response}"
+                    // }
                 }
             }
         }
