@@ -89,24 +89,26 @@ pipeline {
                         docker push ${image_path}-${params.ENVIRONMENT}:${params.PUSH_VERSION}"
 
                     sh(script: scriptPushVar, returnStatus: false, returnStdout: true)
-                }
-                // timeout(time: 7, unit: 'DAYS') {
-                //     input message: "Approve the deployment to ${params.ENVIRONMENT} environment with version latest?", ok: 'Deploy'
-                // }
 
-                // Prompt the user to read linting message
-                def userInput = input(
-                    message: 'Do you want to read the linting message?',
-                    ok: 'Yes',
-                    parameters: [string(defaultValue: 'No', description: 'Select Yes to read the linting message', name: 'readLintMessage')]
-                )
+                    
+                    // Prompt the user to read linting message
+                    def userInput = input(
+                        message: 'Do you want to read the linting message?',
+                        ok: 'Yes',
+                        parameters: [string(defaultValue: 'No', description: 'Select Yes to read the linting message', name: 'readLintMessage')]
+                    )
 
-                // Handle user input
-                if (userInput == 'Yes') {
-                    echo "User wants to read the linting message."
-                } else {
-                    echo "User chose not to read the linting message."
+                    // Handle user input
+                    if (userInput == 'Yes') {
+                        echo "User wants to read the linting message."
+                    } else {
+                        echo "User chose not to read the linting message."
+                    }
                 }
+                    // timeout(time: 7, unit: 'DAYS') {
+                    //     input message: "Approve the deployment to ${params.ENVIRONMENT} environment with version latest?", ok: 'Deploy'
+                    // }
+
             }
            
         }
