@@ -51,7 +51,7 @@ pipeline {
                 }
             }
         }
-        
+
         stage('Tag Docker Image') {
             // to do get build number
             steps {
@@ -93,6 +93,7 @@ pipeline {
                     // }
 
             }
+        }
 
         stage('Deploy to Environment') {
             when {
