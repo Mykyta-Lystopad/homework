@@ -37,14 +37,17 @@ pipeline {
         stage('Fetch Docker Image Tags') {
             steps {
                 script {
-                    // Docker Hub API URL to get tags for a repository
-                    def apiUrl = "https://hub.docker.com/v2/repositories/nominonik/google-class/tags"
+                    def registry = 'https://registry.hub.docker.com/v2/repositories/nominonik/google-class/tags'
 
-                    // Fetching tags from Docker Hub
-                    def response = sh(script: "curl -s ${apiUrl}", returnStdout: true).trim()
+                    // Fetching tags from Docker Hub with authentication
+                    def response = sh(script: "curl -u ${DOCKERHUB_USERNAME}:${DOCKERHUB_PASSWORD} -s ${registry}", returnStdout: true).trim()
+
+                    echo "response: ${response}"
 
                     // Parse the JSON response
-                    def tags = readJSON(text: response).results.collect { it.name }
+                    def tags = readJSON(text: response).collect { it.name }
+
+                    echo "tags: ${tags}"
 
                     // Set the choices for the VERSION parameter
                     currentBuild.setBuildParameter("VERSION", tags.join('\n'))
