@@ -47,14 +47,14 @@ pipeline {
                         echo "response: ${response}"
 
                         // Parse the JSON response
-                        def imageNames = sh(script: "echo \$response | grep -o '\"name\":\"[^\"]*\"' | cut -d':' -f2 | tr -d '\"'", returnStdout: true).trim()
+                        def imageNames = sh(script: "echo $response | grep -oE 'google-class-[^\"]*'", returnStdout: true).trim()
 
                         echo "Docker Image Names: ${imageNames}"
 
                         echo "tags: ${tags}"
 
                         // Set the choices for the VERSION parameter
-                        currentBuild.setBuildParameter("VERSION", tags.join('\n'))
+                        currentBuild.setBuildParameter("VERSION", imageNames.join('\n'))
                     } else {
                         error "Failed to fetch Docker image tags. Exit code: ${response}"
                     }
