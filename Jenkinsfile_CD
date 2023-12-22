@@ -47,7 +47,9 @@ pipeline {
                         echo "response: ${response}"
 
                         // Parse the JSON response
-                        def tags = readJSON(text: response).collect { it.name }
+                        def imageNames = sh(script: "echo \$response | grep -o '\"name\":\"[^\"]*\"' | cut -d':' -f2 | tr -d '\"'", returnStdout: true).trim()
+
+                        echo "Docker Image Names: ${imageNames}"
 
                         echo "tags: ${tags}"
 
