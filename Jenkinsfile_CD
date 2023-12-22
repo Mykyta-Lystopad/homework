@@ -8,6 +8,11 @@ void setBuildStatus(String message, String state) {
   ]);
 }
 
+// vars
+def container_name = "homework"
+def image_path = "nominonik/google-class"
+def image_part_name = "google-class"
+
 
 pipeline {
     agent {
@@ -16,7 +21,7 @@ pipeline {
 
     parameters {
         string(name: 'ENVIRONMENT', defaultValue: 'dev', description: 'Write the target environment')
-        string(name: 'VERSION', defaultValue: '2.3 or ', description: 'Enter the version or tag of the Docker image for build image')
+        choice(name: 'VERSION', choices: [], description: 'Enter the version or tag of the Docker image for build image')
     }
 
 
@@ -29,6 +34,24 @@ pipeline {
 
 
     stages {
+        stage('Fetch Docker Image Tags') {
+            steps {
+                script {
+                    // Docker Hub API URL to get tags for a repository
+                    def apiUrl = "https://hub.docker.com/v2/repositories/nominonik/google-class/tags"
+
+                    // Fetching tags from Docker Hub
+                    def response = sh(script: "curl -s ${apiUrl}", returnStdout: true).trim()
+
+                    // Parse the JSON response
+                    def tags = readJSON(text: response).results.collect { it.name }
+
+                    // Set the choices for the VERSION parameter
+                    currentBuild.setBuildParameter("VERSION", tags.join('\n'))
+                }
+            }
+        }
+        
         stage('Tag Docker Image') {
             // to do get build number
             steps {
@@ -137,6 +160,7 @@ pipeline {
                     """,
                     attachLog: true
                 }
-        }    
+        }
+    }    
         
 }
