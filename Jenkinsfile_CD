@@ -34,6 +34,13 @@ pipeline {
 
 
     stages {
+        stage('Cleaning workspace') {
+            steps {
+                print("Starting preconfiguration cleaning...")
+                deleteDir()
+            }
+        }
+
         stage('Fetch Docker Image Tags') {
             steps {
                 script {
@@ -45,7 +52,7 @@ pipeline {
 
                     echo "response: ${response}"
 
-                    def imageNames = sh(script: "echo ${response} | grep -oE 'google-class-[^\"]*'", returnStdout: true).trim()
+                    def imageNames = sh(script: "echo ${response} | grep -oE 'google-class-[^,]*'", returnStdout: true).trim()
 
                     echo "Docker Image Names: ${imageNames}"
 
