@@ -37,10 +37,11 @@ pipeline {
         stage('Fetch Docker Image Tags') {
             steps {
                 script {
+                    echo "stage = Fetch Docker Image Tags"
                     def registry = 'https://registry.hub.docker.com/v2/repositories/nominonik/google-class/tags'
 
                     // Fetching tags from Docker Hub with authentication
-                    def response = sh(script: "curl -u $DOCKERHUB_USERNAME:$DOCKERHUB_PASSWORD -s ${registry}", returnStatus: true, returnStdout: true).trim()
+                    def response = sh(script: "curl -u ${DOCKERHUB_USERNAME}:${DOCKERHUB_PASSWORD} -s ${registry}", returnStdout: true).trim()
 
                     echo "response: ${response}"
 
