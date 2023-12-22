@@ -66,6 +66,7 @@ pipeline {
                     // Set the choices for the VERSION parameter
                     properties([
                         parameters([
+                            string(name: 'ENVIRONMENT', defaultValue: 'dev', description: 'Write the target environment')
                             choice(name: 'VERSION', choices: javaChoicesList, description: 'Choose the version')
                         ])
                     ])
