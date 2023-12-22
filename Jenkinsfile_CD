@@ -139,10 +139,10 @@ pipeline {
                 }
 
              }
-        }
+        
 
-        // Use for PR status sending
-        post {
+            // Use for PR status sending
+            post {
                 success{
                     setBuildStatus("Build succeeded", "SUCCESS");
                 }
@@ -161,6 +161,7 @@ pipeline {
                     """,
                     attachLog: true
                 }
+            }
         }
     }    
         
