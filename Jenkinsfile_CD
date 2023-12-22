@@ -45,7 +45,7 @@ pipeline {
 
                     echo "response: ${response}"
 
-                    def imageNames = sh(script: "echo ${response} | grep -oE 'google-class-[^\"]*'")
+                    def imageNames = sh(script: "echo ${response} | grep -oE 'google-class-[^\"]*'", returnStdout: true).trim()
 
                     echo "Docker Image Names: ${imageNames}"
 
