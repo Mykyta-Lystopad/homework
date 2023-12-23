@@ -141,10 +141,15 @@ pipeline {
                         echo "File exists!"
                         
                         // Load the script
-                        sharedPipeline = load scriptPath
+                        def sharedPipeline = load scriptPath
                         
-                        // Invoke the sharedStages method
-                        sharedPipeline.sharedStages()
+                        // Check if sharedPipeline is not null
+                        if (sharedPipeline) {
+                            // Invoke the sharedStages method
+                            sharedPipeline.sharedStages()
+                        } else {
+                            error "Failed to load shared pipeline script!"
+                        }
                     } else {
                         echo "File does not exist!"
                         error "Shared pipeline script not found!"
