@@ -135,6 +135,9 @@ pipeline {
                     echo "WORKSPACE: ${WORKSPACE}"
                     def scriptPath = "${WORKSPACE}/sharedPipeline.groovy"
                     echo "Checking if file exists: ${scriptPath}"
+
+                    echo "Contents of the workspace directory:"
+                    sh 'ls -la /var/lib/jenkins/workspace/ci-pipeline'
                     
                     // Check if the file exists
                     if (fileExists(scriptPath)) {
