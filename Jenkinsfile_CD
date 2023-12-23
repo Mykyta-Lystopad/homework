@@ -153,7 +153,7 @@ pipeline {
                     def scriptDeployingVar = """
                         docker pull ${image_path}-${params.ENVIRONMENT}:${params.VERSION}-${params.ENVIRONMENT};
 
-                        if (sh(script: "docker ps -a --format '{{.Names}}' | grep -q '^${container_name}${containerSuffix}$'", returnStatus: true) == 0) {
+                        if (sh(script: "docker ps -a --format '{{.Names}}' | grep -q '^\\${container_name}${containerSuffix}$'", returnStatus: true) == 0) {
                             docker rm -f ${container_name}${containerSuffix}
                         }
 
