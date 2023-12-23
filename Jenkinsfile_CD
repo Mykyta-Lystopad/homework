@@ -42,14 +42,14 @@ pipeline {
         }
 
        // Include shared stages
-        stage('Shared Stages') {
-            steps {
-                script {
-                    sharedPipeline = load 'sharedPipeline.groovy'
-                    sharedPipeline.sharedStages()
-                }
-            }
-        }
+        // stage('Shared Stages') {
+        //     steps {
+        //         script {
+        //             sharedPipeline = load 'sharedPipeline.groovy'
+        //             sharedPipeline.sharedStages()
+        //         }
+        //     }
+        // }
 
         stage('Fetch Docker Image Tags') {
             steps {
