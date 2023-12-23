@@ -151,18 +151,13 @@ pipeline {
                     def portMapping = params.ENVIRONMENT == 'qa' ? '-p 4200:4400' : '-p 4200:4200'
 
                     def scriptDeployingVar = """
-                        docker pull ${image_path}-${params.ENVIRONMENT}:${params.VERSION}-${params.ENVIRONMENT};
-
-                        // if (sh(script: "docker ps -a --format '{{.Names}}' | grep -q '^${container_name}${containerSuffix}\$'", returnStatus: true) == 0) {
-                        //     sh "docker rm -f ${container_name}${containerSuffix}"
-                        // }
-
+                        docker pull ${image_path}-${params.ENVIRONMENT}:${params.VERSION}-${params.ENVIRONMENT} &&
+                        
                         if docker image inspect ${container_name}${containerSuffix} &> /dev/null; then
                             echo "Image exists and deleting..."
                             docker rm -f ${container_name}${containerSuffix}
-                        fi && \\
-
-                        // docker rm -f ${container_name}${containerSuffix};
+                        fi &&
+                        
                         docker run -d ${portMapping} --name ${container_name}${containerSuffix} ${image_path}-${params.ENVIRONMENT}:${params.VERSION}-${params.ENVIRONMENT} npm start
                     """
 
