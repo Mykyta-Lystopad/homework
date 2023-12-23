@@ -82,14 +82,13 @@ pipeline {
                     ])
 
 
-                    // Проверяем, был ли запуск в ручном режиме
+                   // Check if the launch was done manually
                     def manualTrigger = currentBuild.rawBuild.getCause(hudson.model.Cause$UserIdCause)
                     if (manualTrigger) {
-                        echo 'Этот пайплайн был запущен в ручном режиме.'
+                        echo 'This pipeline was started manually.'
                     } else {
-                        echo 'Этот пайплайн был запущен автоматически (не в ручном режиме).'
-                        // Прерываем выполнение пайплайна, если он был запущен автоматически
-                        error 'Пайплайн прерван, так как он был запущен автоматически.'
+                        echo 'This pipeline was started automatically (not manually).'
+                        error "The pipeline was interrupted because it was started automatically."
                     }
 
                     // // Prompt the user to specify the target environment and version

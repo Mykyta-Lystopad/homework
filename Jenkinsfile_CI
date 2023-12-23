@@ -169,9 +169,12 @@ pipeline {
             steps {
                 echo "Invoke cd_pipeline for visibility latest image"
                 script {
+                    def condition = true
                     if (condition) {
                         build job: 'cd_pipeline'
-                    }   
+                    } else{
+                        echo "The pipeline was interrupted because it was started automatically."
+                    }  
                 }
             }
         
