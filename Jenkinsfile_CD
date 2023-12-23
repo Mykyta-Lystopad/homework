@@ -148,7 +148,7 @@ pipeline {
                     echo "Deploying to environment: ${params.ENVIRONMENT} with version: ${params.VERSION}"
 
                     def containerSuffix = params.ENVIRONMENT == 'qa' ? '-qa' : '-dev'
-                    def portMapping = params.ENVIRONMENT == 'qa' ? '-p 4200:4400' : '-p 4200:4300'
+                    def portMapping = params.ENVIRONMENT == 'qa' ? '-p 4400:4200' : '-p 4300:4200'
 
                     def scriptDeployingVar = """
                         docker pull ${image_path}-${params.ENVIRONMENT}:${params.VERSION}-${params.ENVIRONMENT} &&
