@@ -177,7 +177,9 @@ pipeline {
                 success {
                     script {
                         echo 'Jenkins CI pipeline succeeded. Triggering Jenkins CD pipeline.'
-                        build job: 'cd_pipeline'
+                        build job: 'cd_pipeline', parameters: [
+                            booleanParam(name: 'FETCH_STAGE', value: true)
+                        ]
                     }
                 }
                 failure {
