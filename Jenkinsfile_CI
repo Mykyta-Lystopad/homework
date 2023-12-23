@@ -35,6 +35,7 @@ pipeline {
                 script {
                     env.each { key, value ->
                         echo "${key}=${value}"
+                    }
                     // Access the branch name using env.BRANCH_NAME
                     def branchName = env.BRANCH_NAME
                     echo "Current branch is: ${branchName}"
