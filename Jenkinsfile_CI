@@ -164,10 +164,15 @@ pipeline {
         // }
 
 
-        stage('Build Docker Image') {
+        stage('Invoke cd_pipeline') {
+            echo "Invoke cd_pipeline for visibility latest image"
             steps {
-                script {
-                    build job: 'cd_pipeline'
+                catchError(buildResult: 'SUCCESS', stageResult: 'SUCCESS') {
+                    script {
+                        if (condition) {
+                            build job: 'cd_pipeline'
+                        }   
+                    }
                 }
             }
         
