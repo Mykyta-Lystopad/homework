@@ -89,7 +89,7 @@ pipeline {
                     } else {
                         echo 'This pipeline was started automatically (not manually).'
                         echo "The pipeline was interrupted because it was started automatically."
-                        return
+                        exit 0
                     }
 
                     // // Prompt the user to specify the target environment and version
