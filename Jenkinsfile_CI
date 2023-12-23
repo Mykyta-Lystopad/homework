@@ -167,12 +167,10 @@ pipeline {
         stage('Invoke cd_pipeline') {
             echo "Invoke cd_pipeline for visibility latest image"
             steps {
-                catchError(buildResult: 'SUCCESS', stageResult: 'SUCCESS') {
-                    script {
-                        if (condition) {
-                            build job: 'cd_pipeline'
-                        }   
-                    }
+                script {
+                    if (condition) {
+                        build job: 'cd_pipeline'
+                    }   
                 }
             }
         
