@@ -1,5 +1,12 @@
+// sharedPipeline.groovy
+
+def call() {
+    return this
+}
+
 def sharedStages() {
-    stage('Fetch Docker Image Tags') {
+    return {
+        stage('Fetch Docker Image Tags') {
             steps {
                 script {
                     echo "stage = Fetch Docker Image Tags"
@@ -31,5 +38,5 @@ def sharedStages() {
                 }
             }
         }
-
+    }
 }

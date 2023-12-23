@@ -44,10 +44,7 @@ pipeline {
             steps {
                 script {
                     // Access the branch name using env.BRANCH_NAME
-                    def branchName = sh(script: 'git rev-parse --abbrev-ref HEAD || git describe --tags --exact-match', returnStdout: true).trim()
-                    echo "Current branch is: ${branchName}"
                     echo "Current branch is: ${BRANCH_NAME}"
-                    echo "Cloning repo from the branch: ${branchName}..."
                     echo "Cloning repo from the branch: ${BRANCH_NAME}..."
                 }
             }
@@ -67,19 +64,19 @@ pipeline {
             }
         }
 
-        stage('Static Code Analysis') {
-            steps {
-                echo "Run SonarQube analysis"
-                withSonarQubeEnv(installationName: 'SonarQube') {
-                    script {
-                        def scannerHome = tool 'SonarScanner';
-                        withEnv(["PATH+SONARSCANNER=${scannerHome}/bin"]) {
-                            sh "sonar-scanner"
-                        }
-                    }
-                }
-            }
-        }
+        // stage('Static Code Analysis') {
+        //     steps {
+        //         echo "Run SonarQube analysis"
+        //         withSonarQubeEnv(installationName: 'SonarQube') {
+        //             script {
+        //                 def scannerHome = tool 'SonarScanner';
+        //                 withEnv(["PATH+SONARSCANNER=${scannerHome}/bin"]) {
+        //                     sh "sonar-scanner"
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
 
         stage('Build Docker Image') {
             steps {
@@ -136,7 +133,7 @@ pipeline {
             steps {
                 script {
                     sharedPipeline = load 'sharedPipeline.groovy'
-                    sharedPipeline.sharedStages()
+                    sharedPipeline.sharedStages()()
                 }
             }
         }
