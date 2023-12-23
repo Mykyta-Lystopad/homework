@@ -21,12 +21,31 @@ pipeline {
       ])
     }
 
+    environment {
+        DISABLE_AUTH = 'true'
+        DB_ENGINE    = 'sqlite'
+    }
+
 
     stages {
-        stage('Cleaning workspace') {
+        // stage('Cleaning workspace') {
+        //     steps {
+        //         print("Starting preconfiguration cleaning...")
+        //         deleteDir()
+        //     }
+        // }
+
+        stage('Build-1') {
+            node {
+                echo 'Pulling...' + env.BRANCH_NAME
+                checkout scm
+                
+            }
+        }
+
+        stage('Build-2') {
             steps {
-                print("Starting preconfiguration cleaning...")
-                deleteDir()
+                sh 'printenv'
             }
         }
 
@@ -36,10 +55,15 @@ pipeline {
                     env.each { key, value ->
                         echo "${key}=${value}"
                     }
+                    def getGitBranchName() {
+                        return scm.branches[0].name
+                    }
+                    echo "getGitBranchName: ${getGitBranchName}"
                     // Access the branch name using env.BRANCH_NAME
                     def branchName = env.BRANCH_NAME
                     echo "Current branch is: ${branchName}"
                     echo "Cloning repo from the branch: ${branchName}..."
+                    checkout scm
                 }
                 dir("${container_name}_dir") {
                     git(
