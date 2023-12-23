@@ -144,7 +144,7 @@ pipeline {
                         echo "File exists!"
                         
                         // Load the script
-                        def sharedPipeline = load 'CommonJenkinsScript.groovy'
+                        def sharedPipeline = load "${WORKSPACE}/sharedPipeline.groovy"
                         
                         // Check if sharedPipeline is not null
                         if (sharedPipeline) {
