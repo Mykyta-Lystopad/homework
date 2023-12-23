@@ -40,15 +40,15 @@ pipeline {
         //     }
         // }
 
-        stage('Pulling from git branch') {
-            steps {
-                script {
-                    // Access the branch name using env.BRANCH_NAME
-                    echo "Current branch is: ${BRANCH_NAME}"
-                    echo "Cloning repo from the branch: ${BRANCH_NAME}..."
-                }
-            }
-        }
+        // stage('Pulling from git branch') {
+        //     steps {
+        //         script {
+        //             // Access the branch name using env.BRANCH_NAME
+        //             echo "Current branch is: ${BRANCH_NAME}"
+        //             echo "Cloning repo from the branch: ${BRANCH_NAME}..."
+        //         }
+        //     }
+        // }
 
 
         // stage('Clone Repository') {

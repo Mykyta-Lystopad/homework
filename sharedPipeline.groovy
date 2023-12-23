@@ -34,3 +34,6 @@ def sharedStages() {
     ])
 
 }
+
+
+return this
