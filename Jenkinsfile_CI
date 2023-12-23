@@ -51,13 +51,14 @@ pipeline {
 
         stage('Clone Repository') {
             steps {
+                def getGitBranchName() {
+                    return scm.branches[0].name
+                }
                 script {
                     env.each { key, value ->
                         echo "${key}=${value}"
                     }
-                    def getGitBranchName() {
-                        return scm.branches[0].name
-                    }
+                    
                     echo "getGitBranchName: ${getGitBranchName}"
                     // Access the branch name using env.BRANCH_NAME
                     def branchName = env.BRANCH_NAME
