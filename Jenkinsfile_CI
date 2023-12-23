@@ -149,6 +149,7 @@ pipeline {
                         // Check if sharedPipeline is not null
                         if (sharedPipeline) {
                             // Invoke the sharedStages method
+                            sharedPipeline.sharedStages_test()
                             sharedPipeline.sharedStages()
                         } else {
                             error "Failed to load shared pipeline script!"
