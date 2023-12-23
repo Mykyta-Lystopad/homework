@@ -3,6 +3,7 @@
 def image_path = "nominonik/google-class"
 def image_part_name = "google-class"
 def branchName = env.BRANCH_NAME
+def container_name = "homework"
 
 
 pipeline {
