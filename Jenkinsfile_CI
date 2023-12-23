@@ -1,9 +1,9 @@
 // vars
+def branchName = sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
 // image_path - in docker hub (default folder for generel images: 1-with version and latest)
 def image_path = "nominonik/google-class"
 def image_part_name = "google-class"
 def container_name = "homework"
-def branchName = env.GIT_BRANCH
 
 
 pipeline {
@@ -12,7 +12,7 @@ pipeline {
     }
 
     parameters {
-        string(name: 'PUSH_VERSION', defaultValue: '2.4.1', description: 'Enter the version or tag of the Docker image for build image')
+        string(name: 'PUSH_VERSION', defaultValue: '2.4.2', description: 'Enter the version or tag of the Docker image for build image')
     }
 
 
@@ -24,12 +24,12 @@ pipeline {
 
 
     stages {
-        stage('Cleaning workspace') {
-            steps {
-                print("Starting preconfiguration cleaning...")
-                deleteDir()
-            }
-        }
+        // stage('Cleaning workspace') {
+        //     steps {
+        //         print("Starting preconfiguration cleaning...")
+        //         deleteDir()
+        //     }
+        // }
 
         stage('Check all envs') {
             steps {
