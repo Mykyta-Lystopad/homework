@@ -2,7 +2,6 @@
 // image_path - in docker hub (default folder for generel images: 1-with version and latest)
 def image_path = "nominonik/google-class"
 def image_part_name = "google-class"
-def branchName = env.BRANCH_NAME
 def container_name = "homework"
 
 
@@ -34,7 +33,10 @@ pipeline {
         stage('Clone Repository') {
             steps {
                 script {
+                    env.each { key, value ->
+                        echo "${key}=${value}"
                     // Access the branch name using env.BRANCH_NAME
+                    def branchName = env.BRANCH_NAME
                     echo "Current branch is: ${branchName}"
                     echo "Cloning repo from the branch: ${branchName}..."
                 }
