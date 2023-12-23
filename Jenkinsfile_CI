@@ -35,17 +35,12 @@ pipeline {
         //     }
         // }
 
-        stage('Build-1') {
-            node {
-                echo 'Pulling...' + env.BRANCH_NAME
-                checkout scm
-                
-            }
-        }
-
         stage('Build-2') {
             steps {
                 sh 'printenv'
+
+                echo 'Pulling...' + env.BRANCH_NAME
+                checkout scm
             }
         }
 
