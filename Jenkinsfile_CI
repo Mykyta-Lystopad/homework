@@ -126,6 +126,17 @@ pipeline {
                     //     input message: "Approve the deployment to ${params.ENVIRONMENT} environment with version latest?", ok: 'Deploy'
                     // }
             }
+
+            post {
+                success {
+                    script {
+                        echo 'Jenkins CI pipeline succeeded. Triggering Jenkins CD pipeline.'
+
+                        // Вызываем Jenkins CD пайплайн
+                        build job: 'Jenkinsfile_CD'  // Замените на имя вашего CD пайплайна
+                    }
+                }
+            }
         }
 
        // Include shared stages
@@ -163,16 +174,7 @@ pipeline {
         // }
 
 
-        post {
-            success {
-                script {
-                    echo 'Jenkins CI pipeline succeeded. Triggering Jenkins CD pipeline.'
-
-                    // Вызываем Jenkins CD пайплайн
-                    build job: 'Jenkinsfile_CD'  // Замените на имя вашего CD пайплайна
-                }
-            }
-    }
+        
 
     }
 }
