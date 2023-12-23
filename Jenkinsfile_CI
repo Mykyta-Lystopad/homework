@@ -132,7 +132,7 @@ pipeline {
         stage('Shared Stages') {
             steps {
                 script {
-                    sharedPipeline = load 'sharedPipeline.groovy'
+                    sharedPipeline = load "${WORKSPACE}/sharedPipeline.groovy"
                     sharedPipeline.sharedStages()()
                 }
             }
