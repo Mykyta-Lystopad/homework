@@ -165,8 +165,9 @@ pipeline {
 
 
         stage('Invoke cd_pipeline') {
-            echo "Invoke cd_pipeline for visibility latest image"
+            
             steps {
+                echo "Invoke cd_pipeline for visibility latest image"
                 script {
                     if (condition) {
                         build job: 'cd_pipeline'
