@@ -1,7 +1,7 @@
 // sharedPipeline.groovy
 
 def call() {
-    return this
+    // No need for 'return this'
 }
 
 def sharedStages() {
