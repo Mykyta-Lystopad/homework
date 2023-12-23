@@ -148,14 +148,19 @@ pipeline {
                     echo "Deploying to environment: ${params.ENVIRONMENT} with version: ${params.VERSION}"
 
                     def containerSuffix = params.ENVIRONMENT == 'qa' ? '-qa' : '-dev'
-                    def portMapping = params.ENVIRONMENT == 'qa' ? '-p 4200:4400' : '-p 4200:4300'
+                    def portMapping = params.ENVIRONMENT == 'qa' ? '-p 4200:4400' : '-p 4200:4200'
 
                     def scriptDeployingVar = """
                         docker pull ${image_path}-${params.ENVIRONMENT}:${params.VERSION}-${params.ENVIRONMENT};
 
-                        if (sh(script: "docker ps -a --format '{{.Names}}' | grep -q '^${container_name}${containerSuffix}\$'", returnStatus: true) == 0) {
+                        // if (sh(script: "docker ps -a --format '{{.Names}}' | grep -q '^${container_name}${containerSuffix}\$'", returnStatus: true) == 0) {
+                        //     sh "docker rm -f ${container_name}${containerSuffix}"
+                        // }
+
+                        if (sh(script: "docker image inspect ${container_name}${containerSuffix}", returnStatus: true) == 0) {
+                            echo "Image exists and deleting..."
                             sh "docker rm -f ${container_name}${containerSuffix}"
-                        }
+                        } else
 
                         // docker rm -f ${container_name}${containerSuffix};
                         docker run -d ${portMapping} --name ${container_name}${containerSuffix} ${image_path}-${params.ENVIRONMENT}:${params.VERSION}-${params.ENVIRONMENT} npm start
@@ -178,6 +183,7 @@ pipeline {
                     echo "Performing health check for environment: ${params.ENVIRONMENT}"
 
                     def response_status = sh(script: "curl -sLI -w '%{http_code}' http://192.168.0.139:4200 -o /dev/null", returnStdout: true)
+                    // def response_status = sh(script: "curl -sLI -w '%{http_code}' http://192.168.0.139:4400 -o /dev/null", returnStdout: true)
 
                     echo "response_status = ${response_status}"
 
