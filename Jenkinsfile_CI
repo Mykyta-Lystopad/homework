@@ -27,107 +27,107 @@ pipeline {
 
 
     stages {
-        // stage('Cleaning workspace') {
-        //     steps {
-        //         print("Starting preconfiguration cleaning...")
-        //         deleteDir()
-        //     }
-        // }
+        stage('Cleaning workspace') {
+            steps {
+                print("Starting preconfiguration cleaning...")
+                deleteDir()
+            }
+        }
 
-        // stage('Check all envs') {
-        //     steps {
-        //         sh 'printenv'
-        //     }
-        // }
+        stage('Check all envs') {
+            steps {
+                sh 'printenv'
+            }
+        }
 
-        // stage('Pulling from git branch') {
+        stage('Pulling from git branch') {
+            steps {
+                script {
+                    // Access the branch name using env.BRANCH_NAME
+                    echo "Current branch is: ${BRANCH_NAME}"
+                    echo "Cloning repo from the branch: ${BRANCH_NAME}..."
+                }
+            }
+        }
+
+
+        stage('Clone Repository') {
+            steps {
+                dir("${container_name}_dir") {
+                    git(
+                        url: "https://github.com/Mykyta-Lystopad/${container_name}.git",
+                        branch: "main",
+                        changelog: true,
+                        poll: true
+                    )
+                }
+            }
+        }
+
+        // stage('Static Code Analysis') {
         //     steps {
-        //         script {
-        //             // Access the branch name using env.BRANCH_NAME
-        //             echo "Current branch is: ${BRANCH_NAME}"
-        //             echo "Cloning repo from the branch: ${BRANCH_NAME}..."
+        //         echo "Run SonarQube analysis"
+        //         withSonarQubeEnv(installationName: 'SonarQube') {
+        //             script {
+        //                 def scannerHome = tool 'SonarScanner';
+        //                 withEnv(["PATH+SONARSCANNER=${scannerHome}/bin"]) {
+        //                     sh "sonar-scanner"
+        //                 }
+        //             }
         //         }
         //     }
         // }
 
-
-        // stage('Clone Repository') {
-        //     steps {
-        //         dir("${container_name}_dir") {
-        //             git(
-        //                 url: "https://github.com/Mykyta-Lystopad/${container_name}.git",
-        //                 branch: "main",
-        //                 changelog: true,
-        //                 poll: true
-        //             )
-        //         }
-        //     }
-        // }
-
-        // // stage('Static Code Analysis') {
-        // //     steps {
-        // //         echo "Run SonarQube analysis"
-        // //         withSonarQubeEnv(installationName: 'SonarQube') {
-        // //             script {
-        // //                 def scannerHome = tool 'SonarScanner';
-        // //                 withEnv(["PATH+SONARSCANNER=${scannerHome}/bin"]) {
-        // //                     sh "sonar-scanner"
-        // //                 }
-        // //             }
-        // //         }
-        // //     }
-        // // }
-
-        // stage('Build Docker Image') {
-        //     steps {
-        //         sh "docker build -t ${image_path}:${image_part_name}-latest ."
-        //     }
+        stage('Build Docker Image') {
+            steps {
+                sh "docker build -t ${image_path}:${image_part_name}-latest ."
+            }
            
-        // }
+        }
 
-        // stage('Tag Docker Image') {
-        //     steps {
-        //         script {
-        //             // + docker tag nominonik/google-class:google-class-latest nominonik/google-class:google-class-2.4-201
-        //             sh "docker tag ${image_path}:${image_part_name}-latest \
-        //             ${image_path}:${image_part_name}-${params.PUSH_VERSION}-${env.BUILD_NUMBER}"
+        stage('Tag Docker Image') {
+            steps {
+                script {
+                    // + docker tag nominonik/google-class:google-class-latest nominonik/google-class:google-class-2.4-201
+                    sh "docker tag ${image_path}:${image_part_name}-latest \
+                    ${image_path}:${image_part_name}-${params.PUSH_VERSION}-${env.BUILD_NUMBER}"
 
-        //         }
-        //     }
-        // }
+                }
+            }
+        }
 
-        // stage('Push Docker Image to Docker Hub') {
-        //     steps {
-        //         script {
-        //             def scriptPushVar
+        stage('Push Docker Image to Docker Hub') {
+            steps {
+                script {
+                    def scriptPushVar
 
-        //             scriptPushVar = "docker login -u ${DOCKERHUB_USERNAME} -p ${DOCKERHUB_PASSWORD}; \
-        //                 docker push ${image_path}:${image_part_name}-latest; \
-        //                 docker push ${image_path}:${image_part_name}-${params.PUSH_VERSION}-${env.BUILD_NUMBER}"
+                    scriptPushVar = "docker login -u ${DOCKERHUB_USERNAME} -p ${DOCKERHUB_PASSWORD}; \
+                        docker push ${image_path}:${image_part_name}-latest; \
+                        docker push ${image_path}:${image_part_name}-${params.PUSH_VERSION}-${env.BUILD_NUMBER}"
 
-        //             sh(script: scriptPushVar, returnStatus: false, returnStdout: true)
+                    sh(script: scriptPushVar, returnStatus: false, returnStdout: true)
 
                     
-        //             // // Prompt the user to read linting message
-        //             // def userInput = input(
-        //             //     message: 'Do you want to read the linting message?',
-        //             //     ok: 'Yes',
-        //             //     parameters: [string(defaultValue: 'No', description: 'Select Yes to read the linting message', name: 'readLintMessage')]
-        //             // )
+                    // // Prompt the user to read linting message
+                    // def userInput = input(
+                    //     message: 'Do you want to read the linting message?',
+                    //     ok: 'Yes',
+                    //     parameters: [string(defaultValue: 'No', description: 'Select Yes to read the linting message', name: 'readLintMessage')]
+                    // )
 
-        //             // // Handle user input
-        //             // if (userInput == 'Yes') {
-        //             //     echo "User wants to read the linting message."
-        //             // } else {
-        //             //     echo "User chose not to read the linting message."
-        //             // }
-        //         }
-        //             // timeout(time: 7, unit: 'DAYS') {
-        //             //     input message: "Approve the deployment to ${params.ENVIRONMENT} environment with version latest?", ok: 'Deploy'
-        //             // }
-        //     }
+                    // // Handle user input
+                    // if (userInput == 'Yes') {
+                    //     echo "User wants to read the linting message."
+                    // } else {
+                    //     echo "User chose not to read the linting message."
+                    // }
+                }
+                    // timeout(time: 7, unit: 'DAYS') {
+                    //     input message: "Approve the deployment to ${params.ENVIRONMENT} environment with version latest?", ok: 'Deploy'
+                    // }
+            }
 
-        // }
+        }
 
        // Include shared stages
         // stage('Shared Stages') {
@@ -169,12 +169,15 @@ pipeline {
             steps {
                 echo "Invoke cd_pipeline for visibility latest image"
                 script {
-                    def condition = true
-                    if (condition) {
-                        build job: 'cd_pipeline'
-                    } else{
-                        echo "The pipeline was interrupted because it was started automatically."
-                    }  
+                    echo "The pipeline will be interrupted because it would start automatically." 
+                }
+                post {
+                    success {
+                        script {
+                            echo 'Jenkins CI pipeline succeeded. Triggering Jenkins CD pipeline.'
+                            build job: 'cd_pipeline'
+                        }
+                    }
                 }
             }
         
