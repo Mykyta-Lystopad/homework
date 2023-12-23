@@ -3,6 +3,7 @@
 def image_path = "nominonik/google-class"
 def image_part_name = "google-class"
 def container_name = "homework"
+def branchName = env.GIT_BRANCH
 
 
 pipeline {
@@ -21,39 +22,34 @@ pipeline {
       ])
     }
 
-    environment {
-        DISABLE_AUTH = 'true'
-        DB_ENGINE    = 'sqlite'
-    }
-
 
     stages {
-        // stage('Cleaning workspace') {
-        //     steps {
-        //         print("Starting preconfiguration cleaning...")
-        //         deleteDir()
-        //     }
-        // }
-
-        stage('Build-2') {
+        stage('Cleaning workspace') {
             steps {
-                sh 'printenv'
-
-                echo 'Pulling...' + env.BRANCH_NAME
-                checkout scm
+                print("Starting preconfiguration cleaning...")
+                deleteDir()
             }
         }
 
-        stage('Clone Repository') {
+        stage('Check all envs') {
+            steps {
+                sh 'printenv'
+            }
+        }
+
+        stage('Pulling from git branch') {
             steps {
                 script {
-                    echo "getGitBranchName: ${getGitBranchName}"
                     // Access the branch name using env.BRANCH_NAME
-                    def branchName = env.BRANCH_NAME
                     echo "Current branch is: ${branchName}"
                     echo "Cloning repo from the branch: ${branchName}..."
-                    checkout scm
                 }
+            }
+        }
+
+
+        stage('Clone Repository') {
+            steps {
                 dir("${container_name}_dir") {
                     git(
                         url: "https://github.com/Mykyta-Lystopad/${container_name}.git",
