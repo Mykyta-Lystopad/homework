@@ -81,20 +81,31 @@ pipeline {
                         ])
                     ])
 
-                    // Prompt the user to specify the target environment and version
-                    environmentInput = input(
-                        message: 'Specify the target environment (dev or qa):',
-                        parameters: [string(defaultValue: 'dev', description: 'Enter the target environment', name: 'ENVIRONMENT')]
-                    )
 
-                    versionInput = input(
-                        message: 'Choose the version:',
-                        parameters: [choice(name: 'VERSION', choices: javaChoicesList, description: 'Select the version')]
-                    )
+                    // Проверяем, был ли запуск в ручном режиме
+                    def manualTrigger = currentBuild.rawBuild.getCause(hudson.model.Cause$UserIdCause)
+                    if (manualTrigger) {
+                        echo 'Этот пайплайн был запущен в ручном режиме.'
+                    } else {
+                        echo 'Этот пайплайн был запущен автоматически (не в ручном режиме).'
+                        // Прерываем выполнение пайплайна, если он был запущен автоматически
+                        error 'Пайплайн прерван, так как он был запущен автоматически.'
+                    }
 
-                    // Handle user input
-                    echo "Selected environment: ${environmentInput}"
-                    echo "Selected version: ${versionInput}"
+                    // // Prompt the user to specify the target environment and version
+                    // environmentInput = input(
+                    //     message: 'Specify the target environment (dev or qa):',
+                    //     parameters: [string(defaultValue: 'dev', description: 'Enter the target environment', name: 'ENVIRONMENT')]
+                    // )
+
+                    // versionInput = input(
+                    //     message: 'Choose the version:',
+                    //     parameters: [choice(name: 'VERSION', choices: javaChoicesList, description: 'Select the version')]
+                    // )
+
+                    // // Handle user input
+                    // echo "Selected environment: ${environmentInput}"
+                    // echo "Selected version: ${versionInput}"
 
                 }
             }

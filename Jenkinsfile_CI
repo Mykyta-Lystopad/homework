@@ -27,12 +27,12 @@ pipeline {
 
 
     stages {
-        stage('Cleaning workspace') {
-            steps {
-                print("Starting preconfiguration cleaning...")
-                deleteDir()
-            }
-        }
+        // stage('Cleaning workspace') {
+        //     steps {
+        //         print("Starting preconfiguration cleaning...")
+        //         deleteDir()
+        //     }
+        // }
 
         // stage('Check all envs') {
         //     steps {
@@ -161,6 +161,18 @@ pipeline {
         //         }
         //     }
         // }
+
+
+        post {
+            success {
+                script {
+                    echo 'Jenkins CI pipeline succeeded. Triggering Jenkins CD pipeline.'
+
+                    // Вызываем Jenkins CD пайплайн
+                    build job: 'Jenkinsfile_CD'  // Замените на имя вашего CD пайплайна
+                }
+            }
+    }
 
     }
 }
