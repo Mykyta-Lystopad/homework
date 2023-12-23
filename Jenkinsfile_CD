@@ -148,7 +148,7 @@ pipeline {
                     echo "Deploying to environment: ${params.ENVIRONMENT} with version: ${params.VERSION}"
 
                     def containerSuffix = params.ENVIRONMENT == 'qa' ? '-qa' : '-dev'
-                    def portMapping = params.ENVIRONMENT == 'qa' ? '-p 4200:4400' : '-p 4200:4200'
+                    def portMapping = params.ENVIRONMENT == 'qa' ? '-p 4200:4400' : '-p 4200:4300'
 
                     def scriptDeployingVar = """
                         docker pull ${image_path}-${params.ENVIRONMENT}:${params.VERSION}-${params.ENVIRONMENT} &&
@@ -177,7 +177,7 @@ pipeline {
                 script {
                     echo "Performing health check for environment: ${params.ENVIRONMENT}"
 
-                    def response_status = sh(script: "curl -sLI -w '%{http_code}' http://192.168.0.139:4200 -o /dev/null", returnStdout: true)
+                    def response_status = sh(script: "curl -sLI -w '%{http_code}' http://192.168.0.139:4300 -o /dev/null", returnStdout: true)
                     // def response_status = sh(script: "curl -sLI -w '%{http_code}' http://192.168.0.139:4400 -o /dev/null", returnStdout: true)
 
                     echo "response_status = ${response_status}"
