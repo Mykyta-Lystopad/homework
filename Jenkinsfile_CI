@@ -38,13 +38,11 @@ pipeline {
 
         stage('Pulling from git branch') {
             steps {
-                node {
-                    script {
-                        // Access the branch name using env.BRANCH_NAME
-                        def branchName = sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
-                        echo "Current branch is: ${branchName}"
-                        echo "Cloning repo from the branch: ${branchName}..."
-                    }
+                script {
+                    // Access the branch name using env.BRANCH_NAME
+                    def branchName = sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
+                    echo "Current branch is: ${branchName}"
+                    echo "Cloning repo from the branch: ${branchName}..."
                 }
             }
         }
