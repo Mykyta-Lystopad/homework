@@ -171,12 +171,13 @@ pipeline {
                 script {
                     echo "The pipeline will be interrupted because it would start automatically." 
                 }
-                post {
-                    success {
-                        script {
-                            echo 'Jenkins CI pipeline succeeded. Triggering Jenkins CD pipeline.'
-                            build job: 'cd_pipeline'
-                        }
+                
+            }
+            post {
+                success {
+                    script {
+                        echo 'Jenkins CI pipeline succeeded. Triggering Jenkins CD pipeline.'
+                        build job: 'cd_pipeline'
                     }
                 }
             }
