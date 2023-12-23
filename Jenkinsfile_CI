@@ -132,7 +132,11 @@ pipeline {
         stage('Shared Stages') {
             steps {
                 script {
+                    echo "WORKSPACE: ${WORKSPACE}"
+                    echo "Checking if file exists: ${WORKSPACE}/sharedPipeline.groovy"
+                    echo "Is file readable: ${file("${WORKSPACE}/sharedPipeline.groovy").canRead()}"
                     sharedPipeline = load "${WORKSPACE}/sharedPipeline.groovy"
+                    echo "sharedPipeline: ${sharedPipeline}"
                     sharedPipeline.sharedStages()()
                 }
             }
