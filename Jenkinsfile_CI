@@ -180,6 +180,14 @@ pipeline {
                         build job: 'cd_pipeline'
                     }
                 }
+                failure {
+                    echo "Jenkins CI pipeline failed."
+                    // Add more logging or actions here
+                }
+                always {
+                    echo "This will always run."
+                    // Add more logging or actions here
+                }
             }
         
         }

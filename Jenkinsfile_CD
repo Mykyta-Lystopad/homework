@@ -88,7 +88,7 @@ pipeline {
                         echo 'This pipeline was started manually.'
                     } else {
                         echo 'This pipeline was started automatically (not manually).'
-                        echo "The pipeline was interrupted because it was started automatically."
+                        error "The pipeline was interrupted because it was started automatically."
                         return
                     }
 
