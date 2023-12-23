@@ -1,10 +1,5 @@
 def sharedStages() {
-    stage('Simple Stage') {
-        steps {
-            echo "Hello, World!"
-        }
-    }
-
+    echo "Hello, World!"
 }
 
 return this
