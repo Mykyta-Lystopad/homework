@@ -219,9 +219,6 @@ pipeline {
 
             // Use for PR status sending
             post {
-                when {
-                    expression { params.AUTOMATICALLY == false }
-                }
                 success{
                     setBuildStatus("Build succeeded", "SUCCESS");
                 }
