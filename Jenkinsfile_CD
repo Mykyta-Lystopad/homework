@@ -35,10 +35,16 @@ pipeline {
 
 
     stages {
-        stage('Cleaning workspace') {
+        // stage('Cleaning workspace') {
+        //     steps {
+        //         print("Starting preconfiguration cleaning...")
+        //         deleteDir()
+        //     }
+        // }
+
+        stage('Clean workspace') {
             steps {
-                print("Starting preconfiguration cleaning...")
-                deleteDir()
+                cleanWs()
             }
         }
 

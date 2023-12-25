@@ -34,6 +34,12 @@ pipeline {
         //     }
         // }
 
+        stage('Clean workspace') {
+            steps {
+                cleanWs()
+            }
+        }
+
         stage('Check all envs') {
             steps {
                 sh 'printenv'
@@ -192,6 +198,12 @@ pipeline {
                 }
             }
         
+        }
+
+        stage('Finalized') {
+            steps {
+                echo "Finalized..."
+            }
         }
 
     }
