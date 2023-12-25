@@ -22,7 +22,7 @@ pipeline {
     parameters {
         string(name: 'ENVIRONMENT', defaultValue: 'dev', description: 'Write the target environment (dev or qa)')
         choice(name: 'VERSION', choices: ['google-class-latest'], description: 'Enter the version or tag of the Docker image for build image')
-        booleanParam(name: 'AUTOMATICALY', defaultValue: false, description: 'Do not set up this check-box')
+        booleanParam(name: 'AUTOMATICALLY', defaultValue: false, description: 'Do not set up this check-box')
     }
 
 

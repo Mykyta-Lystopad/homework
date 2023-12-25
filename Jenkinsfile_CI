@@ -184,7 +184,7 @@ pipeline {
                     script {
                         echo 'Jenkins CI pipeline succeeded. Triggering Jenkins CD pipeline.'
                         build job: 'cd_pipeline', parameters: [
-                            booleanParam(name: 'AUTOMATICALY', value: true)
+                            booleanParam(name: 'AUTOMATICALLY', value: true)
                         ]
                     }
                 }
