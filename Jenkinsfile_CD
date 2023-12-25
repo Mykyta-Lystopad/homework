@@ -65,9 +65,9 @@ pipeline {
         // }
 
         stage('Fetch Docker Image Tags') {
-            when {
-                expression { params.AUTOMATICALLY == true }
-            }
+            // when {
+            //     expression { params.AUTOMATICALLY == true }
+            // }
             steps {
                 script {
                     echo "stage = Fetch Docker Image Tags"
@@ -99,14 +99,14 @@ pipeline {
 
 
                    // Check if the launch was done manually
-                    // def manualTrigger = currentBuild.rawBuild.getCause(hudson.model.Cause$UserIdCause)
-                    // if (manualTrigger) {
-                    //     echo 'This pipeline was started manually.'
-                    // } else {
-                    //     echo 'This pipeline was started automatically (not manually).'
-                    //     error "The pipeline was interrupted because it was started automatically."
-                    //     return
-                    // }
+                    def manualTrigger = currentBuild.rawBuild.getCause(hudson.model.Cause$UserIdCause)
+                    if (manualTrigger) {
+                        echo 'This pipeline was started manually.'
+                    } else {
+                        echo 'This pipeline was started automatically (not manually).'
+                        // error "The pipeline was interrupted because it was started automatically."
+                        // return
+                    }
 
                     // // Prompt the user to specify the target environment and version
                     // environmentInput = input(
