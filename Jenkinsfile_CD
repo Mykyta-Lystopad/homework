@@ -22,7 +22,7 @@ pipeline {
     parameters {
         string(name: 'ENVIRONMENT', defaultValue: 'dev', description: 'Write the target environment (dev or qa)')
         choice(name: 'VERSION', choices: ['google-class-latest'], description: 'Enter the version or tag of the Docker image for build image')
-        // booleanParam(name: 'FETCH_STAGE', defaultValue: false, description: 'Fetch Docker Image Tags')
+        booleanParam(name: 'AUTOMATICALY', defaultValue: false, description: 'Fetch Docker Image Tags')
     }
 
 
@@ -43,6 +43,9 @@ pipeline {
         // }
 
         stage('Clean workspace') {
+            when {
+                expression { params.AUTOMATICALLY == false }
+            }
             steps {
                 cleanWs()
             }
@@ -50,6 +53,9 @@ pipeline {
 
        // Include shared stages
         // stage('Shared Stages') {
+        //     when {
+        //         expression { params.AUTOMATICALLY == false }
+        //     }
         //     steps {
         //         script {
         //             sharedPipeline = load 'sharedPipeline.groovy'
@@ -59,9 +65,9 @@ pipeline {
         // }
 
         stage('Fetch Docker Image Tags') {
-            // when {
-            //     expression { params.FETCH_STAGE }
-            // }
+            when {
+                expression { params.AUTOMATICALLY == true }
+            }
             steps {
                 script {
                     echo "stage = Fetch Docker Image Tags"
@@ -93,14 +99,14 @@ pipeline {
 
 
                    // Check if the launch was done manually
-                    def manualTrigger = currentBuild.rawBuild.getCause(hudson.model.Cause$UserIdCause)
-                    if (manualTrigger) {
-                        echo 'This pipeline was started manually.'
-                    } else {
-                        echo 'This pipeline was started automatically (not manually).'
-                        error "The pipeline was interrupted because it was started automatically."
-                        return
-                    }
+                    // def manualTrigger = currentBuild.rawBuild.getCause(hudson.model.Cause$UserIdCause)
+                    // if (manualTrigger) {
+                    //     echo 'This pipeline was started manually.'
+                    // } else {
+                    //     echo 'This pipeline was started automatically (not manually).'
+                    //     error "The pipeline was interrupted because it was started automatically."
+                    //     return
+                    // }
 
                     // // Prompt the user to specify the target environment and version
                     // environmentInput = input(
@@ -122,7 +128,9 @@ pipeline {
         }
 
         stage('Tag Docker Image') {
-            // TODO regat with qa or dev
+            when {
+                expression { params.AUTOMATICALLY == false }
+            }
             steps {
                 script {
                     sh "docker tag ${image_path}:${params.VERSION} \
@@ -132,6 +140,9 @@ pipeline {
         }
 
         stage('Push Docker Image to Docker Hub') { // to nominonik/google-class-dev or qa
+            when {
+                expression { params.AUTOMATICALLY == false }
+            }
             steps {
                 script {
                     def scriptPushVar
@@ -151,7 +162,8 @@ pipeline {
 
         stage('Deploy to Environment') {
             when {
-                expression { currentBuild.resultIsBetterOrEqualTo('SUCCESS') }
+                expression { currentBuild.resultIsBetterOrEqualTo('SUCCESS') &&
+                             params.AUTOMATICALLY == false }
             }
             steps {
                 script {
@@ -181,7 +193,8 @@ pipeline {
 
         stage('Health Check') {
             when {
-                expression { currentBuild.resultIsBetterOrEqualTo('SUCCESS') }
+                expression { currentBuild.resultIsBetterOrEqualTo('SUCCESS') &&
+                             params.AUTOMATICALLY == false }
             }
             steps {
                 script {
@@ -206,6 +219,9 @@ pipeline {
 
             // Use for PR status sending
             post {
+                when {
+                    expression { params.AUTOMATICALLY == false }
+                }
                 success{
                     setBuildStatus("Build succeeded", "SUCCESS");
                 }

@@ -70,19 +70,19 @@ pipeline {
             }
         }
 
-        // stage('Static Code Analysis') {
-        //     steps {
-        //         echo "Run SonarQube analysis"
-        //         withSonarQubeEnv(installationName: 'SonarQube') {
-        //             script {
-        //                 def scannerHome = tool 'SonarScanner';
-        //                 withEnv(["PATH+SONARSCANNER=${scannerHome}/bin"]) {
-        //                     sh "sonar-scanner"
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
+        stage('Static Code Analysis') {
+            steps {
+                echo "Run SonarQube analysis"
+                withSonarQubeEnv(installationName: 'SonarQube') {
+                    script {
+                        def scannerHome = tool 'SonarScanner';
+                        withEnv(["PATH+SONARSCANNER=${scannerHome}/bin"]) {
+                            sh "sonar-scanner"
+                        }
+                    }
+                }
+            }
+        }
 
         stage('Build Docker Image') {
             steps {
@@ -184,7 +184,7 @@ pipeline {
                     script {
                         echo 'Jenkins CI pipeline succeeded. Triggering Jenkins CD pipeline.'
                         build job: 'cd_pipeline', parameters: [
-                            booleanParam(name: 'FETCH_STAGE', value: true)
+                            booleanParam(name: 'AUTOMATICALY', value: true)
                         ]
                     }
                 }
