@@ -41,11 +41,11 @@ pipeline {
             }
         }
 
-        stage('Check all envs') {
-            steps {
-                sh 'printenv'
-            }
-        }
+        // stage('Check all envs') {
+        //     steps {
+        //         sh 'printenv'
+        //     }
+        // }
 
         // stage('Pulling from git branch') {
         //     steps {
