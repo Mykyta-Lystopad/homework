@@ -65,9 +65,9 @@ pipeline {
         // }
 
         stage('Fetch Docker Image Tags') {
-            // when {
-            //     expression { params.AUTOMATICALLY == true }
-            // }
+            when {
+                expression { params.AUTOMATICALLY == true }
+            }
             steps {
                 echo "params.AUTOMATICALLY: ${params.AUTOMATICALLY}"
                 script {
@@ -95,7 +95,7 @@ pipeline {
                         parameters([
                             string(name: 'ENVIRONMENT', defaultValue: 'dev', description: 'Write the target environment (dev or qa)'),
                             choice(name: 'VERSION', choices: javaChoicesList, description: 'Choose the version'),
-                            booleanParam(name: 'AUTOMATICALY', defaultValue: false, description: 'Do not set up this check-box')
+                            booleanParam(name: 'AUTOMATICALLY', defaultValue: false, description: 'Do not set up this check-box')
                         ])
                     ])
 
