@@ -94,6 +94,7 @@ pipeline {
                         parameters([
                             string(name: 'ENVIRONMENT', defaultValue: 'dev', description: 'Write the target environment (dev or qa)'),
                             choice(name: 'VERSION', choices: javaChoicesList, description: 'Choose the version')
+                            booleanParam(name: 'AUTOMATICALY', defaultValue: false, description: 'Fetch Docker Image Tags')
                         ])
                     ])
 
