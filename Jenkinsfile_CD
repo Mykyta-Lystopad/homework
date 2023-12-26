@@ -1,0 +1,246 @@
+void setBuildStatus(String message, String state) {
+  step([
+      $class: "GitHubCommitStatusSetter",
+      reposSource: [$class: "ManuallyEnteredRepositorySource", url: "https://github.com/Mykyta-Lystopad/homework.git"],
+      contextSource: [$class: "ManuallyEnteredCommitContextSource", context: "ci/jenkins/build-status"],
+      errorHandlers: [[$class: "ChangingBuildStatusErrorHandler", result: "UNSTABLE"]],
+      statusResultSource: [ $class: "ConditionalStatusResultSource", results: [[$class: "AnyBuildResult", message: message, state: state]] ]
+  ]);
+}
+
+// vars
+def container_name = "homework"
+def image_path = "nominonik/google-class"
+def image_part_name = "google-class"
+
+
+pipeline {
+    agent {
+        label 'docker'
+    }
+
+    parameters {
+        string(name: 'ENVIRONMENT', defaultValue: 'dev', description: 'Write the target environment (dev or qa)')
+        choice(name: 'VERSION', choices: ['google-class-latest'], description: 'Enter the version or tag of the Docker image for build image')
+        booleanParam(name: 'AUTOMATICALLY', defaultValue: false, description: 'Do not set up this check-box')
+    }
+
+
+    options {
+      withCredentials([
+        usernamePassword(credentialsId: "docker_hub", passwordVariable: 'DOCKERHUB_PASSWORD', usernameVariable: 'DOCKERHUB_USERNAME')
+      ])
+    }
+
+
+
+    stages {
+        // stage('Cleaning workspace') {
+        //     steps {
+        //         print("Starting preconfiguration cleaning...")
+        //         deleteDir()
+        //     }
+        // }
+
+        stage('Clean workspace') {
+            when {
+                expression { params.AUTOMATICALLY == false }
+            }
+            steps {
+                cleanWs()
+            }
+        }
+
+       // Include shared stages
+        // stage('Shared Stages') {
+        //     when {
+        //         expression { params.AUTOMATICALLY == false }
+        //     }
+        //     steps {
+        //         script {
+        //             sharedPipeline = load 'sharedPipeline.groovy'
+        //             sharedPipeline.sharedStages()
+        //         }
+        //     }
+        // }
+
+        stage('Fetch Docker Image Tags') {
+            when {
+                expression { params.AUTOMATICALLY == true }
+            }
+            steps {
+                echo "params.AUTOMATICALLY: ${params.AUTOMATICALLY}"
+                script {
+                    echo "stage = Fetch Docker Image Tags"
+                    def registry = 'https://registry.hub.docker.com/v2/repositories/nominonik/google-class/tags'
+
+                    // Fetching tags from Docker Hub with authentication
+                    def response = sh(script: "curl -u ${DOCKERHUB_USERNAME}:${DOCKERHUB_PASSWORD} -s ${registry}", returnStdout: true).trim()
+
+                    echo "response: ${response}"
+
+                    // Parse the JSON response
+                    def imageNames = sh(script: "echo ${response} | grep -oE 'google-class-[^,]*'", returnStdout: true).trim()
+
+                    echo "Docker Image Names: ${imageNames}"
+
+                    // Split the newline-separated string into a list of strings
+                    def choicesList = imageNames.split('\n')
+
+                    // Convert Groovy list to Java list using collect
+                    def javaChoicesList = choicesList.collect { it.trim() }
+
+                    // Set the choices for the VERSION parameter
+                    properties([
+                        parameters([
+                            string(name: 'ENVIRONMENT', defaultValue: 'dev', description: 'Write the target environment (dev or qa)'),
+                            choice(name: 'VERSION', choices: javaChoicesList, description: 'Choose the version'),
+                            booleanParam(name: 'AUTOMATICALLY', defaultValue: false, description: 'Do not set up this check-box')
+                        ])
+                    ])
+
+
+                   // Check if the launch was done manually
+                    def manualTrigger = currentBuild.rawBuild.getCause(hudson.model.Cause$UserIdCause)
+                    if (manualTrigger) {
+                        echo 'This pipeline was started manually.'
+                    } else {
+                        echo 'This pipeline was started automatically (not manually).'
+                        error "The pipeline was interrupted because it was started automatically."
+                        return
+                    }
+
+                    // // Prompt the user to specify the target environment and version
+                    // environmentInput = input(
+                    //     message: 'Specify the target environment (dev or qa):',
+                    //     parameters: [string(defaultValue: 'dev', description: 'Enter the target environment', name: 'ENVIRONMENT')]
+                    // )
+
+                    // versionInput = input(
+                    //     message: 'Choose the version:',
+                    //     parameters: [choice(name: 'VERSION', choices: javaChoicesList, description: 'Select the version')]
+                    // )
+
+                    // // Handle user input
+                    // echo "Selected environment: ${environmentInput}"
+                    // echo "Selected version: ${versionInput}"
+
+                }
+            }
+        }
+
+        stage('Tag Docker Image') {
+            when {
+                expression { params.AUTOMATICALLY == false }
+            }
+            steps {
+                script {
+                    sh "docker tag ${image_path}:${params.VERSION} \
+                     ${image_path}-${params.ENVIRONMENT}:${params.VERSION}-${params.ENVIRONMENT}" // google-class-2.4-201-qa or dev
+                }
+            }
+        }
+
+        stage('Push Docker Image to Docker Hub') { // to nominonik/google-class-dev or qa
+            when {
+                expression { params.AUTOMATICALLY == false }
+            }
+            steps {
+                script {
+                    def scriptPushVar
+
+                    scriptPushVar = "docker login -u ${DOCKERHUB_USERNAME} -p ${DOCKERHUB_PASSWORD}; \
+                        docker push ${image_path}-${params.ENVIRONMENT}:${params.VERSION}-${params.ENVIRONMENT}"
+
+                    sh(script: scriptPushVar, returnStatus: false, returnStdout: true)
+
+                }
+                    timeout(time: 7, unit: 'DAYS') {
+                        input message: "Approve the deployment to ====${params.ENVIRONMENT} environment==== with version ====${params.VERSION}-${params.ENVIRONMENT}==== ?", ok: 'Deploy'
+                    }
+
+            }
+        }
+
+        stage('Deploy to Environment') {
+            when {
+                expression { currentBuild.resultIsBetterOrEqualTo('SUCCESS') &&
+                             params.AUTOMATICALLY == false }
+            }
+            steps {
+                script {
+                    echo "Deploying to environment: ${params.ENVIRONMENT} with version: ${params.VERSION}"
+
+                    def containerSuffix = params.ENVIRONMENT == 'qa' ? '-qa' : '-dev'
+                    def portMapping = params.ENVIRONMENT == 'qa' ? '-p 4400:4200' : '-p 4300:4200'
+
+                    def scriptDeployingVar = """
+                        docker pull ${image_path}-${params.ENVIRONMENT}:${params.VERSION}-${params.ENVIRONMENT} &&
+                        
+                        if docker image inspect ${container_name}${containerSuffix} &> /dev/null; then
+                            echo "Image exists and deleting..."
+                            docker rm -f ${container_name}${containerSuffix}
+                        fi &&
+                        
+                        docker run -d ${portMapping} --name ${container_name}${containerSuffix} ${image_path}-${params.ENVIRONMENT}:${params.VERSION}-${params.ENVIRONMENT} npm start
+                    """
+
+                    sh(script: scriptDeployingVar, returnStatus: false, returnStdout: true)
+
+                    echo "============= Perform sleep command for starting app in container ======================"
+                    sh "sleep 40"
+                }
+            }
+        }
+
+        stage('Health Check') {
+            when {
+                expression { currentBuild.resultIsBetterOrEqualTo('SUCCESS') &&
+                             params.AUTOMATICALLY == false }
+            }
+            steps {
+                script {
+                    echo "Performing health check for environment: ${params.ENVIRONMENT}"
+
+                    def response_status = sh(script: "curl -sLI -w '%{http_code}' http://192.168.0.139:4300 -o /dev/null", returnStdout: true)
+                    // def response_status = sh(script: "curl -sLI -w '%{http_code}' http://192.168.0.139:4400 -o /dev/null", returnStdout: true)
+
+                    echo "response_status = ${response_status}"
+
+                    if (response_status == '200') {
+                        echo "Health check passed with response code ${response_status}."
+                    } else {
+                        echo "Health check failed with response code ${response_status}."
+
+                    }
+
+                }
+
+            }
+        
+
+            // Use for PR status sending
+            post {
+                success{
+                    setBuildStatus("Build succeeded", "SUCCESS");
+                }
+
+                failure {
+                    setBuildStatus("Build failed", "FAILURE");
+                } 
+
+                // Sending notification to gmail
+                always {
+                    emailext to: "niktoring77@gmail.com",
+                    subject: "jenkins build:${currentBuild.currentResult}: ${env.JOB_NAME}",
+                    body: """
+                    Logs from Jenkins pipeline:
+                    ${currentBuild.rawBuild.getLog(100)}
+                    """,
+                    attachLog: true
+                }
+            }
+        }
+    }    
+        
+}
