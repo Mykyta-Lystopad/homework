@@ -1,3 +1,14 @@
+void setBuildStatus(String message, String state) {
+  step([
+      $class: "GitHubCommitStatusSetter",
+      reposSource: [$class: "ManuallyEnteredRepositorySource", url: "https://github.com/Mykyta-Lystopad/homework.git"],
+      contextSource: [$class: "ManuallyEnteredCommitContextSource", context: "ci/jenkins/build-status"],
+      errorHandlers: [[$class: "ChangingBuildStatusErrorHandler", result: "UNSTABLE"]],
+      statusResultSource: [ $class: "ConditionalStatusResultSource", results: [[$class: "AnyBuildResult", message: message, state: state]] ]
+  ]);
+}
+
+
 // vars
 // image_path - in docker hub (default folder for generel images: 1-with version and latest)
 def image_path = "nominonik/google-class"
@@ -209,7 +220,7 @@ pipeline {
                         // if (env.CHANGE_ID) {
                         // This build is associated with a pull request
                         def currentSHA = env.GIT_COMMIT
-                            // setBuildStatus("Build succeeded", "SUCCESS");
+                            setBuildStatus("Build succeeded", "SUCCESS");
                             echo """
                                 curl -L \
                                 -X POST \
@@ -240,7 +251,7 @@ pipeline {
                         // if (env.CHANGE_ID) {
                         // This build is associated with a pull request
                         def currentSHA = env.GIT_COMMIT
-                            // setBuildStatus("Build failed", "FAILURE");
+                            setBuildStatus("Build failed", "FAILURE");
                             echo """
                                 curl -L \
                                 -X POST \
