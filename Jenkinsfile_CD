@@ -85,7 +85,7 @@ pipeline {
                         parameters([
                             string(name: 'ENVIRONMENT', defaultValue: 'dev', description: 'Write the target environment (dev or qa)'),
                             choice(name: 'VERSION', choices: javaChoicesList, description: 'Choose the version'),
-                            booleanParam(name: 'AUTOMATICALLY', defaultValue: false, description: 'Do not set up this check-box')
+                            booleanParam(name: 'AUTOMATICALLY', defaultValue: true, description: 'Do not set up this check-box')
                         ])
                     ])
 
