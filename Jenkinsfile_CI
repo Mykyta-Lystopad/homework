@@ -216,7 +216,7 @@ pipeline {
                         def branchName = BRANCH_NAME
                         build job: 'cd_pipeline', parameters: [
                             booleanParam(name: 'AUTOMATICALLY', value: true),
-                            string(name: 'BRANCH_NAME', value: branchName)
+                            string(name: 'ENVIRONMENT', value: branchName)
                         ]
 
                         // if (env.CHANGE_ID) {
