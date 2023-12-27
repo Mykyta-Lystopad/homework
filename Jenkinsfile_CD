@@ -85,21 +85,21 @@ pipeline {
                         parameters([
                             string(name: 'ENVIRONMENT', defaultValue: 'dev', description: 'Write the target environment (dev or qa)'),
                             choice(name: 'VERSION', choices: javaChoicesList, description: 'Choose the version'),
-                            booleanParam(name: 'AUTOMATICALLY', defaultValue: true, description: 'Do not set up this check-box')
+                            booleanParam(name: 'AUTOMATICALLY', defaultValue: false, description: 'Do not set up this check-box')
                         ])
                     ])
 
 
                    // Check if the launch was done manually
-                    def manualTrigger = currentBuild.rawBuild.getCause(hudson.model.Cause$UserIdCause)
-                    if (manualTrigger) {
-                        echo 'This pipeline was started manually.'
-                    } else {
-                        echo 'This pipeline was started automatically (not manually).'
-                        echo "params.AUTOMATICALLY: ${params.AUTOMATICALLY}"
-                        // error "The pipeline was interrupted because it was started automatically."
-                        // return
-                    }
+                    // def manualTrigger = currentBuild.rawBuild.getCause(hudson.model.Cause$UserIdCause)
+                    // if (manualTrigger) {
+                    //     echo 'This pipeline was started manually.'
+                    // } else {
+                    //     echo 'This pipeline was started automatically (not manually).'
+                    //     echo "params.AUTOMATICALLY: ${params.AUTOMATICALLY}"
+                    //     // error "The pipeline was interrupted because it was started automatically."
+                    //     // return
+                    // }
 
                     // // Prompt the user to specify the target environment and version
                     // environmentInput = input(
