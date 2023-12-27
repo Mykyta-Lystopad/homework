@@ -14,7 +14,6 @@ void setBuildStatus(String message, String state) {
 def image_path = "nominonik/google-class"
 def image_part_name = "google-class"
 def container_name = "homework"
-def branchName = ${BRANCH_NAME}
 
 
 pipeline {
@@ -214,7 +213,7 @@ pipeline {
                 success {
                     script {
                         echo 'Jenkins CI pipeline succeeded. Triggering Jenkins CD pipeline.'
-                        
+                        def branchName = BRANCH_NAME
                         build job: 'cd_pipeline', parameters: [
                             booleanParam(name: 'AUTOMATICALLY', value: true),
                             string(name: 'BRANCH_NAME', value: branchName)
