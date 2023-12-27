@@ -221,7 +221,7 @@ pipeline {
                         // if (env.CHANGE_ID) {
                         // This build is associated with a pull request
                         def currentSHA = env.GIT_COMMIT
-                            setBuildStatus("Build succeeded", "success");
+                            setBuildStatus("Build succeeded", "SUCCESS");
                             echo """
                                 curl -L \
                                 -X POST \
@@ -252,7 +252,7 @@ pipeline {
                         // if (env.CHANGE_ID) {
                         // This build is associated with a pull request
                         def currentSHA = env.GIT_COMMIT
-                            setBuildStatus("Build failed", "failure");
+                            setBuildStatus("Build failed", "FAILURE");
                             echo """
                                 curl -L \
                                 -X POST \
