@@ -39,7 +39,7 @@ pipeline {
                 script {
                     echo "Checkout stage"
                     // checkout([$class: 'GitSCM', branches: [[name: params.ENVIRONMENT]], userRemoteConfigs: [[url: 'https://github.com/Mykyta-Lystopad/homework.git']]])
-                    checkout scmGit(branches: [[name: params.ENVIRONMENT]], userRemoteConfigs: [[url: 'https://github.com/Mykyta-Lystopad/homework.git']]])
+                    checkout scmGit(branches: [[name: params.ENVIRONMENT]], userRemoteConfigs: [[url: 'https://github.com/Mykyta-Lystopad/homework.git']])
                 }
             }
         }
