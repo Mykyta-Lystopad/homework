@@ -91,15 +91,14 @@ pipeline {
 
 
                    // Check if the launch was done manually
-                    // def manualTrigger = currentBuild.rawBuild.getCause(hudson.model.Cause$UserIdCause)
-                    // if (manualTrigger) {
-                    //     echo 'This pipeline was started manually.'
-                    // } else {
-                    //     echo 'This pipeline was started automatically (not manually).'
-                    //     echo "params.AUTOMATICALLY: ${params.AUTOMATICALLY}"
-                    //     // error "The pipeline was interrupted because it was started automatically."
-                    //     // return
-                    // }
+                    def manualTrigger = currentBuild.rawBuild.getCause(hudson.model.Cause$UserIdCause)
+                    if (manualTrigger) {
+                        echo 'This pipeline was started manually.'
+                    } else {
+                        echo 'This pipeline was started automatically (not manually).'
+                        // error "The pipeline was interrupted because it was started automatically."
+                        // return
+                    }
 
                     // // Prompt the user to specify the target environment and version
                     // environmentInput = input(
@@ -126,7 +125,6 @@ pipeline {
             }
             steps {
                 script {
-                    echo "params.AUTOMATICALLY: ${params.AUTOMATICALLY}"
                     sh "docker tag ${image_path}:${params.VERSION} \
                      ${image_path}-${params.ENVIRONMENT}:${params.VERSION}-${params.ENVIRONMENT}" // google-class-2.4-201-qa or dev
                 }
@@ -139,7 +137,6 @@ pipeline {
             }
             steps {
                 script {
-                    echo "params.AUTOMATICALLY: ${params.AUTOMATICALLY}"
                     def scriptPushVar
 
                     scriptPushVar = "docker login -u ${DOCKERHUB_USERNAME} -p ${DOCKERHUB_PASSWORD}; \
@@ -162,7 +159,6 @@ pipeline {
             }
             steps {
                 script {
-                    echo "params.AUTOMATICALLY: ${params.AUTOMATICALLY}"
                     echo "Deploying to environment: ${params.ENVIRONMENT} with version: ${params.VERSION}"
 
                     def containerSuffix = params.ENVIRONMENT == 'qa' ? '-qa' : '-dev'
