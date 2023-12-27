@@ -170,6 +170,24 @@ pipeline {
         //     }
         // }
 
+        stage('Update GitHub Commit Status') {
+            steps {
+                script {
+                    // Replace 'commit_sha' with the actual commit SHA you want to update
+                    def commitSha = 'commit_sha'
+
+                    // Update GitHub commit status to 'FAILURE' or 'SUCCESS' based on build result
+                    GitHubCommitStatusBuilder {
+                        reposource 'Mykyta-Lystopad/homework'
+                        sha commitSha
+                        state 'FAILURE' // or 'SUCCESS' based on your build result
+                        targetUrl 'https://Mykyta-Lystopad/homework/build/status'
+                        description 'The build failed!' // or 'The build succeeded!'
+                    }
+                }
+            }
+        }
+
 
         stage('Invoke cd_pipeline') {
             
