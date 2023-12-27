@@ -13,6 +13,7 @@ pipeline {
         string(name: 'ENVIRONMENT', defaultValue: 'dev', description: 'Write the target environment (dev or qa)')
         choice(name: 'VERSION', choices: ['google-class-latest'], description: 'Enter the version or tag of the Docker image for build image')
         booleanParam(name: 'AUTOMATICALLY', defaultValue: false, description: 'Do not set up this check-box')
+        string(name: 'BRANCH_NAME', description: 'Branch name to build', defaultValue: 'dev')
     }
 
 
@@ -31,6 +32,14 @@ pipeline {
         //         deleteDir()
         //     }
         // }
+
+        stage('Checkout') {
+            steps {
+                script {
+                    checkout([$class: 'GitSCM', branches: [[name: params.BRANCH_NAME]], userRemoteConfigs: [[url: 'https://github.com/Mykyta-Lystopad/homework.git']]])
+                }
+            }
+        }
 
         stage('Clean workspace') {
             when {
