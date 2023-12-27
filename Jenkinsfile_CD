@@ -35,6 +35,9 @@ pipeline {
         }
 
         stage('Checkout') {
+            when {
+                expression { params.AUTOMATICALLY == true }
+            }
             steps {
                 script {
                     echo "Checkout stage"
@@ -52,6 +55,9 @@ pipeline {
         // }
 
         stage('Work with git branch') {
+            when {
+                expression { params.AUTOMATICALLY == false }
+            }
             steps {
                 script {
                     // Access the branch name using env.BRANCH_NAME
