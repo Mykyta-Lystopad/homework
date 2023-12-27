@@ -125,6 +125,7 @@ pipeline {
             }
             steps {
                 script {
+                    echo "params.AUTOMATICALLY: ${params.AUTOMATICALLY}"
                     sh "docker tag ${image_path}:${params.VERSION} \
                      ${image_path}-${params.ENVIRONMENT}:${params.VERSION}-${params.ENVIRONMENT}" // google-class-2.4-201-qa or dev
                 }
@@ -137,6 +138,7 @@ pipeline {
             }
             steps {
                 script {
+                    echo "params.AUTOMATICALLY: ${params.AUTOMATICALLY}"
                     def scriptPushVar
 
                     scriptPushVar = "docker login -u ${DOCKERHUB_USERNAME} -p ${DOCKERHUB_PASSWORD}; \
@@ -159,6 +161,7 @@ pipeline {
             }
             steps {
                 script {
+                    echo "params.AUTOMATICALLY: ${params.AUTOMATICALLY}"
                     echo "Deploying to environment: ${params.ENVIRONMENT} with version: ${params.VERSION}"
 
                     def containerSuffix = params.ENVIRONMENT == 'qa' ? '-qa' : '-dev'
