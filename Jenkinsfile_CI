@@ -1,3 +1,14 @@
+void setBuildStatus(String message, String state) {
+  step([
+      $class: "GitHubCommitStatusSetter",
+      reposSource: [$class: "ManuallyEnteredRepositorySource", url: "https://github.com/Mykyta-Lystopad/homework.git"],
+      contextSource: [$class: "ManuallyEnteredCommitContextSource", context: "ci/jenkins/build-status"],
+      errorHandlers: [[$class: "ChangingBuildStatusErrorHandler", result: "UNSTABLE"]],
+      statusResultSource: [ $class: "ConditionalStatusResultSource", results: [[$class: "AnyBuildResult", message: message, state: state]] ]
+  ]);
+}
+
+
 // vars
 // image_path - in docker hub (default folder for generel images: 1-with version and latest)
 def image_path = "nominonik/google-class"
@@ -41,35 +52,45 @@ pipeline {
             }
         }
 
+        stage('Checkout') {
+            steps {
+                script {
+                    echo "Checkout stage"
+                    // checkout([$class: 'GitSCM', branches: [[name: params.ENVIRONMENT]], userRemoteConfigs: [[url: 'https://github.com/Mykyta-Lystopad/homework.git']]])
+                    checkout scmGit(branches: [[name: BRANCH_NAME]], userRemoteConfigs: [[url: 'https://github.com/Mykyta-Lystopad/homework.git']])
+                }
+            }
+        }
+
         // stage('Check all envs') {
         //     steps {
         //         sh 'printenv'
         //     }
         // }
 
-        // stage('Pulling from git branch') {
-        //     steps {
-        //         script {
-        //             // Access the branch name using env.BRANCH_NAME
-        //             echo "Current branch is: ${BRANCH_NAME}"
-        //             echo "Cloning repo from the branch: ${BRANCH_NAME}..."
-        //         }
-        //     }
-        // }
+        stage('Pulling from git branch') {
+            steps {
+                script {
+                    // Access the branch name using env.BRANCH_NAME
+                    echo "Current branch is: ${BRANCH_NAME}"
+                    echo "Cloning repo from the branch: ${BRANCH_NAME}..."
+                }
+            }
+        }
 
 
-        // stage('Clone Repository') {
-        //     steps {
-        //         dir("${container_name}_dir") {
-        //             git(
-        //                 url: "https://github.com/Mykyta-Lystopad/${container_name}.git",
-        //                 branch: "main",
-        //                 changelog: true,
-        //                 poll: true
-        //             )
-        //         }
-        //     }
-        // }
+        stage('Clone Repository') {
+            steps {
+                dir("${container_name}_dir") {
+                    git(
+                        url: "https://github.com/Mykyta-Lystopad/${container_name}.git",
+                        branch: "main",
+                        changelog: true,
+                        poll: true
+                    )
+                }
+            }
+        }
 
         // stage('Static Code Analysis') {
         //     steps {
@@ -85,56 +106,56 @@ pipeline {
         //     }
         // }
 
-        // stage('Build Docker Image') {
-        //     steps {
-        //         sh "docker build -t ${image_path}:${image_part_name}-latest ."
-        //     }
+        stage('Build Docker Image') {
+            steps {
+                sh "docker build -t ${image_path}:${image_part_name}-latest ."
+            }
            
-        // }
+        }
 
-        // stage('Tag Docker Image') {
-        //     steps {
-        //         script {
-        //             // + docker tag nominonik/google-class:google-class-latest nominonik/google-class:google-class-2.4-201
-        //             sh "docker tag ${image_path}:${image_part_name}-latest \
-        //             ${image_path}:${image_part_name}-${params.PUSH_VERSION}-${env.BUILD_NUMBER}"
+        stage('Tag Docker Image') {
+            steps {
+                script {
+                    // + docker tag nominonik/google-class:google-class-latest nominonik/google-class:google-class-2.4-201
+                    sh "docker tag ${image_path}:${image_part_name}-latest \
+                    ${image_path}:${image_part_name}-${params.PUSH_VERSION}-${env.BUILD_NUMBER}"
 
-        //         }
-        //     }
-        // }
+                }
+            }
+        }
 
-        // stage('Push Docker Image to Docker Hub') {
-        //     steps {
-        //         script {
-        //             def scriptPushVar
+        stage('Push Docker Image to Docker Hub') {
+            steps {
+                script {
+                    def scriptPushVar
 
-        //             scriptPushVar = "docker login -u ${DOCKERHUB_USERNAME} -p ${DOCKERHUB_PASSWORD}; \
-        //                 docker push ${image_path}:${image_part_name}-latest; \
-        //                 docker push ${image_path}:${image_part_name}-${params.PUSH_VERSION}-${env.BUILD_NUMBER}"
+                    scriptPushVar = "docker login -u ${DOCKERHUB_USERNAME} -p ${DOCKERHUB_PASSWORD}; \
+                        docker push ${image_path}:${image_part_name}-latest; \
+                        docker push ${image_path}:${image_part_name}-${params.PUSH_VERSION}-${env.BUILD_NUMBER}"
 
-        //             sh(script: scriptPushVar, returnStatus: false, returnStdout: true)
+                    sh(script: scriptPushVar, returnStatus: false, returnStdout: true)
 
                     
-        //             // // Prompt the user to read linting message
-        //             // def userInput = input(
-        //             //     message: 'Do you want to read the linting message?',
-        //             //     ok: 'Yes',
-        //             //     parameters: [string(defaultValue: 'No', description: 'Select Yes to read the linting message', name: 'readLintMessage')]
-        //             // )
+                    // // Prompt the user to read linting message
+                    // def userInput = input(
+                    //     message: 'Do you want to read the linting message?',
+                    //     ok: 'Yes',
+                    //     parameters: [string(defaultValue: 'No', description: 'Select Yes to read the linting message', name: 'readLintMessage')]
+                    // )
 
-        //             // // Handle user input
-        //             // if (userInput == 'Yes') {
-        //             //     echo "User wants to read the linting message."
-        //             // } else {
-        //             //     echo "User chose not to read the linting message."
-        //             // }
-        //         }
-        //             // timeout(time: 7, unit: 'DAYS') {
-        //             //     input message: "Approve the deployment to ${params.ENVIRONMENT} environment with version latest?", ok: 'Deploy'
-        //             // }
-        //     }
+                    // // Handle user input
+                    // if (userInput == 'Yes') {
+                    //     echo "User wants to read the linting message."
+                    // } else {
+                    //     echo "User chose not to read the linting message."
+                    // }
+                }
+                    // timeout(time: 7, unit: 'DAYS') {
+                    //     input message: "Approve the deployment to ${params.ENVIRONMENT} environment with version latest?", ok: 'Deploy'
+                    // }
+            }
 
-        // }
+        }
 
        // Include shared stages
         // stage('Shared Stages') {
@@ -170,6 +191,24 @@ pipeline {
         //     }
         // }
 
+        // stage('Update GitHub Commit Status') {
+        //     steps {
+        //         script {
+        //             // Replace 'commit_sha' with the actual commit SHA you want to update
+        //             def commitSha = 'commit_sha'
+
+        //             // Update GitHub commit status to 'FAILURE' or 'SUCCESS' based on build result
+        //             GitHubCommitStatusBuilder {
+        //                 reposource 'Mykyta-Lystopad/homework'
+        //                 sha commitSha
+        //                 state 'FAILURE' // or 'SUCCESS' based on your build result
+        //                 targetUrl 'https://Mykyta-Lystopad/homework/build/status'
+        //                 description 'The build failed!' // or 'The build succeeded!'
+        //             }
+        //         }
+        //     }
+        // }
+
 
         stage('Invoke cd_pipeline') {
             
@@ -185,13 +224,14 @@ pipeline {
                     script {
                         echo 'Jenkins CI pipeline succeeded. Triggering Jenkins CD pipeline.'
                         build job: 'cd_pipeline', parameters: [
-                            booleanParam(name: 'AUTOMATICALLY', value: true)
+                            booleanParam(name: 'AUTOMATICALLY', value: true),
+                            string(name: 'ENVIRONMENT', value: BRANCH_NAME)
                         ]
 
                         // if (env.CHANGE_ID) {
                         // This build is associated with a pull request
                         def currentSHA = env.GIT_COMMIT
-                            // setBuildStatus("Build succeeded", "SUCCESS");
+                            setBuildStatus("Build succeeded", "SUCCESS");
                             echo """
                                 curl -L \
                                 -X POST \
@@ -222,7 +262,7 @@ pipeline {
                         // if (env.CHANGE_ID) {
                         // This build is associated with a pull request
                         def currentSHA = env.GIT_COMMIT
-                            // setBuildStatus("Build failed", "FAILURE");
+                            setBuildStatus("Build failed", "FAILURE");
                             echo """
                                 curl -L \
                                 -X POST \
@@ -262,6 +302,5 @@ pipeline {
         }
 
     }
+
 }
-
-
