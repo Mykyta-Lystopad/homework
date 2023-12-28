@@ -1,3 +1,13 @@
+void setBuildStatus(String message, String state) {
+  step([
+      $class: "GitHubCommitStatusSetter",
+      reposSource: [$class: "ManuallyEnteredRepositorySource", url: "https://github.com/Mykyta-Lystopad/homework.git"],
+      contextSource: [$class: "ManuallyEnteredCommitContextSource", context: "ci/jenkins/build-status"],
+      errorHandlers: [[$class: "ChangingBuildStatusErrorHandler", result: "UNSTABLE"]],
+      statusResultSource: [ $class: "ConditionalStatusResultSource", results: [[$class: "AnyBuildResult", message: message, state: state]] ]
+  ]);
+}
+
 // vars
 def container_name = "homework"
 def image_path = "nominonik/google-class"
@@ -41,18 +51,10 @@ pipeline {
             steps {
                 script {
                     echo "Checkout stage"
-                    // checkout([$class: 'GitSCM', branches: [[name: params.ENVIRONMENT]], userRemoteConfigs: [[url: 'https://github.com/Mykyta-Lystopad/homework.git']]])
                     checkout scmGit(branches: [[name: params.ENVIRONMENT]], userRemoteConfigs: [[url: 'https://github.com/Mykyta-Lystopad/homework.git']])
                 }
             }
         }
-
-        // stage('Cleaning workspace') {
-        //     steps {
-        //         print("Starting preconfiguration cleaning...")
-        //         deleteDir()
-        //     }
-        // }
 
         stage('Work with git branch') {
             when {
@@ -66,20 +68,6 @@ pipeline {
                 }
             }
         }
-
-
-       // Include shared stages
-        // stage('Shared Stages') {
-        //     when {
-        //         expression { params.AUTOMATICALLY == false }
-        //     }
-        //     steps {
-        //         script {
-        //             sharedPipeline = load 'sharedPipeline.groovy'
-        //             sharedPipeline.sharedStages()
-        //         }
-        //     }
-        // }
 
         stage('Fetch Docker Image Tags') {
             when {
@@ -126,21 +114,6 @@ pipeline {
                         // error "The pipeline was interrupted because it was started automatically."
                         // return
                     }
-
-                    // // Prompt the user to specify the target environment and version
-                    // environmentInput = input(
-                    //     message: 'Specify the target environment (dev or qa):',
-                    //     parameters: [string(defaultValue: 'dev', description: 'Enter the target environment', name: 'ENVIRONMENT')]
-                    // )
-
-                    // versionInput = input(
-                    //     message: 'Choose the version:',
-                    //     parameters: [choice(name: 'VERSION', choices: javaChoicesList, description: 'Select the version')]
-                    // )
-
-                    // // Handle user input
-                    // echo "Selected environment: ${environmentInput}"
-                    // echo "Selected version: ${versionInput}"
 
                 }
             }
