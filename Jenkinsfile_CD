@@ -51,22 +51,14 @@ pipeline {
             steps {
                 script {
                     echo "Checkout stage"
-                    // checkout([$class: 'GitSCM', branches: [[name: params.ENVIRONMENT]], userRemoteConfigs: [[url: 'https://github.com/Mykyta-Lystopad/homework.git']]])
                     checkout scmGit(branches: [[name: params.ENVIRONMENT]], userRemoteConfigs: [[url: 'https://github.com/Mykyta-Lystopad/homework.git']])
                 }
             }
         }
 
-        // stage('Cleaning workspace') {
-        //     steps {
-        //         print("Starting preconfiguration cleaning...")
-        //         deleteDir()
-        //     }
-        // }
-
         stage('Work with git branch') {
             when {
-                expression { params.AUTOMATICALLY == true }
+                expression { params.AUTOMATICALLY == false }
             }
             steps {
                 script {
@@ -76,20 +68,6 @@ pipeline {
                 }
             }
         }
-
-
-       // Include shared stages
-        // stage('Shared Stages') {
-        //     when {
-        //         expression { params.AUTOMATICALLY == false }
-        //     }
-        //     steps {
-        //         script {
-        //             sharedPipeline = load 'sharedPipeline.groovy'
-        //             sharedPipeline.sharedStages()
-        //         }
-        //     }
-        // }
 
         stage('Fetch Docker Image Tags') {
             when {
@@ -136,21 +114,6 @@ pipeline {
                         // error "The pipeline was interrupted because it was started automatically."
                         // return
                     }
-
-                    // // Prompt the user to specify the target environment and version
-                    // environmentInput = input(
-                    //     message: 'Specify the target environment (dev or qa):',
-                    //     parameters: [string(defaultValue: 'dev', description: 'Enter the target environment', name: 'ENVIRONMENT')]
-                    // )
-
-                    // versionInput = input(
-                    //     message: 'Choose the version:',
-                    //     parameters: [choice(name: 'VERSION', choices: javaChoicesList, description: 'Select the version')]
-                    // )
-
-                    // // Handle user input
-                    // echo "Selected environment: ${environmentInput}"
-                    // echo "Selected version: ${versionInput}"
 
                 }
             }
@@ -222,15 +185,15 @@ pipeline {
 
         stage('Health Check') {
             when {
-                expression { currentBuild.resultIsBetterOrEqualTo('SUCCESS') && params.AUTOMATICALLY == false }
+                expression { currentBuild.resultIsBetterOrEqualTo('SUCCESS') &&
+                             params.AUTOMATICALLY == false }
             }
             steps {
                 script {
                     echo "Performing health check for environment: ${params.ENVIRONMENT}"
 
-                    def baseUrl = params.ENVIRONMENT == 'qa' ? 'http://192.168.0.139:4400' : 'http://192.168.0.139:4300'
-
-                    def response_status = sh(script: "curl -sLI -w '%{http_code}' ${baseUrl} -o /dev/null", returnStdout: true)
+                    def response_status = sh(script: "curl -sLI -w '%{http_code}' http://192.168.0.139:4300 -o /dev/null", returnStdout: true)
+                    // def response_status = sh(script: "curl -sLI -w '%{http_code}' http://192.168.0.139:4400 -o /dev/null", returnStdout: true)
 
                     echo "response_status = ${response_status}"
 
@@ -238,9 +201,13 @@ pipeline {
                         echo "Health check passed with response code ${response_status}."
                     } else {
                         echo "Health check failed with response code ${response_status}."
+
                     }
+
                 }
+
             }
+        
 
             // Use for PR status sending
             post {
