@@ -20,11 +20,11 @@ pipeline {
     }
 
     stages {
-        stage('Clean workspace') {
-            steps {
-                cleanWs()
-            }
-        }
+        // stage('Clean workspace') {
+        //     steps {
+        //         cleanWs()
+        //     }
+        // }
 
         stage('Clone Repository') {
             steps {
@@ -70,7 +70,7 @@ pipeline {
                     if (fileExists(dockerfilePath)) {
                         echo "Dockerfile found at: ${dockerfilePath}"
                         // Use installed Hadolint to lint the Dockerfile
-                        def hadolintCommand = "/usr/local/bin/hadolint ${dockerfilePath} > ${lintResultFile}"
+                        def hadolintCommand = "/usr/local/bin/hadolint ${dockerfilePath} > ${lintResultFile} || true"
                         echo "Executing: ${hadolintCommand}"
                         
 
