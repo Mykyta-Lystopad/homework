@@ -1,12 +1,12 @@
-// void setBuildStatus(String message, String state) {
-//   step([
-//       $class: "GitHubCommitStatusSetter",
-//       reposSource: [$class: "ManuallyEnteredRepositorySource", url: "https://github.com/Mykyta-Lystopad/homework.git"],
-//       contextSource: [$class: "ManuallyEnteredCommitContextSource", context: "ci/jenkins/build-status"],
-//       errorHandlers: [[$class: "ChangingBuildStatusErrorHandler", result: "UNSTABLE"]],
-//       statusResultSource: [ $class: "ConditionalStatusResultSource", results: [[$class: "AnyBuildResult", message: message, state: state]] ]
-//   ]);
-// }
+void setBuildStatus(String message, String state) {
+  step([
+      $class: "GitHubCommitStatusSetter",
+      reposSource: [$class: "ManuallyEnteredRepositorySource", url: "https://github.com/Mykyta-Lystopad/homework.git"],
+      contextSource: [$class: "ManuallyEnteredCommitContextSource", context: "ci/jenkins/build-status"],
+      errorHandlers: [[$class: "ChangingBuildStatusErrorHandler", result: "UNSTABLE"]],
+      statusResultSource: [ $class: "ConditionalStatusResultSource", results: [[$class: "AnyBuildResult", message: message, state: state]] ]
+  ]);
+}
 
 
 
@@ -20,11 +20,31 @@ pipeline {
       ])
     }
 
+    environment {
+        BRANCH_NAME = "${GIT_BRANCH.split("/")[1]}"
+    }
+
     // environment {
     //     GITHUB_CREDENTIALS = credentials('git') // Replace 'vagrant' with your actual credentials ID
     // }
 
     stages {
+        stage('Clean workspace') {
+            steps {
+                cleanWs()
+            }
+        }
+
+        stage('Work with git branch') {
+            steps {
+                script {
+                    // Access the branch name using env.BRANCH_NAME
+                    echo "Current branch is: ${BRANCH_NAME}"
+                    echo "Cloning repo from the branch: ${BRANCH_NAME}..."
+                }
+            }
+        }
+
         stage('Clone Repository') {
             steps {
                 script {
@@ -77,20 +97,6 @@ pipeline {
                         echo "Linting Results:"
                         sh "cat ${lintResultFile}"
 
-                        // Prompt the user to read linting message
-                        // def userInput = input(
-                        //     message: 'Do you want to read the linting message?',
-                        //     ok: 'Yes',
-                        //     parameters: [string(defaultValue: 'No', description: 'Select Yes to read the linting message', name: 'readLintMessage')]
-                        // )
-
-                        // // Handle user input
-                        // if (userInput == 'Yes') {
-                        //     echo "User wants to read the linting message."
-                        // } else {
-                        //     echo "User chose not to read the linting message."
-                        // }
-
                     } else {
                         error "Dockerfile not found at path: ${dockerfilePath}"
                     }
@@ -98,63 +104,79 @@ pipeline {
             }
 
             post {
-                success{
+                success {
                     script {
-                        if (env.CHANGE_ID) {
-                            // This build is associated with a pull request
-                            def currentSHA = env.GIT_COMMIT
-                                // setBuildStatus("Build succeeded", "SUCCESS");
-                                sh """
-                                    curl -L \
-                                        -X POST \
-                                        -H "Accept: application/vnd.github+json" \
-                                        -H "Authorization: Bearer ${TOKEN}" \
-                                        -H "X-GitHub-Api-Version: 2022-11-28" \
-                                        https://api.github.com/repos/Mykyta-Lystopad/homework/statuses/${currentSHA} \
-                                        -d '{"state":"success","target_url":"https://Mykyta-Lystopad/homework/build/status", \
-                                        "description":"The build:${currentBuild.currentResult}!","context":"continuous-integration/jenkins:${env.JOB_NAME}"}'
-                                """
-                            }
-                        }
-                }    
-
-                failure {
-                    script {
-                        if (env.CHANGE_ID) {
-                            // This build is associated with a pull request
-                            def currentSHA = env.GIT_COMMIT
-                                // setBuildStatus("Build failed", "FAILURE");
-                                sh """
-                                    curl -L \
-                                        -X POST \
-                                        -H "Accept: application/vnd.github+json" \
-                                        -H "Authorization: Bearer ${TOKEN}" \
-                                        -H "X-GitHub-Api-Version: 2022-11-28" \
-                                        https://api.github.com/repos/Mykyta-Lystopad/homework/statuses/${currentSHA} \
-                                        -d '{"state":"failured","target_url":"https://Mykyta-Lystopad/homework/build/status", \
-                                        "description":"The build:${currentBuild.currentResult}!","context":"continuous-integration/jenkins:${env.JOB_NAME}"}'
-                                """
-                            }
+                        echo 'Jenkins CI pipeline succeeded. Triggering Jenkins CD pipeline.'
+                    
+                        def currentSHA = env.GIT_COMMIT
+                            setBuildStatus("Build succeeded", "SUCCESS");
+                            echo """
+                                curl -L \
+                                -X POST \
+                                -H "Accept: application/vnd.github+json" \
+                                -H "Authorization: Bearer ${TOKEN}" \
+                                -H "X-GitHub-Api-Version: 2022-11-28" \
+                                https://api.github.com/repos/Mykyta-Lystopad/homework/statuses/${currentSHA} \
+                                -d '{"state":"success","target_url":"https://Mykyta-Lystopad/homework/build/status", \
+                                "description":"The build succeeded!","context":"continuous-integration/jenkins:${env.JOB_NAME}"}'
+                            """
+                            // Now, execute the curl command
+                            sh """
+                                curl -L \
+                                    -X POST \
+                                    -H "Accept: application/vnd.github+json" \
+                                    -H "Authorization: Bearer ${TOKEN}" \
+                                    -H "X-GitHub-Api-Version: 2022-11-28" \
+                                    https://api.github.com/repos/Mykyta-Lystopad/homework/statuses/${currentSHA} \
+                                    -d '{"state":"success","target_url":"https://Mykyta-Lystopad/homework/build/status", \
+                                    "description":"The build succeeded!","context":"continuous-integration/jenkins:${env.JOB_NAME}"}'
+                            """
                     }
                 }
-
-                // Sending notification to gmail
+                failure {
+                    echo "Jenkins CI pipeline failed."
+                    script {
+                        // if (env.CHANGE_ID) {
+                        // This build is associated with a pull request
+                        def currentSHA = env.GIT_COMMIT
+                            setBuildStatus("Build failed", "FAILURE");
+                            echo """
+                                curl -L \
+                                -X POST \
+                                -H "Accept: application/vnd.github+json" \
+                                -H "Authorization: Bearer ${TOKEN}" \
+                                -H "X-GitHub-Api-Version: 2022-11-28" \
+                                https://api.github.com/repos/Mykyta-Lystopad/homework/statuses/${currentSHA} \
+                                -d '{"state":"failure","target_url":"https://Mykyta-Lystopad/homework/build/status", \
+                                "description":"The build failured!","context":"continuous-integration/jenkins:${env.JOB_NAME}"}'
+                            """
+                            // Now, execute the curl command
+                            sh """
+                                curl -L \
+                                    -X POST \
+                                    -H "Accept: application/vnd.github+json" \
+                                    -H "Authorization: Bearer ${TOKEN}" \
+                                    -H "X-GitHub-Api-Version: 2022-11-28" \
+                                    https://api.github.com/repos/Mykyta-Lystopad/homework/statuses/${currentSHA} \
+                                    -d '{"state":"failure","target_url":"https://Mykyta-Lystopad/homework/build/status", \
+                                    "description":"The build failured!","context":"continuous-integration/jenkins:${env.JOB_NAME}"}'
+                            """
+                        // }
+                    }
+                }
                 always {
-                    emailext to: "niktoring77@gmail.com",
-                    subject: "jenkins build:${currentBuild.currentResult}: ${env.JOB_NAME}",
-                    body: """
-                    Logs from Jenkins pipeline:
-                    ${currentBuild.rawBuild.getLog(100)}
-                    """,
-                    attachLog: true
+                    echo "This will always run."
+                    // Add more logging or actions here
                 }
             }
+        
         }
 
-
-
-
-
+        stage('Finalized') {
+            steps {
+                echo "Finalized..."
+            }
+        }
 
     }
 }
