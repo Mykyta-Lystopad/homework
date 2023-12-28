@@ -20,11 +20,11 @@ pipeline {
     }
 
     stages {
-        // stage('Clean workspace') {
-        //     steps {
-        //         cleanWs()
-        //     }
-        // }
+        stage('Clean workspace') {
+            steps {
+                cleanWs()
+            }
+        }
 
         stage('Clone Repository') {
             steps {
@@ -64,7 +64,7 @@ pipeline {
                     echo "dockerfilePath: ${dockerfilePath}  lintResultFile: ${lintResultFile}"
 
                     // Print the content of the workspace directory
-                    sh "touch hadolint_result.txt"
+                    // sh "touch hadolint_result.txt"
                     sh "ls -la ${workspacePath}"
 
                     // Make sure the Dockerfile exists
