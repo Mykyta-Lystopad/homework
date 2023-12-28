@@ -1,13 +1,3 @@
-void setBuildStatus(String message, String state) {
-  step([
-      $class: "GitHubCommitStatusSetter",
-      reposSource: [$class: "ManuallyEnteredRepositorySource", url: "https://github.com/Mykyta-Lystopad/homework.git"],
-      contextSource: [$class: "ManuallyEnteredCommitContextSource", context: "ci/jenkins/build-status"],
-      errorHandlers: [[$class: "ChangingBuildStatusErrorHandler", result: "UNSTABLE"]],
-      statusResultSource: [ $class: "ConditionalStatusResultSource", results: [[$class: "AnyBuildResult", message: message, state: state]] ]
-  ]);
-}
-
 // vars
 def container_name = "homework"
 def image_path = "nominonik/google-class"
@@ -35,13 +25,6 @@ pipeline {
 
 
     stages {
-        // stage('Cleaning workspace') {
-        //     steps {
-        //         print("Starting preconfiguration cleaning...")
-        //         deleteDir()
-        //     }
-        // }
-
         stage('Clean workspace') {
             when {
                 expression { params.AUTOMATICALLY == false }
@@ -50,6 +33,40 @@ pipeline {
                 cleanWs()
             }
         }
+
+        stage('Checkout') {
+            when {
+                expression { params.AUTOMATICALLY == true }
+            }
+            steps {
+                script {
+                    echo "Checkout stage"
+                    // checkout([$class: 'GitSCM', branches: [[name: params.ENVIRONMENT]], userRemoteConfigs: [[url: 'https://github.com/Mykyta-Lystopad/homework.git']]])
+                    checkout scmGit(branches: [[name: params.ENVIRONMENT]], userRemoteConfigs: [[url: 'https://github.com/Mykyta-Lystopad/homework.git']])
+                }
+            }
+        }
+
+        // stage('Cleaning workspace') {
+        //     steps {
+        //         print("Starting preconfiguration cleaning...")
+        //         deleteDir()
+        //     }
+        // }
+
+        stage('Work with git branch') {
+            when {
+                expression { params.AUTOMATICALLY == false }
+            }
+            steps {
+                script {
+                    // Access the branch name using env.BRANCH_NAME
+                    echo "Current branch is: ${BRANCH_NAME}"
+                    echo "Cloning repo from the branch: ${BRANCH_NAME}..."
+                }
+            }
+        }
+
 
        // Include shared stages
         // stage('Shared Stages') {
@@ -106,8 +123,8 @@ pipeline {
                         echo 'This pipeline was started manually.'
                     } else {
                         echo 'This pipeline was started automatically (not manually).'
-                        error "The pipeline was interrupted because it was started automatically."
-                        return
+                        // error "The pipeline was interrupted because it was started automatically."
+                        // return
                     }
 
                     // // Prompt the user to specify the target environment and version
@@ -195,15 +212,15 @@ pipeline {
 
         stage('Health Check') {
             when {
-                expression { currentBuild.resultIsBetterOrEqualTo('SUCCESS') &&
-                             params.AUTOMATICALLY == false }
+                expression { currentBuild.resultIsBetterOrEqualTo('SUCCESS') && params.AUTOMATICALLY == false }
             }
             steps {
                 script {
                     echo "Performing health check for environment: ${params.ENVIRONMENT}"
 
-                    def response_status = sh(script: "curl -sLI -w '%{http_code}' http://192.168.0.139:4300 -o /dev/null", returnStdout: true)
-                    // def response_status = sh(script: "curl -sLI -w '%{http_code}' http://192.168.0.139:4400 -o /dev/null", returnStdout: true)
+                    def baseUrl = params.ENVIRONMENT == 'qa' ? 'http://192.168.0.139:4400' : 'http://192.168.0.139:4300'
+
+                    def response_status = sh(script: "curl -sLI -w '%{http_code}' ${baseUrl} -o /dev/null", returnStdout: true)
 
                     echo "response_status = ${response_status}"
 
@@ -211,13 +228,9 @@ pipeline {
                         echo "Health check passed with response code ${response_status}."
                     } else {
                         echo "Health check failed with response code ${response_status}."
-
                     }
-
                 }
-
             }
-        
 
             // Use for PR status sending
             post {
@@ -241,6 +254,5 @@ pipeline {
                 }
             }
         }
-    }    
-        
+    }
 }
