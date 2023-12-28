@@ -16,32 +16,13 @@ pipeline {
     options {
       withCredentials([
         string(credentialsId: 'git-token-2', variable: 'TOKEN')
-        // usernamePassword(credentialsId: "git", passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')
       ])
     }
-
-    environment {
-        BRANCH_NAME = "${GIT_BRANCH.split("/")[1]}"
-    }
-
-    // environment {
-    //     GITHUB_CREDENTIALS = credentials('git') // Replace 'vagrant' with your actual credentials ID
-    // }
 
     stages {
         stage('Clean workspace') {
             steps {
                 cleanWs()
-            }
-        }
-
-        stage('Work with git branch') {
-            steps {
-                script {
-                    // Access the branch name using env.BRANCH_NAME
-                    echo "Current branch is: ${BRANCH_NAME}"
-                    echo "Cloning repo from the branch: ${BRANCH_NAME}..."
-                }
             }
         }
 
