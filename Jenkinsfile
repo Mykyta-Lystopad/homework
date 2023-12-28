@@ -77,7 +77,7 @@ pipeline {
 
                         // Display linting results in the console
                         echo "Linting Results:"
-                        sh "cat ${lintResultFile}"
+                        cat ${lintResultFile}
 
                     } else {
                         error "Dockerfile not found at path: ${dockerfilePath}"
