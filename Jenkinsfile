@@ -19,10 +19,20 @@ pipeline {
       ])
     }
 
+
     stages {
         stage('Clean workspace') {
             steps {
                 cleanWs()
+            }
+        }
+
+        stage('Checkout') {
+            steps {
+                script {
+                    echo "Checkout stage"
+                    checkout scmGit(branches: [[name: BRANCH_NAME]], userRemoteConfigs: [[url: 'https://github.com/Mykyta-Lystopad/homework.git']])
+                }
             }
         }
 
@@ -77,7 +87,7 @@ pipeline {
 
                         // Display linting results in the console
                         echo "Linting Results:"
-                        cat ${lintResultFile}
+                        sh "cat ${lintResultFile}"
 
                     } else {
                         error "Dockerfile not found at path: ${dockerfilePath}"
