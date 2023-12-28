@@ -32,6 +32,10 @@ pipeline {
       ])
     }
 
+    environment {
+        BRANCH_NAME = "${GIT_BRANCH.split("/")[1]}"
+    }
+
 
 
     stages {
@@ -57,9 +61,6 @@ pipeline {
         }
 
         stage('Work with git branch') {
-            when {
-                expression { params.AUTOMATICALLY == false }
-            }
             steps {
                 script {
                     // Access the branch name using env.BRANCH_NAME
