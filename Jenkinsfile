@@ -64,13 +64,14 @@ pipeline {
                     echo "dockerfilePath: ${dockerfilePath}  lintResultFile: ${lintResultFile}"
 
                     // Print the content of the workspace directory
+                    sh "touch hadolint_result.txt"
                     sh "ls -la ${workspacePath}"
 
                     // Make sure the Dockerfile exists
                     if (fileExists(dockerfilePath)) {
                         echo "Dockerfile found at: ${dockerfilePath}"
                         // Use installed Hadolint to lint the Dockerfile
-                        def hadolintCommand = "/usr/local/bin/hadolint ${dockerfilePath} > ${lintResultFile} || true"
+                        def hadolintCommand = "/usr/local/bin/hadolint ${dockerfilePath} > ${lintResultFile}"
                         echo "Executing: ${hadolintCommand}"
                         
 
