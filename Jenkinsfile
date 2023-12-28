@@ -19,6 +19,10 @@ pipeline {
       ])
     }
 
+    environment {
+        BRANCH_NAME = "${GIT_BRANCH.split("/")[1]}"
+    }
+
 
     stages {
         stage('Clean workspace') {
@@ -27,11 +31,27 @@ pipeline {
             }
         }
 
+        stage('Check all envs') {
+            steps {
+                sh 'printenv'
+            }
+        }
+
         stage('Checkout') {
             steps {
                 script {
                     echo "Checkout stage"
                     checkout scmGit(branches: [[name: BRANCH_NAME]], userRemoteConfigs: [[url: 'https://github.com/Mykyta-Lystopad/homework.git']])
+                }
+            }
+        }
+
+        stage('Pulling from git branch') {
+            steps {
+                script {
+                    // Access the branch name using env.BRANCH_NAME
+                    echo "Current branch is: ${BRANCH_NAME}"
+                    echo "Cloning repo from the branch: ${BRANCH_NAME}..."
                 }
             }
         }
