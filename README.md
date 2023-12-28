@@ -35,14 +35,4 @@ tesxer ljklkk
 uuuuuuuuuuuuuuuuuuuuuuuu
 changes 1
 changes 2
-changes 3
-changes 4
-changes 5
-changes 6
-changes 7
-changes 8
-changes 9
-changes 10
-changes 11
-changes 12
-changes 13
+
