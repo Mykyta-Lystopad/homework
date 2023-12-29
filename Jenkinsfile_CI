@@ -50,7 +50,8 @@ pipeline {
             steps {
                 script {
                     echo "Checkout stage"
-                    checkout scmGit(branches: [[name: BRANCH_NAME]], userRemoteConfigs: [[url: 'https://github.com/Mykyta-Lystopad/homework.git']])
+                    // checkout scmGit(branches: [[name: BRANCH_NAME]], userRemoteConfigs: [[url: 'https://github.com/Mykyta-Lystopad/homework.git']])
+                    checkout scm
                 }
             }
         }
