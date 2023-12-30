@@ -21,8 +21,6 @@ pipeline {
 
     parameters {
         string(name: 'ENVIRONMENT', defaultValue: 'dev', description: 'Write the target environment (dev or qa)')
-        choice(name: 'VERSION', choices: ['google-class-latest'], description: 'Enter the version or tag of the Docker image for build image')
-        booleanParam(name: 'AUTOMATICALLY', defaultValue: false, description: 'Do not set up this check-box')
     }
 
 
@@ -40,90 +38,33 @@ pipeline {
 
     stages {
         stage('Clean workspace') {
-            when {
-                expression { params.AUTOMATICALLY == false }
-            }
             steps {
                 cleanWs()
             }
         }
 
-        stage('Checkout') {
-            when {
-                expression { params.AUTOMATICALLY == true }
-            }
-            steps {
-                script {
-                    echo "Checkout stage"
-                    checkout scmGit(branches: [[name: params.ENVIRONMENT]], userRemoteConfigs: [[url: 'https://github.com/Mykyta-Lystopad/homework.git']])
-                }
-            }
-        }
+        // stage('Checkout') {
+        //     steps {
+        //         script {
+        //             echo "Checkout stage"
+        //             checkout scmGit(branches: [[name: params.ENVIRONMENT]], userRemoteConfigs: [[url: 'https://github.com/Mykyta-Lystopad/homework.git']])
+        //         }
+        //     }
+        // }
 
         stage('Work with git branch') {
             steps {
                 script {
-                    // Access the branch name using env.BRANCH_NAME
+                    // Access the branch name using env.BRANCH_NAME (must be main)
+                    echo "Work with git branch"
+                    echo "Must be main"
                     echo "Current branch is: ${BRANCH_NAME}"
                     echo "Cloning repo from the branch: ${BRANCH_NAME}..."
                 }
             }
         }
 
-        stage('Fetch Docker Image Tags') {
-            when {
-                expression { params.AUTOMATICALLY == true }
-            }
-            steps {
-                echo "params.AUTOMATICALLY: ${params.AUTOMATICALLY}"
-                script {
-                    echo "stage = Fetch Docker Image Tags"
-                    def registry = 'https://registry.hub.docker.com/v2/repositories/nominonik/google-class/tags'
-
-                    // Fetching tags from Docker Hub with authentication
-                    def response = sh(script: "curl -u ${DOCKERHUB_USERNAME}:${DOCKERHUB_PASSWORD} -s ${registry}", returnStdout: true).trim()
-
-                    echo "response: ${response}"
-
-                    // Parse the JSON response
-                    def imageNames = sh(script: "echo ${response} | grep -oE 'google-class-[^,]*'", returnStdout: true).trim()
-
-                    echo "Docker Image Names: ${imageNames}"
-
-                    // Split the newline-separated string into a list of strings
-                    def choicesList = imageNames.split('\n')
-
-                    // Convert Groovy list to Java list using collect
-                    def javaChoicesList = choicesList.collect { it.trim() }
-
-                    // Set the choices for the VERSION parameter
-                    properties([
-                        parameters([
-                            string(name: 'ENVIRONMENT', defaultValue: 'dev', description: 'Write the target environment (dev or qa)'),
-                            choice(name: 'VERSION', choices: javaChoicesList, description: 'Choose the version'),
-                            booleanParam(name: 'AUTOMATICALLY', defaultValue: false, description: 'Do not set up this check-box')
-                        ])
-                    ])
-
-
-                   // Check if the launch was done manually
-                    def manualTrigger = currentBuild.rawBuild.getCause(hudson.model.Cause$UserIdCause)
-                    if (manualTrigger) {
-                        echo 'This pipeline was started manually.'
-                    } else {
-                        echo 'This pipeline was started automatically (not manually).'
-                        // error "The pipeline was interrupted because it was started automatically."
-                        // return
-                    }
-
-                }
-            }
-        }
-
         stage('Tag Docker Image') {
-            when {
-                expression { params.AUTOMATICALLY == false }
-            }
             steps {
                 script {
                     sh "docker tag ${image_path}:${params.VERSION} \
@@ -133,9 +74,6 @@ pipeline {
         }
 
         stage('Push Docker Image to Docker Hub') { // to nominonik/google-class-dev or qa
-            when {
-                expression { params.AUTOMATICALLY == false }
-            }
             steps {
                 script {
                     def scriptPushVar
@@ -155,8 +93,7 @@ pipeline {
 
         stage('Deploy to Environment') {
             when {
-                expression { currentBuild.resultIsBetterOrEqualTo('SUCCESS') &&
-                             params.AUTOMATICALLY == false }
+                expression { currentBuild.resultIsBetterOrEqualTo('SUCCESS') }
             }
             steps {
                 script {
@@ -186,15 +123,15 @@ pipeline {
 
         stage('Health Check') {
             when {
-                expression { currentBuild.resultIsBetterOrEqualTo('SUCCESS') &&
-                             params.AUTOMATICALLY == false }
+                expression { currentBuild.resultIsBetterOrEqualTo('SUCCESS') }
             }
             steps {
                 script {
                     echo "Performing health check for environment: ${params.ENVIRONMENT}"
 
-                    def response_status = sh(script: "curl -sLI -w '%{http_code}' http://192.168.0.139:4300 -o /dev/null", returnStdout: true)
-                    // def response_status = sh(script: "curl -sLI -w '%{http_code}' http://192.168.0.139:4400 -o /dev/null", returnStdout: true)
+                    def port = params.ENVIRONMENT == 'qa' ? 4400 : 4300
+
+                    def response_status = sh(script: "curl -sLI -w '%{http_code}' http://192.168.0.139:${port} -o /dev/null", returnStdout: true)
 
                     echo "response_status = ${response_status}"
 
@@ -202,11 +139,8 @@ pipeline {
                         echo "Health check passed with response code ${response_status}."
                     } else {
                         echo "Health check failed with response code ${response_status}."
-
                     }
-
                 }
-
             }
         
 
@@ -234,3 +168,5 @@ pipeline {
         }
     }
 }
+
+

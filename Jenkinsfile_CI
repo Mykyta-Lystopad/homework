@@ -55,76 +55,76 @@ pipeline {
             }
         }
 
-        stage('Pulling from git branch') {
-            steps {
-                script {
-                    // Access the branch name using env.BRANCH_NAME
-                    echo "Current branch is: ${BRANCH_NAME}"
-                    echo "Cloning repo from the branch: ${BRANCH_NAME}..."
-                }
-            }
-        }
-
-
-        stage('Clone Repository') {
-            steps {
-                dir("${container_name}_dir") {
-                    git(
-                        url: "https://github.com/Mykyta-Lystopad/${container_name}.git",
-                        branch: "main",
-                        changelog: true,
-                        poll: true
-                    )
-                }
-            }
-        }
-
-        // stage('Static Code Analysis') {
+        // stage('Pulling from git branch') {
         //     steps {
-        //         echo "Run SonarQube analysis"
-        //         withSonarQubeEnv(installationName: 'SonarQube') {
-        //             script {
-        //                 def scannerHome = tool 'SonarScanner';
-        //                 withEnv(["PATH+SONARSCANNER=${scannerHome}/bin"]) {
-        //                     sh "sonar-scanner"
-        //                 }
-        //             }
+        //         script {
+        //             // Access the branch name using env.BRANCH_NAME
+        //             echo "Current branch is: ${BRANCH_NAME}"
+        //             echo "Cloning repo from the branch: ${BRANCH_NAME}..."
         //         }
         //     }
         // }
 
-        stage('Build Docker Image') {
-            steps {
-                sh "docker build -t ${image_path}:${image_part_name}-latest ."
-            }
+
+        // stage('Clone Repository') {
+        //     steps {
+        //         dir("${container_name}_dir") {
+        //             git(
+        //                 url: "https://github.com/Mykyta-Lystopad/${container_name}.git",
+        //                 branch: "main",
+        //                 changelog: true,
+        //                 poll: true
+        //             )
+        //         }
+        //     }
+        // }
+
+        // // stage('Static Code Analysis') {
+        // //     steps {
+        // //         echo "Run SonarQube analysis"
+        // //         withSonarQubeEnv(installationName: 'SonarQube') {
+        // //             script {
+        // //                 def scannerHome = tool 'SonarScanner';
+        // //                 withEnv(["PATH+SONARSCANNER=${scannerHome}/bin"]) {
+        // //                     sh "sonar-scanner"
+        // //                 }
+        // //             }
+        // //         }
+        // //     }
+        // // }
+
+        // stage('Build Docker Image') {
+        //     steps {
+        //         sh "docker build -t ${image_path}:${image_part_name}-latest ."
+        //     }
            
-        }
+        // }
 
-        stage('Tag Docker Image') {
-            steps {
-                script {
-                    // + docker tag nominonik/google-class:google-class-latest nominonik/google-class:google-class-2.4-201
-                    sh "docker tag ${image_path}:${image_part_name}-latest \
-                    ${image_path}:${image_part_name}-${params.PUSH_VERSION}-${env.BUILD_NUMBER}"
+        // stage('Tag Docker Image') {
+        //     steps {
+        //         script {
+        //             // + docker tag nominonik/google-class:google-class-latest nominonik/google-class:google-class-2.4-201
+        //             sh "docker tag ${image_path}:${image_part_name}-latest \
+        //             ${image_path}:${image_part_name}-${params.PUSH_VERSION}-${env.BUILD_NUMBER}"
 
-                }
-            }
-        }
+        //         }
+        //     }
+        // }
 
-        stage('Push Docker Image to Docker Hub') {
-            steps {
-                script {
-                    def scriptPushVar
+        // stage('Push Docker Image to Docker Hub') {
+        //     steps {
+        //         script {
+        //             def scriptPushVar
 
-                    scriptPushVar = "docker login -u ${DOCKERHUB_USERNAME} -p ${DOCKERHUB_PASSWORD}; \
-                        docker push ${image_path}:${image_part_name}-latest; \
-                        docker push ${image_path}:${image_part_name}-${params.PUSH_VERSION}-${env.BUILD_NUMBER}"
+        //             scriptPushVar = "docker login -u ${DOCKERHUB_USERNAME} -p ${DOCKERHUB_PASSWORD}; \
+        //                 docker push ${image_path}:${image_part_name}-latest; \
+        //                 docker push ${image_path}:${image_part_name}-${params.PUSH_VERSION}-${env.BUILD_NUMBER}"
 
-                    sh(script: scriptPushVar, returnStatus: false, returnStdout: true)
-                }
-            }
+        //             sh(script: scriptPushVar, returnStatus: false, returnStdout: true)
+        //         }
+        //     }
 
-        }
+        // }
 
 
         stage('Invoke cd_pipeline') {
@@ -140,10 +140,7 @@ pipeline {
                 success {
                     script {
                         echo 'Jenkins CI pipeline succeeded. Triggering Jenkins CD pipeline.'
-                        build job: 'cd_pipeline', parameters: [
-                            booleanParam(name: 'AUTOMATICALLY', value: true),
-                            string(name: 'ENVIRONMENT', value: BRANCH_NAME)
-                        ]
+                        build job: 'cd_pipeline'
 
                         // if (env.CHANGE_ID) {
                         // This build is associated with a pull request
