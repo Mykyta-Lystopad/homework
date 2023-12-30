@@ -127,23 +127,19 @@ pipeline {
         // }
 
 
-        stage('Invoke cd_pipeline') {
+        stage('Trigger github') {
             
             steps {
-                echo "Invoke cd_pipeline for visibility latest image"
+                echo "Trigger github"
                 script {
-                    echo "The pipeline will be interrupted because it would start automatically." 
+                    echo "Trigger github..." 
                 }
                 
             }
             post {
                 success {
                     script {
-                        echo 'Jenkins CI pipeline succeeded. Triggering Jenkins CD pipeline.'
-                        build job: 'cd_pipeline'
-
-                        // if (env.CHANGE_ID) {
-                        // This build is associated with a pull request
+                        echo "Jenkins CI pipeline succeeded."
                         def currentSHA = env.GIT_COMMIT
                             setBuildStatus("Build succeeded", "SUCCESS");
                             echo """
@@ -171,10 +167,8 @@ pipeline {
                     }
                 }
                 failure {
-                    echo "Jenkins CI pipeline failed."
                     script {
-                        // if (env.CHANGE_ID) {
-                        // This build is associated with a pull request
+                        echo "Jenkins CI pipeline failed."
                         def currentSHA = env.GIT_COMMIT
                             setBuildStatus("Build failed", "FAILURE");
                             echo """
