@@ -46,6 +46,21 @@ pipeline {
             }
         }
 
+        stage('Print GitHub PR Information') {
+            steps {
+                script {
+                    echo "CHANGE_ID: ${env.CHANGE_ID}"
+                    echo "CHANGE_URL: ${env.CHANGE_URL}"
+                    echo "CHANGE_TITLE: ${env.CHANGE_TITLE}"
+                    echo "CHANGE_AUTHOR: ${env.CHANGE_AUTHOR}"
+                    echo "CHANGE_AUTHOR_DISPLAY_NAME: ${env.CHANGE_AUTHOR_DISPLAY_NAME}"
+                    echo "CHANGE_AUTHOR_EMAIL: ${env.CHANGE_AUTHOR_EMAIL}"
+                    echo "CHANGE_TARGET: ${env.CHANGE_TARGET}"
+                    echo "CHANGE_BRANCH: ${env.CHANGE_BRANCH}"
+                }
+            }
+        }
+
         stage('Checkout') {
             steps {
                 script {
@@ -55,15 +70,15 @@ pipeline {
             }
         }
 
-        // stage('Pulling from git branch') {
-        //     steps {
-        //         script {
-        //             // Access the branch name using env.BRANCH_NAME
-        //             echo "Current branch is: ${BRANCH_NAME}"
-        //             echo "Cloning repo from the branch: ${BRANCH_NAME}..."
-        //         }
-        //     }
-        // }
+        stage('Pulling from git branch') {
+            steps {
+                script {
+                    // Access the branch name using env.BRANCH_NAME
+                    echo "Current branch is: ${BRANCH_NAME}"
+                    echo "Cloning repo from the branch: ${BRANCH_NAME}..."
+                }
+            }
+        }
 
 
         // stage('Clone Repository') {
