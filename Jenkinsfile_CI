@@ -140,10 +140,7 @@ pipeline {
                 success {
                     script {
                         echo 'Jenkins CI pipeline succeeded. Triggering Jenkins CD pipeline.'
-                        build job: 'cd_pipeline', parameters: [
-                            booleanParam(name: 'AUTOMATICALLY', value: true),
-                            string(name: 'ENVIRONMENT', value: BRANCH_NAME)
-                        ]
+                        build job: 'cd_pipeline'
 
                         // if (env.CHANGE_ID) {
                         // This build is associated with a pull request
