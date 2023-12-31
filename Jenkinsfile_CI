@@ -46,6 +46,15 @@ pipeline {
             }
         }
 
+
+        stage('Print Webhook Payload') {
+            steps {
+                script {
+                    echo "Webhook Payload: ${params.GITHUB_WEBHOOK_PAYLOAD}"
+                }
+            }
+        }
+
         stage('Checkout') {
             steps {
                 script {
@@ -55,15 +64,15 @@ pipeline {
             }
         }
 
-        // stage('Pulling from git branch') {
-        //     steps {
-        //         script {
-        //             // Access the branch name using env.BRANCH_NAME
-        //             echo "Current branch is: ${BRANCH_NAME}"
-        //             echo "Cloning repo from the branch: ${BRANCH_NAME}..."
-        //         }
-        //     }
-        // }
+        stage('Pulling from git branch') {
+            steps {
+                script {
+                    // Access the branch name using env.BRANCH_NAME
+                    echo "Current branch is: ${BRANCH_NAME}"
+                    echo "Cloning repo from the branch: ${BRANCH_NAME}..."
+                }
+            }
+        }
 
 
         // stage('Clone Repository') {
@@ -127,7 +136,7 @@ pipeline {
         // }
 
 
-        stage('Trigger github') {
+        stage('Trigger github current branch and block untill build will not pass success') {
             
             steps {
                 echo "Trigger github"
@@ -166,6 +175,34 @@ pipeline {
                         // }
                     }
                 }
+                // success {
+                //     script {
+                //         echo "Jenkins CI pipeline succeeded."
+                //         def currentSHA = env.GIT_COMMIT
+                //         def pullRequestNumber = env.CHANGE_ID
+
+                //         echo "currentSHA: ${currentSHA}"
+                //         echo "pullRequestNumber: ${pullRequestNumber}"
+
+                //         if (pullRequestNumber) {
+                //             // Merge the pull request using GitHub API
+                //             def mergePRCommand = """
+                //                 curl -L \
+                //                 -X PUT \
+                //                 -H "Accept: application/vnd.github+json" \
+                //                 -H "Authorization: Bearer ${TOKEN}" \
+                //                 -H "X-GitHub-Api-Version: 2022-11-28" \
+                //                 https://api.github.com/repos/Mykyta-Lystopad/homework/pulls/${pullRequestNumber}/merge \
+                //                 -d '{"commit_title":"Merge pull request #${pullRequestNumber}","merge_method":"squash"}'
+                //             """
+
+                //             // Execute the curl command to merge the pull request
+                //             sh mergePRCommand
+                //         } else {
+                //             echo "No pull request information found. This might not be a pull request build."
+                //         }
+                //     }
+                // }
                 failure {
                     script {
                         echo "Jenkins CI pipeline failed."
