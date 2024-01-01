@@ -74,66 +74,65 @@ pipeline {
         }
 
 
-        // stage('Clone Repository') {
+        stage('Clone Repository') {
+            steps {
+                dir("${container_name}_dir") {
+                    git(
+                        url: "https://github.com/Mykyta-Lystopad/${container_name}.git",
+                        branch: "main",
+                        changelog: true,
+                        poll: true
+                    )
+                }
+            }
+        }
+
+        // stage('Static Code Analysis') {
         //     steps {
-        //         dir("${container_name}_dir") {
-        //             git(
-        //                 url: "https://github.com/Mykyta-Lystopad/${container_name}.git",
-        //                 branch: "main",
-        //                 changelog: true,
-        //                 poll: true
-        //             )
+        //         echo "Run SonarQube analysis"
+        //         withSonarQubeEnv(installationName: 'SonarQube') {
+        //             script {
+        //                 def scannerHome = tool 'SonarScanner';
+        //                 withEnv(["PATH+SONARSCANNER=${scannerHome}/bin"]) {
+        //                     sh "sonar-scanner"
+        //                 }
+        //             }
         //         }
         //     }
         // }
 
-        // // stage('Static Code Analysis') {
-        // //     steps {
-        // //         echo "Run SonarQube analysis"
-        // //         withSonarQubeEnv(installationName: 'SonarQube') {
-        // //             script {
-        // //                 def scannerHome = tool 'SonarScanner';
-        // //                 withEnv(["PATH+SONARSCANNER=${scannerHome}/bin"]) {
-        // //                     sh "sonar-scanner"
-        // //                 }
-        // //             }
-        // //         }
-        // //     }
-        // // }
-
-        // stage('Build Docker Image') {
-        //     steps {
-        //         sh "docker build -t ${image_path}:${image_part_name}-latest ."
-        //     }
+        stage('Build Docker Image') {
+            steps {
+                sh "docker build -t ${image_path}:${image_part_name}-latest ."
+            }
            
-        // }
+        }
 
-        // stage('Tag Docker Image') {
-        //     steps {
-        //         script {
-        //             // + docker tag nominonik/google-class:google-class-latest nominonik/google-class:google-class-2.4-201
-        //             sh "docker tag ${image_path}:${image_part_name}-latest \
-        //             ${image_path}:${image_part_name}-${params.PUSH_VERSION}-${env.BUILD_NUMBER}"
+        stage('Tag Docker Image') {
+            steps {
+                script {
+                    // + docker tag nominonik/google-class:google-class-latest nominonik/google-class:google-class-2.4-201
+                    sh "docker tag ${image_path}:${image_part_name}-latest \
+                    ${image_path}:${image_part_name}-${params.PUSH_VERSION}-${env.BUILD_NUMBER}"
 
-        //         }
-        //     }
-        // }
+                }
+            }
+        }
 
-        // stage('Push Docker Image to Docker Hub') {
-        //     steps {
-        //         script {
-        //             def scriptPushVar
+        stage('Push Docker Image to Docker Hub') {
+            steps {
+                script {
+                    def scriptPushVar
 
-        //             scriptPushVar = "docker login -u ${DOCKERHUB_USERNAME} -p ${DOCKERHUB_PASSWORD}; \
-        //                 docker push ${image_path}:${image_part_name}-latest; \
-        //                 docker push ${image_path}:${image_part_name}-${params.PUSH_VERSION}-${env.BUILD_NUMBER}"
+                    scriptPushVar = "docker login -u ${DOCKERHUB_USERNAME} -p ${DOCKERHUB_PASSWORD}; \
+                        docker push ${image_path}:${image_part_name}-latest; \
+                        docker push ${image_path}:${image_part_name}-${params.PUSH_VERSION}-${env.BUILD_NUMBER}"
 
-        //             sh(script: scriptPushVar, returnStatus: false, returnStdout: true)
-        //         }
-        //     }
+                    sh(script: scriptPushVar, returnStatus: false, returnStdout: true)
+                }
+            }
 
-        // }
-
+        }
 
         stage('Trigger github current branch and block untill build will not pass success') {
             
