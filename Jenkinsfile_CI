@@ -93,7 +93,7 @@ pipeline {
                         def hadolintCommand = "/usr/local/bin/hadolint ${dockerfilePath} > ${lintResultFile}"
                         echo "Executing: ${hadolintCommand}"
 
-                        archiveArtifacts(artifacts: '**/hadolint_result.txt', followSymlinks: false)
+                        archiveArtifacts(artifacts: "**/${lintResultFile}", followSymlinks: false)
 
                         // Display linting results in the console
                         echo "Linting Results:"
