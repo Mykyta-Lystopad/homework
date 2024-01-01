@@ -56,7 +56,7 @@ pipeline {
                 dir("${container_name}_dir") {
                     git(
                         url: "https://github.com/Mykyta-Lystopad/${container_name}.git",
-                        branch: "main",
+                        branch: "${GITHUB_PR_SOURCE_BRANCH}",
                         changelog: true,
                         poll: true
                     )
