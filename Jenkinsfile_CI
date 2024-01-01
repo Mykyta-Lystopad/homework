@@ -90,8 +90,24 @@ pipeline {
                     if (fileExists(dockerfilePath)) {
                         echo "Dockerfile found at: ${dockerfilePath}"
                         // Use installed Hadolint to lint the Dockerfile
-                        def hadolintCommand = "/usr/local/bin/hadolint ${dockerfilePath} > ${lintResultFile}"
+                        echo "============ Executing: hadolintCommand ===============" 
+                        echo "============ Executing: hadolintCommand ===============" > ${lintResultFile}
+                        def hadolintCommand = "/usr/local/bin/hadolint ${dockerfilePath} >> ${lintResultFile} 2>&1"
                         echo "Executing: ${hadolintCommand}"
+                        sh(hadolintCommand, returnStatus: true)
+                        
+                        // Check the exit code of the linting process
+                        def lintExitCode = sh(script: "echo \$?", returnStatus: true).trim()
+                        
+                        echo "Linting Exit Code: ${lintExitCode}"
+                        
+                        if (lintExitCode != "0") {
+                            error "Linting process failed. Check the linting results for details."
+                        }
+                        
+                        echo "Executing: ${hadolintCommand}"
+                        
+                        sh "ls -la ${workspacePath}"
 
                         archiveArtifacts(artifacts: "${lintResultFile}", followSymlinks: false)
 
