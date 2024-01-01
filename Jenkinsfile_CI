@@ -65,10 +65,6 @@ pipeline {
         }
 
         stage("Lint Dockerfile") {
-            agent {
-                label 'docker'
-            }
-
             steps {
                 script {
                     echo "Lint Dockerfile Stage"
@@ -95,23 +91,35 @@ pipeline {
                         sh "touch ${lintResultFile}"
 
                         sh "ls -la ${workspacePath}"
-                        // Use installed Hadolint to lint the Dockerfile
-                        sh 'echo "============ Executing: hadolintCommand ===============" > "${lintResultFile}"'
+
+
+                        writeFile file: "${lintResultFile}", text: '============ Executing: hadolintCommand ==============='
                        
+                        sh "ls -la ${workspacePath}"
+
                         def hadolintBinary = sh(script: 'which hadolint', returnStdout: true).trim()
                         echo "Path to hadolint: ${hadolintBinary}"
                         
-                        def hadolintCommand = "${hadolintBinary} ${dockerfilePath} >> \"${lintResultFile}\""
-
+                        def hadolintCommand = "${hadolintBinary} ${dockerfilePath}"
                         echo "Executing: ${hadolintCommand}"
                         
-                        sh "ls -la ${workspacePath}"
+                        sh(script: "${hadolintCommand}", returnStdout: true).trim() >> "${lintResultFile}"
 
+                        sh "ls -la ${workspacePath}"
+                        
                         archiveArtifacts(artifacts: "${lintResultFile}", followSymlinks: false)
 
-                        // Display linting results in the console
-                        echo "Linting Results:"
+
+                        echo "Linting Results:"                        
                         sh "cat ${lintResultFile}"
+                        
+                        
+
+                        
+
+                        // Display linting results in the console
+                        
+                        // sh "cat ${lintResultFile}"
 
                     } else {
                         error "Dockerfile not found at path: ${dockerfilePath}"
