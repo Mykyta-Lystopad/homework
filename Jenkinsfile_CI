@@ -64,6 +64,47 @@ pipeline {
             }
         }
 
+        stage("Lint Dockerfile") {
+            agent {
+                label 'docker'
+            }
+
+            steps {
+                script {
+                    echo "Lint Dockerfile Stage"
+                    echo "JENKINS_HOME: ${JENKINS_HOME}"
+                    echo "JOB_NAME: ${JOB_NAME}"
+                    echo "WORKSPACE: ${WORKSPACE}"
+                    
+                    def workspacePath = "${WORKSPACE}"
+                    def dockerfilePath = "${workspacePath}/Dockerfile"
+                    def lintResultFile = "${workspacePath}/hadolint_result.txt"
+
+                    echo "dockerfilePath: ${dockerfilePath}  lintResultFile: ${lintResultFile}"
+
+                    // Print the content of the workspace directory
+                    // sh "touch hadolint_result.txt"
+                    sh "ls -la ${workspacePath}"
+
+                    // Make sure the Dockerfile exists
+                    if (fileExists(dockerfilePath)) {
+                        echo "Dockerfile found at: ${dockerfilePath}"
+                        // Use installed Hadolint to lint the Dockerfile
+                        def hadolintCommand = "/usr/local/bin/hadolint ${dockerfilePath} > ${lintResultFile}"
+                        echo "Executing: ${hadolintCommand}"
+
+                        archiveArtifacts(artifacts: '**/hadolint_result.txt', followSymlinks: false)
+
+                        // Display linting results in the console
+                        echo "Linting Results:"
+                        sh "cat ${lintResultFile}"
+
+                    } else {
+                        error "Dockerfile not found at path: ${dockerfilePath}"
+                    }
+                }
+            }
+
         // stage('Static Code Analysis') {
         //     steps {
         //         echo "Run SonarQube analysis"
