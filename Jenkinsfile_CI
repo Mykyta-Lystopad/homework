@@ -42,14 +42,14 @@ pipeline {
             }
         }
 
-        stage('Checkout') {
-            steps {
-                script {
-                    echo "Checkout stage"
-					checkout scmGit(branches: [[name: GITHUB_PR_SOURCE_BRANCH]], userRemoteConfigs: [[url: 'https://github.com/Mykyta-Lystopad/homework.git']])
-                }
-            }
-        }
+        // stage('Checkout') {
+        //     steps {
+        //         script {
+        //             echo "Checkout stage"
+		// 			checkout scmGit(branches: [[name: GITHUB_PR_SOURCE_BRANCH]], userRemoteConfigs: [[url: 'https://github.com/Mykyta-Lystopad/homework.git']])
+        //         }
+        //     }
+        // }
 
         stage('Clone Repository') {
             steps {
