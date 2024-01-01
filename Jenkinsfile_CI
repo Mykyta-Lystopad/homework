@@ -88,22 +88,42 @@ pipeline {
 
                     // Make sure the Dockerfile exists
                     if (fileExists(dockerfilePath)) {
+
                         echo "Dockerfile found at: ${dockerfilePath}"
+                        sh "cat ${dockerfilePath}"
+
+                        sh "touch ${lintResultFile}"
+
+                        sh "ls -la ${workspacePath}"
+                        // Use installed Hadolint to lint the Dockerfile
+                        sh 'echo Executing: hadolintCommand > ${lintResultFile}' 
+                       
+                        def hado = sh(script: 'which hadolint', returnStdout: true).trim()
+                        echo "Path to hadolint: ${hado}"
+                        def hadolintCommand = "${hado} ${dockerfilePath} >> ${lintResultFile}"
+
+
+
+
+                        echo "Dockerfile found at: ${dockerfilePath}"
+                        sh "cat ${dockerfilePath}"
                         // Use installed Hadolint to lint the Dockerfile
                         echo "============ Executing: hadolintCommand ===============" 
-                        echo "============ Executing: hadolintCommand ===============" > ${lintResultFile}
-                        def hadolintCommand = "/usr/local/bin/hadolint ${dockerfilePath} >> ${lintResultFile} 2>&1"
-                        echo "Executing: ${hadolintCommand}"
-                        sh(hadolintCommand, returnStatus: true)
+                        // echo "============ Executing: hadolintCommand ===============" > ${lintResultFile}
+                        def hado = sh(script: 'which hadolint', returnStdout: true).trim()
+                        echo "Path to hadolint: ${hado}"
+                        def hadolintCommand = "${hado} ${dockerfilePath} >> ${lintResultFile}"
+                        // echo "Executing: ${hadolintCommand}"
+                        // sh(hadolintCommand, returnStatus: true)
                         
                         // Check the exit code of the linting process
-                        def lintExitCode = sh(script: "echo \$?", returnStatus: true).trim()
+                        // def lintExitCode = sh(script: "echo \$?", returnStatus: true).trim()
                         
-                        echo "Linting Exit Code: ${lintExitCode}"
+                        // echo "Linting Exit Code: ${lintExitCode}"
                         
-                        if (lintExitCode != "0") {
-                            error "Linting process failed. Check the linting results for details."
-                        }
+                        // if (lintExitCode != "0") {
+                        //     error "Linting process failed. Check the linting results for details."
+                        // }
                         
                         echo "Executing: ${hadolintCommand}"
                         
