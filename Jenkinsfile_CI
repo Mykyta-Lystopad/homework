@@ -79,23 +79,12 @@ pipeline {
 
                     echo "dockerfilePath: ${dockerfilePath}  lintResultFile: ${lintResultFile}"
 
-                    // Print the content of the workspace directory
-                    // sh "touch hadolint_result.txt"
-                    // sh "ls -la ${workspacePath}"
-
-                    // Make sure the Dockerfile exists
                     if (fileExists(dockerfilePath)) {
 
                         echo "Dockerfile found at: ${dockerfilePath}"
-                        sh "cat ${dockerfilePath}"
 
                         sh "touch ${lintResultFile}"
 
-                        // sh "ls -la ${workspacePath}"
-                        
-                        // sh "mkdir -p ${workspacePath}"
-                        
-                        // sh 'echo "Executing: hadolintCommand" > "${lintResultFile}"'
                         writeFile file: "${lintResultFile}", text: '============ Executing: hadolintCommand ==============='
                        
                         def hadolintBinary = sh(script: 'which hadolint', returnStdout: true).trim()
@@ -104,23 +93,9 @@ pipeline {
                         def hadolintCommand = "${hadolintBinary} ${dockerfilePath}"
                         echo "Executing: ${hadolintCommand}"
                         
-                        // sh(script: "${hadolintCommand}", returnStdout: true).trim() > "${lintResultFile}"
                         sh(script: "${hadolintCommand} >> ${lintResultFile}", returnStatus: true)
                         
-                        sh "cat ${lintResultFile}"
-                        
-                        sh "ls -la ${workspacePath}"
-                        
-                        // archiveArtifacts(artifacts: "**${lintResultFile}", followSymlinks: false)
                         archiveArtifacts artifacts: "hadolint_result.txt", onlyIfSuccessful: false
-                                                
-                        
-
-                        
-
-                        // Display linting results in the console
-                        echo "Linting Results:"
-                        sh "cat ${lintResultFile}"
 
                     } else {
                         error "Dockerfile not found at path: ${dockerfilePath}"
