@@ -85,8 +85,10 @@ pipeline {
 
                         sh "touch ${lintResultFile}"
 
-                        writeFile file: "${lintResultFile}", text: '============ Executing: hadolintCommand ==============='
-                       
+                        writeFile file: "${lintResultFile}", text: """============ Executing: hadolintCommand ===============
+                        If empty - it means Dockerfile is correct
+                        """
+                        
                         def hadolintBinary = sh(script: 'which hadolint', returnStdout: true).trim()
                         echo "Path to hadolint: ${hadolintBinary}"
                         
