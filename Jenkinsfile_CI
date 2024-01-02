@@ -64,6 +64,46 @@ pipeline {
             }
         }
 
+       stage("Lint Dockerfile") {
+         
+            steps {
+                script {
+                    echo "Lint Dockerfile Stage"
+                    echo "JENKINS_HOME: ${JENKINS_HOME}"
+                    echo "JOB_NAME: ${JOB_NAME}"
+                    echo "WORKSPACE: ${WORKSPACE}"
+                    
+                    def workspacePath = "${WORKSPACE}"
+                    def dockerfilePath = "${workspacePath}/Dockerfile"
+                    def lintResultFile = "${workspacePath}/hadolint_result.txt"
+
+                    echo "dockerfilePath: ${dockerfilePath}  lintResultFile: ${lintResultFile}"
+
+                    if (fileExists(dockerfilePath)) {
+
+                        echo "Dockerfile found at: ${dockerfilePath}"
+
+                        sh "touch ${lintResultFile}"
+
+                        writeFile file: "${lintResultFile}", text: '============ Executing: hadolintCommand ==============='
+                       
+                        def hadolintBinary = sh(script: 'which hadolint', returnStdout: true).trim()
+                        echo "Path to hadolint: ${hadolintBinary}"
+                        
+                        def hadolintCommand = "${hadolintBinary} ${dockerfilePath}"
+                        echo "Executing: ${hadolintCommand}"
+                        
+                        sh(script: "${hadolintCommand} >> ${lintResultFile}", returnStatus: true)
+                        
+                        archiveArtifacts artifacts: "hadolint_result.txt", onlyIfSuccessful: false
+
+                    } else {
+                        error "Dockerfile not found at path: ${dockerfilePath}"
+                    }
+                }
+            }
+        }
+
         // stage('Static Code Analysis') {
         //     steps {
         //         echo "Run SonarQube analysis"
