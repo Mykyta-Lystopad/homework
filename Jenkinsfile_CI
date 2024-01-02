@@ -64,7 +64,8 @@ pipeline {
             }
         }
 
-        stage("Lint Dockerfile") {
+       stage("Lint Dockerfile") {
+         
             steps {
                 script {
                     echo "Lint Dockerfile Stage"
@@ -80,7 +81,7 @@ pipeline {
 
                     // Print the content of the workspace directory
                     // sh "touch hadolint_result.txt"
-                    sh "ls -la ${workspacePath}"
+                    // sh "ls -la ${workspacePath}"
 
                     // Make sure the Dockerfile exists
                     if (fileExists(dockerfilePath)) {
@@ -90,36 +91,36 @@ pipeline {
 
                         sh "touch ${lintResultFile}"
 
-                        sh "ls -la ${workspacePath}"
-
-
+                        // sh "ls -la ${workspacePath}"
+                        
+                        // sh "mkdir -p ${workspacePath}"
+                        
+                        // sh 'echo "Executing: hadolintCommand" > "${lintResultFile}"'
                         writeFile file: "${lintResultFile}", text: '============ Executing: hadolintCommand ==============='
                        
-                        sh "ls -la ${workspacePath}"
-
                         def hadolintBinary = sh(script: 'which hadolint', returnStdout: true).trim()
                         echo "Path to hadolint: ${hadolintBinary}"
                         
                         def hadolintCommand = "${hadolintBinary} ${dockerfilePath}"
                         echo "Executing: ${hadolintCommand}"
                         
-                        sh(script: "${hadolintCommand}", returnStdout: true).trim() >> "${lintResultFile}"
-
-                        sh "ls -la ${workspacePath}"
+                        // sh(script: "${hadolintCommand}", returnStdout: true).trim() > "${lintResultFile}"
+                        sh(script: "${hadolintCommand} >> ${lintResultFile}", returnStatus: true)
                         
-                        archiveArtifacts(artifacts: "${lintResultFile}", followSymlinks: false)
-
-
-                        echo "Linting Results:"                        
                         sh "cat ${lintResultFile}"
                         
+                        sh "ls -la ${workspacePath}"
+                        
+                        // archiveArtifacts(artifacts: "**${lintResultFile}", followSymlinks: false)
+                        archiveArtifacts artifacts: "hadolint_result.txt", onlyIfSuccessful: false
+                                                
                         
 
                         
 
                         // Display linting results in the console
-                        
-                        // sh "cat ${lintResultFile}"
+                        echo "Linting Results:"
+                        sh "cat ${lintResultFile}"
 
                     } else {
                         error "Dockerfile not found at path: ${dockerfilePath}"
